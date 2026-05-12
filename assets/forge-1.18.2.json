@@ -1,0 +1,4063 @@
+[
+    {
+        "_id": "621fb0a58a3998ab47d371e0",
+        "__v": 0,
+        "branch": null,
+        "build": 40000001,
+        "files": [
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "27c939af09688e2aaeb8b108bb28744a880bbc97"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "d2fa558fe20fdcc8b424b469552333b0a088a3dc"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-01T16:31:35.000Z",
+        "version": "40.0.1"
+    },
+    {
+        "_id": "621fb0a78a3998ab47d3721c",
+        "__v": 0,
+        "branch": null,
+        "build": 40000000,
+        "files": [
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8a58f9041a9af52e3781318145a3688b20ccf19e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "b89d6d4742a9cafe4c3dd02cf0ae8407a31b4b03"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-01T15:15:30.000Z",
+        "version": "40.0.0"
+    },
+    {
+        "_id": "622102238a3998ab47ea7f09",
+        "__v": 0,
+        "branch": null,
+        "build": 40000002,
+        "files": [
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "336e33118e9ecf668808c503d56870a9d5bfeffb"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c474cfa8f0251e29d0031eacaedad57aa68c857d"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-02T20:33:11.000Z",
+        "version": "40.0.2"
+    },
+    {
+        "_id": "622253a58a3998ab4705b619",
+        "__v": 0,
+        "branch": null,
+        "build": 40000003,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "713af1de6505dcbf095f973d2bb04772fe748ae1"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "34b9af7d59d13c0c142511c7830282413fd0e3b9"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "603064ff8492dce23e7cdf199a89d41fe08448ad"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-03T19:56:17.000Z",
+        "version": "40.0.3"
+    },
+    {
+        "_id": "6223a5258a3998ab4736204a",
+        "__v": 0,
+        "branch": null,
+        "build": 40000004,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "952d9064b62b8c2b60de2e6874aabe01afc2ade8"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "dd29948a860d8be2cdee256922348546f9ca94d3"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "68ac6b691162eb347c700fd27d540baeca023cf4"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-05T07:34:07.000Z",
+        "version": "40.0.4"
+    },
+    {
+        "_id": "6224f6a58a3998ab475d65ef",
+        "__v": 0,
+        "branch": null,
+        "build": 40000012,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "a0b9baafa1a843cb529cb9ec8656c4ebf3393b87"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "9b711b8d3903979e7631af6829c41c24bf5cf461"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "38bb55137a933a82e26368c6bcb19a6be7abc878"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-06T07:17:18.000Z",
+        "version": "40.0.12"
+    },
+    {
+        "_id": "6224f6a88a3998ab475d690f",
+        "__v": 0,
+        "branch": null,
+        "build": 40000011,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c39ce94eea04e8aac62374c6708cda46d52ca6b9"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "08d54f02f8346d1db99712b7690941b308667f56"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c04ab4f57943bd95d116863f429399c1d2ca0080"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-06T07:08:53.000Z",
+        "version": "40.0.11"
+    },
+    {
+        "_id": "6224f6ad8a3998ab475d72dc",
+        "__v": 0,
+        "branch": null,
+        "build": 40000010,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "67fbd44ed8d0c15da1602ef36b763e7cc24be092"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "c15881f5cdb235fa332cf7830cb91fe72df47f08"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "965b030e133fd290bc348140cee0fa28562532bf"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-06T07:05:27.000Z",
+        "version": "40.0.10"
+    },
+    {
+        "_id": "6224f6b18a3998ab475d795c",
+        "__v": 0,
+        "branch": null,
+        "build": 40000009,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "57b515e6ef90b29fca933b28c76e7006819ffff2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "825f27bc55b9cf1155390b1310f00335cd2a522f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "53779e8483741ef33e7841313a18fd3c223bb7f1"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-06T07:03:51.000Z",
+        "version": "40.0.9"
+    },
+    {
+        "_id": "6224f6b48a3998ab475d7b7c",
+        "__v": 0,
+        "branch": null,
+        "build": 40000008,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f993678f8fa7936c88a4a25f9dd20a0ec25a8a14"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "fa25fcabde5d9781747d45b70ff57316b482d5dc"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "a5104433e95511e9bac67a99782af64af52cde3e"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-06T06:49:52.000Z",
+        "version": "40.0.8"
+    },
+    {
+        "_id": "6224f6b68a3998ab475d7eb9",
+        "__v": 0,
+        "branch": null,
+        "build": 40000007,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "eaf306e6fc45ba8d453423a3981c91eb653badb2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "182846aa5111e00581b776f1ab301faaba469537"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "9ce40f111096ce5257dcfb26cbafa5390fc55c1f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-06T06:48:29.000Z",
+        "version": "40.0.7"
+    },
+    {
+        "_id": "6224f6bb8a3998ab475d84f5",
+        "__v": 0,
+        "branch": null,
+        "build": 40000006,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f073cd9b9d04f6e5f2932da01a148a65dd0e599d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "0b82226e3b3d4c7ae17c21bc9a0095f4fb640327"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3ea64504539f336aa152543c8b8e89fd07c0dd52"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-06T06:38:47.000Z",
+        "version": "40.0.6"
+    },
+    {
+        "_id": "6224f6be8a3998ab475d85fb",
+        "__v": 0,
+        "branch": null,
+        "build": 40000005,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c0e5b69c4852a63db80abd710a14b9a9a1d29150"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "89ec497e43247ff2065f8661adc22a91ed571000"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "b8e9fa6302fc8fbafe8bedfe13e6a37b4c61d45b"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-05T17:47:31.000Z",
+        "version": "40.0.5"
+    },
+    {
+        "_id": "623a0eae8a3998ab4755fdad",
+        "__v": 0,
+        "branch": null,
+        "build": 40000022,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c4983ba29020866dc4c1645b436111816dd347c0"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "1db27a2ade49d853d62ec47f132979a85101083c"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3459a97c03f3976fd9be6219c6360b5bdc8f4d15"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-22T00:31:14.000Z",
+        "version": "40.0.22"
+    },
+    {
+        "_id": "623a0eb08a3998ab4755ffe2",
+        "__v": 0,
+        "branch": null,
+        "build": 40000021,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "80bddcca0f9653224fe5059acb14e45ea2e26912"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "35a08976054ade5f591826a956363e2ff0965659"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "7f2aa03966fe801cb8a574156ff0bc09dca8aa06"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-21T23:23:05.000Z",
+        "version": "40.0.21"
+    },
+    {
+        "_id": "623a0eb58a3998ab4756081e",
+        "__v": 0,
+        "branch": null,
+        "build": 40000020,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "dae29b06c91e8c296ff39eb66dbed99111abf32b"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "88a420023cee1e37b3c6f8d80ee5bc68d189edfb"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "d01d7501212ed8f84c2ae8607bb905352f6dae91"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-21T22:58:23.000Z",
+        "version": "40.0.20"
+    },
+    {
+        "_id": "623a0eb88a3998ab47560aae",
+        "__v": 0,
+        "branch": null,
+        "build": 40000019,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c38fd614508a7d4f7200c00d46e8e104d63e7127"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b0d8dde22e576c8eb97b38f4b2eb685376164f16"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c703a46901ea9f2861161cd59fdabefc21758b1a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-17T13:13:53.000Z",
+        "version": "40.0.19"
+    },
+    {
+        "_id": "623a0ebc8a3998ab47560f3e",
+        "__v": 0,
+        "branch": null,
+        "build": 40000018,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "415143f7f3d59f2ac5ba6c80362cae1aa2e43306"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "de53131ad91ed391ab607e0b1792c6ab5c1a8a24"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "99a9a6fcbe39e2fe1acef46cf125fe78fdab517f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-16T13:50:25.000Z",
+        "version": "40.0.18"
+    },
+    {
+        "_id": "623a0ec08a3998ab47561359",
+        "__v": 0,
+        "branch": null,
+        "build": 40000017,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "59fb46ceca224f8b7342d9f3e5e494bc8990f269"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d7a664f99db28319584dad7cef9e92f4f62d23c2"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "cea696e145a16b10873af655f81b2b3c60d62066"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-15T15:22:02.000Z",
+        "version": "40.0.17"
+    },
+    {
+        "_id": "623a0ec58a3998ab47561982",
+        "__v": 0,
+        "branch": null,
+        "build": 40000016,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f3c5a27edac9d39f69a17fe8699eb46c69fb8b72"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "679e420c76a6b3931dcaedf51b8ab6cf57dfe54f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5e9d7e184ffdd2073d56ffa68d69ac921e9d4f25"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-15T10:59:59.000Z",
+        "version": "40.0.16"
+    },
+    {
+        "_id": "623a0ec88a3998ab47561b5c",
+        "__v": 0,
+        "branch": null,
+        "build": 40000015,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "b6bd3c2e0d134a4540443e0ed6905a407eb4db94"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8810b7dea946b943658d23276ff2312a67f294e6"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5c4f3316fca688f6bbc81670f2c861567072daf3"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-13T15:14:26.000Z",
+        "version": "40.0.15"
+    },
+    {
+        "_id": "623a0ecc8a3998ab47562000",
+        "__v": 0,
+        "branch": null,
+        "build": 40000014,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "39097007e70754d47efaf06fc2d560491c7f32a7"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "83f64ea40279a3cea2373381e7f79cbf673254f8"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "12c559b8983e67fd2ac2fe38663ead9bf41ae979"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-13T15:04:07.000Z",
+        "version": "40.0.14"
+    },
+    {
+        "_id": "623a0ece8a3998ab47562507",
+        "__v": 0,
+        "branch": null,
+        "build": 40000013,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "78b0e40ebf166b74c1098b96bf4cd6dea1639a93"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "7d7b16e457ee4e505fb270cf15de3cb975932b8c"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "a3ed6fa8c8a312f6791b800639be1f8310d58349"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-12T23:23:46.000Z",
+        "version": "40.0.13"
+    },
+    {
+        "_id": "623b60238a3998ab47733abe",
+        "__v": 0,
+        "branch": null,
+        "build": 40000024,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "13a6eb559bf907a796c4dfbdb170063a70ff5004"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "0bc5f8077a9d8fd9925d8ed06e0cd6a621907812"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "1e818449588b82c8d245f009d1623dd8f78e59b7"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-22T18:07:03.000Z",
+        "version": "40.0.24"
+    },
+    {
+        "_id": "623b60258a3998ab47733ce9",
+        "__v": 0,
+        "branch": null,
+        "build": 40000023,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "399fad80d17aa8900d7fd8c11075a5ca17b2888e"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8958293f6ea3bd834a77a7d86f5ed5699a99bfdb"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "fac5565839c533e699835d4f080ac9fd3db4ecfc"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-22T17:58:50.000Z",
+        "version": "40.0.23"
+    },
+    {
+        "_id": "623cb1a88a3998ab47919fca",
+        "__v": 0,
+        "branch": null,
+        "build": 40000025,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "702d6bc22aaa87b8e47934184987b737bd9b7ca5"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "908464e309427be2239d674d4f26bafa4b308e4c"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "82ec30a24a760c610971d6672da0ac2c66b20222"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-23T18:25:40.000Z",
+        "version": "40.0.25"
+    },
+    {
+        "_id": "623e03268a3998ab47b6e4b2",
+        "__v": 0,
+        "branch": null,
+        "build": 40000031,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "0586c3ec087483fa2da8f5833f0085661a3579bf"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "ae11f82e736dcc65db8b5c0c5bcb50de0ed3b9e9"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "07cdc2a5344d0631b1c28daaf54c379867f8f987"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-24T15:23:22.000Z",
+        "version": "40.0.31"
+    },
+    {
+        "_id": "623e032b8a3998ab47b6eb40",
+        "__v": 0,
+        "branch": null,
+        "build": 40000030,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "50e9ba1cb72d46a046f908fa84657c1b8815b457"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "3f5e9bb2b85a367ab3a6fbf61ac4d52af26e985d"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "090621b6fbf2694258e4e31d4408f4d42d5cc536"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-24T15:21:09.000Z",
+        "version": "40.0.30"
+    },
+    {
+        "_id": "623e032d8a3998ab47b6f1ab",
+        "__v": 0,
+        "branch": null,
+        "build": 40000029,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3afd1527470c0a979a4bbfcccfa9e0bfb1140ca4"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8e150a2e25f3a1f0517aad6b4c5909d0431a46f7"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3976ba0096406799fb3ca445e0167963270037fd"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-24T15:06:22.000Z",
+        "version": "40.0.29"
+    },
+    {
+        "_id": "623e03368a3998ab47b6ff1d",
+        "__v": 0,
+        "branch": null,
+        "build": 40000028,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "06f380ce617ed842ed1e80382632ded7f6f98450"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "2152f24291d656bceb5ba7114d0ce8f861f35b9a"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "310410cadf140e18039ecd679f4c8718af7e7dfd"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-24T14:48:40.000Z",
+        "version": "40.0.28"
+    },
+    {
+        "_id": "623e033c8a3998ab47b70625",
+        "__v": 0,
+        "branch": null,
+        "build": 40000027,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "85c32fde43e1ca2678434c60ee42023283f6fe4d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "e80a20eb3fa195e884c6659d1c782220f17f6eec"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "faab71d7057f6993ea94f1062e03463a5c2da8b3"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-24T14:33:09.000Z",
+        "version": "40.0.27"
+    },
+    {
+        "_id": "623e03418a3998ab47b70951",
+        "__v": 0,
+        "branch": null,
+        "build": 40000026,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "885209971d6932e8671a34a19360ac0cd016b5b2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "650f8d6cd9eee85cb6e1acda3c31a5ffba6ea857"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "de2318af182fb29aedb7eeb8f7891a33f046ab90"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-24T14:30:08.000Z",
+        "version": "40.0.26"
+    },
+    {
+        "_id": "623f54a58a3998ab47e7829e",
+        "__v": 0,
+        "branch": null,
+        "build": 40000032,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e4410b460eff90e3ae2e35cd2751f82c7dd7b429"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "2d427766f268f188fc2498a40e820d794e692772"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "31e7141eac28af5d0b824bdbfd281ce5f93ff06a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-25T18:07:13.000Z",
+        "version": "40.0.32"
+    },
+    {
+        "_id": "6245ec2b8a3998ab478c4d51",
+        "__v": 0,
+        "branch": null,
+        "build": 40000034,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3b421829cbc7328325636959b1f2774773fba0b2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "0014fdd30bbc0025e2060406239e48387bb6fe54"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "d9ff1a1f345d9a070c62fb1f3fdf3cf7be39ee96"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-30T13:12:57.000Z",
+        "version": "40.0.34"
+    },
+    {
+        "_id": "6245ec308a3998ab478c502a",
+        "__v": 0,
+        "branch": null,
+        "build": 40000033,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "a36385b1be87750aa80f4078b895f41af778c0b1"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "58f1aacbb7e00bbb7a91bd2cface4d7c52498578"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3a1dd89456bf913c7d508b60099bb9a70aac84ae"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-03-30T13:12:37.000Z",
+        "version": "40.0.33"
+    },
+    {
+        "_id": "62488f268a3998ab47d5637e",
+        "__v": 0,
+        "branch": null,
+        "build": 40000036,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "edc47cb904cd719d22ee15406effe31d0e912bf7"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "9ffb2288469ef64eda307131799564f238f7bf33"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "34d298670940d36da0e696a8d92fd9448655c01c"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-02T00:22:42.000Z",
+        "version": "40.0.36"
+    },
+    {
+        "_id": "62488f298a3998ab47d5673e",
+        "__v": 0,
+        "branch": null,
+        "build": 40000035,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3d0a67745ba50d8913c2c35607af6548a2abf317"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "bc2a7efc23a721954bd9684067d76cb0db36e943"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "05b5e8ac01d20d03b339c2d769484c17a04326bc"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-01T14:03:06.000Z",
+        "version": "40.0.35"
+    },
+    {
+        "_id": "624c83a58a3998ab47584faa",
+        "__v": 0,
+        "branch": null,
+        "build": 40000040,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f4da10452e98bdf40ff9f86bad2eb7c09f208d27"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "07656f0811d1c661cb80917644efabcb22237f15"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "ca0670386e56c0c18b8574f19401dee61f65a585"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-04T18:28:30.000Z",
+        "version": "40.0.40"
+    },
+    {
+        "_id": "624c83a78a3998ab47585381",
+        "__v": 0,
+        "branch": null,
+        "build": 40000039,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "137df81c243f08bf2cdccb77d87aeba58dc1e66d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "e15eecd62236d435f64ff7a6fc952dec03433deb"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "acd60cec4981561d73d62adce653bb8f2076364d"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-04T18:24:18.000Z",
+        "version": "40.0.39"
+    },
+    {
+        "_id": "624c83aa8a3998ab47585760",
+        "__v": 0,
+        "branch": null,
+        "build": 40000038,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "edf51c64c72ee6746f7caf687f37beecf457b07c"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d652f8f91755689d5defb237534f1e16c9d75873"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "999dee2387afcf91d14df23f7a97fa244749c3f7"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-04T18:20:51.000Z",
+        "version": "40.0.38"
+    },
+    {
+        "_id": "624f26a58a3998ab47953db2",
+        "__v": 0,
+        "branch": null,
+        "build": 40000041,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3f9f6a9db804cae8286ba89a52f72e969bcf01e2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "348288b114385d88d43a442afe0b5a0dce3d4050"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "08849ac6b17f4fba38770a1f371d325b8f4ed68a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-06T14:25:50.000Z",
+        "version": "40.0.41"
+    },
+    {
+        "_id": "6250782a8a3998ab47b64b07",
+        "__v": 0,
+        "branch": null,
+        "build": 40000043,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "cb126dd9b12e9da4ecf9dbd5f2bc963751b473c2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "38e053c8e0c0ae424502e96f775b3f5ee3f595df"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "ed1d1a756af2d3413d1663c2b643e98fa1fb3cbc"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-08T10:27:53.000Z",
+        "version": "40.0.43"
+    },
+    {
+        "_id": "6250782c8a3998ab47b64fa5",
+        "__v": 0,
+        "branch": null,
+        "build": 40000042,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "000a1e6dd70e9bbcfc3b83aa6539dc0a3e713210"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "bc4752d13b2b2954d6cba56b418ced8f15e7c3e0"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "6a96cf82f9b13dcc62ef22d20930c5a4351cc7bb"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-07T11:53:36.000Z",
+        "version": "40.0.42"
+    },
+    {
+        "_id": "6251c9a58a3998ab47df244d",
+        "__v": 0,
+        "branch": null,
+        "build": 40000044,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3dcb24c1aefb6df6c67eeb5d9a6179bccd86a54d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8e5095c569def769e373228ed2928b1346967585"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "831388ecf6678037fd4c67d000931729fe31c450"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-08T15:50:28.000Z",
+        "version": "40.0.44"
+    },
+    {
+        "_id": "62546ca58a3998ab4722a19b",
+        "__v": 0,
+        "branch": null,
+        "build": 40000045,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "aff8f76af45e89907beaae763215da48329da09e"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "ad21aeccab2f4025de9a5b363f6f81fc0aa31eff"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "2ed7b66d225db7ce720bd89ddc12c0e74b886c58"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-11T08:03:32.000Z",
+        "version": "40.0.45"
+    },
+    {
+        "_id": "6255be288a3998ab4741fa4d",
+        "__v": 0,
+        "branch": null,
+        "build": 40000046,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "38854dc17bbfb7481c71697a5eda374008e824b8"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b69222055a63b0e4b1d64196321ae65dad811bd6"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "fd6c41ce79f0ba8b1734f6481f59754d539ab02a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-12T10:00:03.000Z",
+        "version": "40.0.46"
+    },
+    {
+        "_id": "625861248a3998ab477d62b1",
+        "__v": 0,
+        "branch": null,
+        "build": 40000049,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "8b9a07241831694a678b3d7776467899e5d69855"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "56fa7579bbec3b5c2ad68347e69d6b7d81286a8b"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "7de0c80ac05e4fe335f8645820273884d3c9a019"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-13T20:54:58.000Z",
+        "version": "40.0.49"
+    },
+    {
+        "_id": "625861268a3998ab477d65f4",
+        "__v": 0,
+        "branch": null,
+        "build": 40000048,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "9d8b62e292545e0f1adde050e36db190a6d48f92"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "4eb92a9d609edf5bd5109d9f397dd64209ca6eab"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "69e9091870a01fa64f64fbe3ffea591d74b6ca32"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-13T11:14:26.000Z",
+        "version": "40.0.48"
+    },
+    {
+        "_id": "625861298a3998ab477d6bd7",
+        "__v": 0,
+        "branch": null,
+        "build": 40000047,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "70a862e4d80164a9b1203f8f2ccd4dce3ffdb4fb"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "f39a5769e165ea06d396c31a6fe4bca89854723b"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "d01dd9490c28065b3e433f20b25c54845401853e"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-13T11:00:05.000Z",
+        "version": "40.0.47"
+    },
+    {
+        "_id": "6259b2a48a3998ab479e940a",
+        "__v": 0,
+        "branch": null,
+        "build": 40000052,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "2b5334cef6017ce0248a800b5a43c10d9130b206"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "5767492fa501a81a5004b1b6a3f1206374bbca1e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "e21accdcf7206a0a5f0808a7e3d70335b0a45e3a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-14T11:27:56.000Z",
+        "version": "40.0.52"
+    },
+    {
+        "_id": "6259b2a68a3998ab479e9636",
+        "__v": 0,
+        "branch": null,
+        "build": 40000051,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "beb7da1bce2c645f2652ab5fdfbdb8435e436b83"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "0b8c6a2e3d39c50b8cc2ad41d5f9aaff1d0ab2ab"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "54b69137b31e4e1a45a22316a6a24ee19a765722"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-14T11:13:48.000Z",
+        "version": "40.0.51"
+    },
+    {
+        "_id": "625da7278a3998ab47091cc8",
+        "__v": 0,
+        "branch": null,
+        "build": 40000054,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "6b79e65362f64f97bc1b9f09abf6a20166ac3fb7"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "bb31a64a0b4d5e374f84291a4af8e4668c2380a8"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c4f4bcbfde12f5b24d673be95f017d3b78051afe"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-17T15:25:59.000Z",
+        "version": "40.0.54"
+    },
+    {
+        "_id": "625da72a8a3998ab47091eea",
+        "__v": 0,
+        "branch": null,
+        "build": 40000053,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "fef7d7159b48eeddff523660533f780fefa14df3"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "9cc6d62a02b3b48f2f392ce234a10458383a1bc6"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "7e5d01aafc3e78fe47ad7f17776db697c51ec4bd"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-17T14:56:49.000Z",
+        "version": "40.0.53"
+    },
+    {
+        "_id": "6262ed278a3998ab477e3e78",
+        "__v": 0,
+        "branch": null,
+        "build": 40010000,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "bbf5351393e487d703cf7ddaac2bf8081872dff8"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "1496ea9bb68d6d7ffe1b86f6365a1edc5bf0e18d"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c6d0095f554ee3f7c43c08d2f2a682c3d18bfb60"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-04-18T17:21:19.000Z",
+        "version": "40.1.0"
+    },
+    {
+        "_id": "627410a58a3998ab47373ba7",
+        "__v": 0,
+        "branch": null,
+        "build": 40010015,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "b65cafed59419c00705b0902f893d3153ae49286"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "e947f8ccfecac5a000260d0d1b32d52ec6bb03ef"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "9ecefbb288915494e7b188578919b69093043cf3"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-05T06:21:56.000Z",
+        "version": "40.1.15"
+    },
+    {
+        "_id": "627410a78a3998ab47373bf0",
+        "__v": 0,
+        "branch": null,
+        "build": 40010014,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "b633e1bb9022faba76435eea942585f68dde20a7"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "670d73e334d0bda7cdd1cc0083eff64a5b093cd3"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "9e8d9fa91f138bc8f87aa2bb4f002021378e6f52"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T12:43:48.000Z",
+        "version": "40.1.14"
+    },
+    {
+        "_id": "627410a98a3998ab47373c2c",
+        "__v": 0,
+        "branch": null,
+        "build": 40010013,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f7fa03aabae9b078a34fc4cff1d166d556d0f963"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "1cae41ca783786f16acf4ad673c7a71cbac19333"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "798c55074e9eafd2360cd65257cf0d99fcd060e9"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T12:11:39.000Z",
+        "version": "40.1.13"
+    },
+    {
+        "_id": "627410ab8a3998ab47373cfe",
+        "__v": 0,
+        "branch": null,
+        "build": 40010012,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "ea0fa01c964a7de69a677ab4416de111abb57a7d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "4cce6a8dfe32b1d0043a78b0295f2b0a03a29749"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "89163b853aaaff1b483f87c25a43e786456ae9e7"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T11:30:00.000Z",
+        "version": "40.1.12"
+    },
+    {
+        "_id": "627410ad8a3998ab47373e99",
+        "__v": 0,
+        "branch": null,
+        "build": 40010011,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "42bbb3872854ffbf9bbecb2c75aae0436d1911ea"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8fed32205652f8c153b2253e993114e28cea0258"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "2de9fe5ca14631c8cb00128b5874303d12153b42"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T10:55:03.000Z",
+        "version": "40.1.11"
+    },
+    {
+        "_id": "627410ae8a3998ab47373ef1",
+        "__v": 0,
+        "branch": null,
+        "build": 40010010,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "52c41e6326f34a549de0408841eecaa34e7700af"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "eed4c9c3a8e16ce416bcf02e1a3ff2318c24e33f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "2e3e7024fefa8546e3bc1ebda07b4eeece8898be"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T10:50:45.000Z",
+        "version": "40.1.10"
+    },
+    {
+        "_id": "627410b08a3998ab473741d9",
+        "__v": 0,
+        "branch": null,
+        "build": 40010008,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "36233e87ae2c404c2cc4a823d513e05934026eef"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d61b7100d12d11594052767dea0343ef0e88151b"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "921e17d071db815a7f328c46d09f1d286bafcd5f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T10:40:29.000Z",
+        "version": "40.1.8"
+    },
+    {
+        "_id": "627410b28a3998ab47374220",
+        "__v": 0,
+        "branch": null,
+        "build": 40010006,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e94764655f9cfe7be1d406dea441b1ebefe137e9"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d7ad104e8b94bcfc87a227d1b9ff97a963325b96"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "1b57cdc84dbc752bce2e071ba379e8df9de3fd18"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T10:38:12.000Z",
+        "version": "40.1.6"
+    },
+    {
+        "_id": "627410b48a3998ab473743e0",
+        "__v": 0,
+        "branch": null,
+        "build": 40010005,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "a9ec5bd509032464fe076322ed794832ae53a8d7"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "37ec1665d1eb0f5ea78f805783b6153bb79441a3"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c751acd10d5825b5866e70cf119f387449752a82"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T10:34:12.000Z",
+        "version": "40.1.5"
+    },
+    {
+        "_id": "627410ba8a3998ab47374717",
+        "__v": 0,
+        "branch": null,
+        "build": 40010004,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "b043fb5b2e948d1dd31d37c65f9ae7e19f8e4215"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "ce57d12a0c8b5190c929cee9cc50ca55e27daa72"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "cb5b806d6ad6af6d39506523d6b811f40fccf1cd"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T10:25:21.000Z",
+        "version": "40.1.4"
+    },
+    {
+        "_id": "627410c08a3998ab47374d56",
+        "__v": 0,
+        "branch": null,
+        "build": 40010003,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "fa8a53c3ff9f66dd4bb17202bd7079ecb36bc5c1"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8ae5357cb56e48805fb4948f81acf2da6ccbb855"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "d3dff01c49ec7bf2f85a2b5554a0a165314fe6aa"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-03T10:15:35.000Z",
+        "version": "40.1.3"
+    },
+    {
+        "_id": "627410c28a3998ab47374e82",
+        "__v": 0,
+        "branch": null,
+        "build": 40010002,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e0d9d03d23f9a79f909957eecf9675e1e5b428bc"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "20e17f5a0ee6404a1a8da16c74d5c000c2f4cb6c"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5ea032807810301cb164552395d08f26492cb3ce"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-02T11:02:49.000Z",
+        "version": "40.1.2"
+    },
+    {
+        "_id": "627410c48a3998ab47374f72",
+        "__v": 0,
+        "branch": null,
+        "build": 40010001,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "307993c8f01fad49af0cda94d2bf92f9389c1c3c"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "3c863db586af1b4ddcb75615d2a3227f60e74b08"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "576fc0027f10a12086c8165163660efce2fd411e"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-02T11:00:16.000Z",
+        "version": "40.1.1"
+    },
+    {
+        "_id": "6275622f8a3998ab47566d59",
+        "__v": 0,
+        "branch": null,
+        "build": 40010016,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "a3bde30a21d4958bda44ef03954615974a1c3426"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "f42176afe51167f80e9db79980080bb6330a2e40"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "da4362a6685d7483e97a125722ccb758de94c9f6"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-05T11:26:38.000Z",
+        "version": "40.1.16"
+    },
+    {
+        "_id": "627805258a3998ab479ff71b",
+        "__v": 0,
+        "branch": null,
+        "build": 40010019,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "78023fa7a9ee0600bf3bd6a56abaf38ce65ee870"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "78dc3f3005fba71e2615b1d4ec730b9b8f27c96f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5750200c25c5ea172d81e18a92c46ae16525e770"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-07T22:27:23.000Z",
+        "version": "40.1.19"
+    },
+    {
+        "_id": "627805268a3998ab479ff8c4",
+        "__v": 0,
+        "branch": null,
+        "build": 40010018,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "b69db160b212cabcd02c82f1764746037237501a"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b525d6e21382fc2b5471721455176dba05415459"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "40c89047a079c2706216b67eec7a18e9acef6835"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-07T20:56:10.000Z",
+        "version": "40.1.18"
+    },
+    {
+        "_id": "627805288a3998ab479ffa53",
+        "__v": 0,
+        "branch": null,
+        "build": 40010017,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "991c975fac0edf1a1dbbb28c232b8763e65c7176"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "9bb4406b765a95c20fdb83e3fe75577f02fa496a"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "e07d8f9415132a2f586420fd9e762a6a37874910"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-07T12:37:36.000Z",
+        "version": "40.1.17"
+    },
+    {
+        "_id": "627fee248a3998ab47582141",
+        "__v": 0,
+        "branch": null,
+        "build": 40010020,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3d12167cf6b5d5c9d44bb391bf090295692abb0e"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "7cad816f82d0a8a952674fc211d6cdf7e5ecf3bc"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "6db6b8f25714ffd15fbf743a18f200fd2d50e06a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-14T09:43:21.000Z",
+        "version": "40.1.20"
+    },
+    {
+        "_id": "628a7a298a3998ab475054be",
+        "__v": 0,
+        "branch": null,
+        "build": 40010021,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f99431296ff38ba12da6a255a0b300c40c4983b1"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "52f07025c1389ecf7afa6743a2e8c142084f9b9f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5d255caa8050fe4ce1101e1b90d18bf04aa8fd4a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-21T13:58:12.000Z",
+        "version": "40.1.21"
+    },
+    {
+        "_id": "628a7a2b8a3998ab475058aa",
+        "__v": 0,
+        "branch": null,
+        "build": 40010022,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "fcd012740579a1f259e55dd4de47672471dfa710"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "a499838caeb66285a196a2578dc6ad8bbc5ab431"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "785517b50b99cbe4d2e06e47713df6564b7d3977"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-21T13:31:37.000Z",
+        "version": "40.1.22"
+    },
+    {
+        "_id": "628bcbbb8a3998ab476a8cb6",
+        "__v": 0,
+        "branch": null,
+        "build": 40010023,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "2b6def8b5f69e0c6341dbbdb047a0694ed1038a0"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "5cf479a779636aaf0020889d1f526c8f71b1c3ca"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "9ae170abaa148a5c5db6453c1660b226022b4651"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-22T10:11:12.000Z",
+        "version": "40.1.23"
+    },
+    {
+        "_id": "628d1d248a3998ab47850db1",
+        "__v": 0,
+        "branch": null,
+        "build": 40010025,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "8574d297a18c9c526658b534a286956aff94efc3"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "10c35380821a23adae78442b9823fd25de423e04"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "ce75b2e9514118bf44a639468f3815a43703b4e8"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-23T12:18:59.000Z",
+        "version": "40.1.25"
+    },
+    {
+        "_id": "628d1d268a3998ab47850f40",
+        "__v": 0,
+        "branch": null,
+        "build": 40010024,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "fbdf5f59b12bd9672539d78bba8c999b2b2f01e9"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "9bb9a7027ec899e6477822c220fe5fe92730ace2"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c703470a4619422dd81417d54b06a36664161827"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-23T12:17:14.000Z",
+        "version": "40.1.24"
+    },
+    {
+        "_id": "629cef258a3998ab47fe5fbe",
+        "__v": 0,
+        "branch": null,
+        "build": 40010045,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f4573027a63c9f3df32179c9bc5cff3034c78af6"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "f074432520d6c851e791001c385e2c50ff8b570e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "56fdac7ebf5101c2b3b6f6065bd95509fd99881a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T08:50:28.000Z",
+        "version": "40.1.45"
+    },
+    {
+        "_id": "629cef278a3998ab47fe61fc",
+        "__v": 0,
+        "branch": null,
+        "build": 40010044,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c21560754482db2fb7f4bc1ba25936236795c43d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "5e7b1b43a7ab4e70074bc05222210adf4750179a"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "bf8624c28e2c3719fcb27e749e57750910606aa5"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T08:20:37.000Z",
+        "version": "40.1.44"
+    },
+    {
+        "_id": "629cef2a8a3998ab47fe6380",
+        "__v": 0,
+        "branch": null,
+        "build": 40010041,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "994291a6c9cbbc102afb74d812c1799f16682a6a"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b9f05810be7d36752f83c8daae2a06647c6a0bc5"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "15de6f481de7ab76d179f730428c3625152cd4a7"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T08:05:13.000Z",
+        "version": "40.1.41"
+    },
+    {
+        "_id": "629cef338a3998ab47fe707e",
+        "__v": 0,
+        "branch": null,
+        "build": 40010036,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "ef426505fcfccbd271d12b7e8c95fa582286fbbe"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "7c0dcef4ced76a6b982d7e84dfbeac749cf0e536"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3868069d26b2a532c8ec0492ad046e32fdd2b9c2"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T07:52:17.000Z",
+        "version": "40.1.36"
+    },
+    {
+        "_id": "629cef378a3998ab47fe7961",
+        "__v": 0,
+        "branch": null,
+        "build": 40010035,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "27d3997c7b7014f88e5b9f63f03834d0548ba6de"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b429835e8f8c5ecd23f2e7dc8e1c4ce80a7cc9a0"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "2146409ebed1d868436345bd84badc8bdaed4e77"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T07:47:18.000Z",
+        "version": "40.1.35"
+    },
+    {
+        "_id": "629cef3c8a3998ab47fe7df2",
+        "__v": 0,
+        "branch": null,
+        "build": 40010034,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "7133c964100cd093199f07124084343c5e7e73c1"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "f79c2f7fc971a3e12573e274c09c2823708846b7"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3c04bbf733b1166c034a6b261635a6d24f23be95"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T07:42:12.000Z",
+        "version": "40.1.34"
+    },
+    {
+        "_id": "629cef3e8a3998ab47fe80d7",
+        "__v": 0,
+        "branch": null,
+        "build": 40010031,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "7dbbc371a285ddb76031b602a1711c4c81ae66ac"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "ed2b289a46049ff6dfff1676216dcb751c69c8fd"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "7c65535de8e52386216523e1fd2c740c9ed7d7fc"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-01T10:30:06.000Z",
+        "version": "40.1.31"
+    },
+    {
+        "_id": "629cef3f8a3998ab47fe8258",
+        "__v": 0,
+        "branch": null,
+        "build": 40010030,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "4efa59dd277f7cbe1fbb88499c22cb587f7a38ba"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "e9a414deeccf88f0ca6d79d41d0318bd44a39a5f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "f82348144b61d41f60f25dc04fc1df2b907075c2"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-31T11:22:05.000Z",
+        "version": "40.1.30"
+    },
+    {
+        "_id": "629cef418a3998ab47fe8581",
+        "__v": 0,
+        "branch": null,
+        "build": 40010029,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "80cd96692105f19c2997c47872dc2afa3d826a23"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "3bc54f0b84eba1ca6df7261bb8d0f477c41b5002"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "9624e01711bafae456e108eb8801d8e90f192eca"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-31T11:19:44.000Z",
+        "version": "40.1.29"
+    },
+    {
+        "_id": "629cef438a3998ab47fe88e6",
+        "__v": 0,
+        "branch": null,
+        "build": 40010028,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "7519c4ebb58308ca54f5fe80c4a18406121fec77"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "c7f8960d233286bb1925e40f0a9cb1c73cdba3cd"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "6fe3611c8446dee40001c02ba3cf6fc85c2c8a1f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-31T10:56:43.000Z",
+        "version": "40.1.28"
+    },
+    {
+        "_id": "629cef448a3998ab47fe8ab9",
+        "__v": 0,
+        "branch": null,
+        "build": 40010027,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "2e8f2c6be6e062a3fa7d58a04b6d81c7f5df0efa"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "e64d8f984b93f9d07184ba0c0b592d13f2cb4491"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "2e1279590180325b953153b3eb89b389731cc560"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-31T10:55:25.000Z",
+        "version": "40.1.27"
+    },
+    {
+        "_id": "629cef468a3998ab47fe8d2f",
+        "__v": 0,
+        "branch": null,
+        "build": 40010026,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "782cbef5dce8fe2a6699f5e892a0dd41009c27b0"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "3f6f74840c9e04bd902b2b870d6c45f92186a06c"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "936a5f5193c4bebfd4b3c83a7872ea8f3880006e"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-05-31T10:51:37.000Z",
+        "version": "40.1.26"
+    },
+    {
+        "_id": "629e40a58a3998ab471bd184",
+        "__v": 0,
+        "branch": null,
+        "build": 40010047,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "4f94f2fff54603ecd0bc40da90e3a0ebb9eff843"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "a44433b2e9e56fdef150ce11efe1bf053d5c540e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "b8fc4a4ab4166564dc07cb5d9dc064e15ebceeed"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T19:46:21.000Z",
+        "version": "40.1.47"
+    },
+    {
+        "_id": "629e40a78a3998ab471bd38b",
+        "__v": 0,
+        "branch": null,
+        "build": 40010046,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "bc3512abe2d4d58d5f070c38a0f07805b15d81dc"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "6478ea7216233e92254b2c4d8c5efbedc4077b06"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "42937ad118a7d1d690ce0d6cb8886dda295db782"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-05T12:47:32.000Z",
+        "version": "40.1.46"
+    },
+    {
+        "_id": "629f92258a3998ab4741efa1",
+        "__v": 0,
+        "branch": null,
+        "build": 40010048,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "24528d8558cc7128b6474e13aecbb260aa47bf0a"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "a8596ae834843f30b797e842ea927f322ecbfa0c"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "28c14af202d37f47ae0764dab57ff8ddc2f190b0"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-07T09:59:35.000Z",
+        "version": "40.1.48"
+    },
+    {
+        "_id": "62a386a48a3998ab47aa7042",
+        "__v": 0,
+        "branch": null,
+        "build": 40010051,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "67d1f5d9cf95d1f9b5e36be1649ad49ecf4ce0a5"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "4ebbee94cabf3243359daa47070171dfb67f5487"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "9961b02db941cefccb2705e28eed2f7a7c5d1b4f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-09T12:58:43.000Z",
+        "version": "40.1.51"
+    },
+    {
+        "_id": "62b207258a3998ab473e6aeb",
+        "__v": 0,
+        "branch": null,
+        "build": 40010052,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "7c1f723f306d2655a6fee29bff6757ce64af1db2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "985617ef5a7dcc20b94128abae21800ede9cf7ce"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c352d01309d7c0bf0c6ad22c1354f87ef3c8f773"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-20T15:36:57.000Z",
+        "version": "40.1.52"
+    },
+    {
+        "_id": "62bde4a78a3998ab47959ef7",
+        "__v": 0,
+        "branch": null,
+        "build": 40010054,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "05f6f2d36eefb45224c7b19c55f0c057bc18ab76"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "21633db0d681844310fc116fd91f85e77cf05bcc"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "244e62004790a66a9b4e3bbc0d538b3d3de27b43"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-30T05:37:34.000Z",
+        "version": "40.1.54"
+    },
+    {
+        "_id": "62bde4ac8a3998ab4795a15d",
+        "__v": 0,
+        "branch": null,
+        "build": 40010053,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "de07607a458acacace7a9a4c5e5ab70decc4a4d2"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d9318c6b6051505b546b02e471b5c11b93161df1"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "71227182152b9b16d73cbb64f6530548b74e6f47"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-06-29T12:22:07.000Z",
+        "version": "40.1.53"
+    },
+    {
+        "_id": "62c9c2258a3998ab47006a50",
+        "__v": 0,
+        "branch": null,
+        "build": 40010060,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "826402c264b9b02d20930a9c396db841a6cac7f7"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "5a8b4f2eec2f0896a3976995da89338b7fc25245"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "21446ce6966b6918fe13cbe70245733ab71428ab"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-09T07:54:36.000Z",
+        "version": "40.1.60"
+    },
+    {
+        "_id": "62c9c2278a3998ab47006c79",
+        "__v": 0,
+        "branch": null,
+        "build": 40010059,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "9789625e0c5906a4800ee381c50f33d51d13db69"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "fb8946a252d3daae1c3ed808f78703e85b31e6b1"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "082c4250ba026c416b5e883654892fafbffe42f5"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-09T02:55:19.000Z",
+        "version": "40.1.59"
+    },
+    {
+        "_id": "62c9c2298a3998ab47006f43",
+        "__v": 0,
+        "branch": null,
+        "build": 40010057,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "08fffb5004f23a929800c064d97828d6c2df3cf4"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "530de43cd9d784d6a05e52ffe86082fa98a07373"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "487659b83a185823817665244bd2e9df3fc4a46f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-09T02:41:16.000Z",
+        "version": "40.1.57"
+    },
+    {
+        "_id": "62c9c22b8a3998ab470073d7",
+        "__v": 0,
+        "branch": null,
+        "build": 40010056,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "388db3467aab946453b212c90960ba6a55ccff6a"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "54b0a14a806393d2cda212b27668b9fa81797768"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "61b23f4ab6b962cb9391cd851bf25fc6b8d157b7"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-09T02:40:54.000Z",
+        "version": "40.1.56"
+    },
+    {
+        "_id": "62c9c2328a3998ab47007e36",
+        "__v": 0,
+        "branch": null,
+        "build": 40010055,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "5fd9ce2d5eabc35500681b7408eb69107f80d7d9"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "423b3b31f4e3332c567fa4a9be26c19b047ddf4e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "2202a7653266919d9287cad7cfed76ef9e0b289a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-09T02:40:09.000Z",
+        "version": "40.1.55"
+    },
+    {
+        "_id": "62d44e248a3998ab47426581",
+        "__v": 0,
+        "branch": null,
+        "build": 40010067,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "67144e4e906d7b0bf86a49af45e34897452c83bd"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8d7904867fc49251a08a828a4e4d79a91685c673"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "8f2ceffbc8a58b3a9d36629f83ed0d70f0c50fe9"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-17T07:57:34.000Z",
+        "version": "40.1.67"
+    },
+    {
+        "_id": "62d44e2d8a3998ab474272ba",
+        "__v": 0,
+        "branch": null,
+        "build": 40010062,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "190e4136ae1bbdaf76416f9f41269acadb32d805"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "9b3831f21d4b33357a47d4c829397cdd78087bfc"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "8d74eb7b69d9f9e38820dbeff4ff73c2b6fb2359"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-17T07:50:23.000Z",
+        "version": "40.1.62"
+    },
+    {
+        "_id": "62d44e338a3998ab47427a7d",
+        "__v": 0,
+        "branch": null,
+        "build": 40010061,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "beafd79e7d93924b1b59e48f5886934ed91d138e"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "6cdaf06795a72fc277b005d474427f8ef8ed1735"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c6ea265bf0cb580d159eaec12bbbc00fc9d6b3dc"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-17T07:38:11.000Z",
+        "version": "40.1.61"
+    },
+    {
+        "_id": "62d59fa58a3998ab476b5a31",
+        "__v": 0,
+        "branch": null,
+        "build": 40010068,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e4f71b3ec604168c4d11b77d4238d826ab44c713"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b652b1178ddc1b84f3a9a509a721bbe01331b1c8"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "a80fbb23d43e2e00fb33c2001b7405e367c56d70"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-07-17T14:45:40.000Z",
+        "version": "40.1.68"
+    },
+    {
+        "_id": "62ec09458a3998ab47b1a2bc",
+        "__v": 0,
+        "branch": null,
+        "build": 40010069,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "9601596da423e58c71235fa5b27049c1423f5df5"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "2839aed8cd86a36b2e2972cba50b51cd37233a3e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "495696bcc029c7bb370a648f9031472a5b382868"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-08-03T15:19:10.000Z",
+        "version": "40.1.69"
+    },
+    {
+        "_id": "62f14f2f8a3998ab47677a89",
+        "__v": 0,
+        "branch": null,
+        "build": 40010073,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3b694ecd378eba19cd3981a398a8d54dfbad60d4"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "68cfaf26199c3e3c148f36155d522d8420d3a2c2"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "76acefc8f73941d34125eceb4923005eff9ba0c4"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-08-08T06:30:45.000Z",
+        "version": "40.1.73"
+    },
+    {
+        "_id": "62f14f328a3998ab47677c8e",
+        "__v": 0,
+        "branch": null,
+        "build": 40010071,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "dd52964b4fba4bfb0b06be59c1a8d2a70e7c2a64"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "131345d518fbfce369768a05f5c92ff91beefb42"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "92b5fb3d9bc299cb7c175f0822f96bc48c89debb"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-08-08T06:25:12.000Z",
+        "version": "40.1.71"
+    },
+    {
+        "_id": "62f14f348a3998ab476780b2",
+        "__v": 0,
+        "branch": null,
+        "build": 40010070,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "b43385fe83ac42eca88b412bbe655fe3ce81d994"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "2d4a0dd6a95af5619d59f4cf404cba110cd091d3"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "c01fb72171c4880f3abaa74f76d69273ca3d07e1"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-08-08T06:20:09.000Z",
+        "version": "40.1.70"
+    },
+    {
+        "_id": "630bad2a8a3998ab47d59481",
+        "__v": 0,
+        "branch": null,
+        "build": 40010074,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "7343c52b18b1e623ee25d4f8d97802061e543b50"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "a792021c7f250ccdff045b4c2a3d79bc92c1b217"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3c0aeea99a13bf2ee1128c34c40b6a88c3cf70b0"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-08-27T11:39:06.000Z",
+        "version": "40.1.74"
+    },
+    {
+        "_id": "6314e7bb8a3998ab47d6dc74",
+        "__v": 0,
+        "branch": null,
+        "build": 40010076,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c22438793e7eeae6fb46716b47e1d1e4b9c38383"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "88a6ec77fb756674f24621030dd0e421acf14963"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "9ef5eac147089eadf062d44899ab0d9503aabd26"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-09-03T12:37:49.000Z",
+        "version": "40.1.76"
+    },
+    {
+        "_id": "6314e7bd8a3998ab47d6e045",
+        "__v": 0,
+        "branch": null,
+        "build": 40010075,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "792dce79dcbfc5a1f20b7e5ecce0790e9ffae5da"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "4167e1035a4f6ec707786d003da5044960316dd2"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "27c39e9917ebd86944762508c556cd9c06897d39"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-09-03T12:34:01.000Z",
+        "version": "40.1.75"
+    },
+    {
+        "_id": "631a2db68a3998ab475f351b",
+        "__v": 0,
+        "branch": null,
+        "build": 40010079,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "d38a6c9d669b8dbfc0a684693d1a360e9dec5ef0"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "4ceb15a0926e0be4a34262d805d5d33d67779f0b"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "d93e7e3c55a5197932dfafb8c7ece56e7e09c869"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-09-08T08:42:13.000Z",
+        "version": "40.1.79"
+    },
+    {
+        "_id": "631a2dbd8a3998ab475f3e5c",
+        "__v": 0,
+        "branch": null,
+        "build": 40010078,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "0775566d45e24c40772bf267f93d705061f65753"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "70151e65759f4b805a41af497f456f094170711e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "b9aadfcbd0c21c24e68f491f07477347627a7fc6"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-09-08T08:33:59.000Z",
+        "version": "40.1.78"
+    },
+    {
+        "_id": "631cd0ad8a3998ab47af50fd",
+        "__v": 0,
+        "branch": null,
+        "build": 40010080,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "33744307dcfc3aa4f6c58a8e27deeb4d8ad20296"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "63bf564ae1bf78ba0b9fb175a765be81b388ed3a"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "8b5e28ffe5b524991f59c090bc8d530c613afc1a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-09-09T17:30:40.000Z",
+        "version": "40.1.80"
+    },
+    {
+        "_id": "6349a3b779b733f49bb5bdec",
+        "__v": 0,
+        "branch": null,
+        "build": 40010084,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "d0664d4172f6a215a4634da388182eb2cfc6c679"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "53b8f17a9eb91c6a142fa45ff87f36a2e7cd6d82"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "30cbad4bf6c718e8492cca9446f65d0805582f7a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-10-14T10:09:33.000Z",
+        "version": "40.1.84"
+    },
+    {
+        "_id": "6349a3c679b733f49bb5cf75",
+        "__v": 0,
+        "branch": null,
+        "build": 40010082,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "18bde4e97425aaf3f396bcf11103a1a10a87da62"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "3ded5567bfde499e13be477521fab36dbc2cd59f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "a90479ea10097189b0e8c699e4c0fe4839cbe236"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-10-14T10:03:45.000Z",
+        "version": "40.1.82"
+    },
+    {
+        "_id": "6349a3c879b733f49bb5d087",
+        "__v": 0,
+        "branch": null,
+        "build": 40010081,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "da879d0e6c3553cbc88163620cffb330278fd6ed"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "c7d831e2907d6b509db24f7242f0f75c02a41ff2"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "bcb48261b539cb7b078c37919b6394703b520d46"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-10-14T09:40:40.000Z",
+        "version": "40.1.81"
+    },
+    {
+        "_id": "637fb1a279b733f49b0e9003",
+        "__v": 0,
+        "branch": null,
+        "build": 40010085,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "8e1534b7104d56f14c4d3ba3efe4c06d71341e39"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "94f9033a155926f8bb05ff582c643ca5d3961bad"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "6ba1d8950eba0d188610cc935cd1d96d81c0d39e"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-11-12T17:55:48.000Z",
+        "version": "40.1.85"
+    },
+    {
+        "_id": "638a2ff879b733f49b2ce281",
+        "__v": 0,
+        "branch": null,
+        "build": 40010086,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "0e0de3e2ca1b4a9c28c29bc29c973632433e0446"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "0d1f91c48ebb637054c184e19db49ee9de0ff852"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "8608851ae20d564ab7058c30cb18998acb9bdf60"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-11-30T14:38:07.000Z",
+        "version": "40.1.86"
+    },
+    {
+        "_id": "63a0a6b979b733f49b0a0ce5",
+        "__v": 0,
+        "branch": null,
+        "build": 40010087,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "d6a576f0f3c8bdd18137db66eaff0eca917c2495"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "7af3ce01c44368ded4735b6d2388731ca004f5ec"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "e0bb771cd4d255477edb1116e76b6694a27bc58d"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-12-17T10:14:36.000Z",
+        "version": "40.1.87"
+    },
+    {
+        "_id": "63a1f82b79b733f49b38acf1",
+        "__v": 0,
+        "branch": null,
+        "build": 40010092,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "19601490f4695cba83e45dcaa66d8f3be7f2f365"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8113c19638697400dda9b7776ef93a6a57accdf7"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "b724b6223a8bc5e3019b0df85a8e50cff5d045c6"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-12-20T03:38:28.000Z",
+        "version": "40.1.92"
+    },
+    {
+        "_id": "63b078ad79b733f49b35237f",
+        "__v": 0,
+        "branch": null,
+        "build": 40010093,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c2480cb78c03d26485ed4a37fd2ed92a8aedba39"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "68435f3ccb56b11b2d50384b864b84996c9369bf"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "0c818e2e2eeb7c0a1f2d53020705a2846849bcf7"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2022-12-30T11:16:56.000Z",
+        "version": "40.1.93"
+    },
+    {
+        "_id": "63c590b379b733f49bfcad3f",
+        "__v": 0,
+        "branch": null,
+        "build": 40020000,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "1fb892514e6b8164f3bf67f646edc4eea4772dec"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "17d14658f6884d627d40820071a2b0a240250a8e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "32e8c011635bf6dadd213795abb58c48bc1f9d74"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-01-01T20:37:47.000Z",
+        "version": "40.2.0"
+    },
+    {
+        "_id": "63d9572b81abbfbf97700c73",
+        "__v": 0,
+        "branch": null,
+        "build": 40020001,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "31c0dc0c1b61239025d92cd1fd36b99d54831b42"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "94fedebd3e4280a2729de60d20d8be76a7ac982a"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "16542bd6ff304f6f99dd05b1629f4c07a9bac692"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-01-25T14:23:27.000Z",
+        "version": "40.2.1"
+    },
+    {
+        "_id": "64417dbb0bbbb25aaf82bdf5",
+        "__v": 0,
+        "branch": null,
+        "build": 40020002,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e72513961eccdc7709392e04d4b6fb3f9a5b3da3"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "e7cc36efa184befdbb15baf4448ff53318081965"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "137bf445f455faed24e9e4fbfa0f43e03d473545"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-04-20T01:34:11.000Z",
+        "version": "40.2.2"
+    },
+    {
+        "_id": "646667ae0bbbb25aaf093bf0",
+        "__v": 0,
+        "build": 40020004,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "4ff14d9bec30dda6a4b906f1dbd49ffe77e457c9"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "bf070ef6b7296e82945618e4b4a2bd47330d3440"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "37e594ac8cd131af312ff55f1bb641e321b127f7"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-05-18T02:11:35.000Z",
+        "version": "40.2.4"
+    },
+    {
+        "_id": "647639ae0bbbb25aafbb60df",
+        "__v": 0,
+        "build": 40020007,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "9f072b85e76fe2d6964b7fb715fe11c63fba028e"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "4a91297bd8e8fbec854e91637a95918383896118"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5393b4e0e3b501005293adb0a5dcbdbf73bf9f40"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-05-29T15:52:23.000Z",
+        "version": "40.2.7"
+    },
+    {
+        "_id": "647639ae0bbbb25aafbb624e",
+        "__v": 0,
+        "build": 40020006,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "2d305ab3e80da2276ed2a2f4c2cb15c8de17b177"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "dc145bbb6b01c90ba4cc5689ce5d35e6291f8a1f"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "7064cc8ba9f23133fd8d658f9358578aa208ac57"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-05-29T12:42:12.000Z",
+        "version": "40.2.6"
+    },
+    {
+        "_id": "647639b00bbbb25aafbb639a",
+        "__v": 0,
+        "build": 40020005,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "1af9b6cfa8b3e0aa7a7f2856c19826b393f4d058"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "33669479b35f52f71f350f7c1f494b095a1d1bf2"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "aa6069a259cfcbadab9e0c946b7fd5acb7f088ec"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-05-29T12:38:16.000Z",
+        "version": "40.2.5"
+    },
+    {
+        "_id": "64778b330bbbb25aafd98fd8",
+        "__v": 0,
+        "build": 40020008,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c4266f8c027c7ad4c309085ab337c22d24add80d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "81d6ef7ee627759652d91ac1cf3403faa4de15f7"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "18377181602595ace5bfec6dd6d20ce70148aaba"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-05-30T15:23:06.000Z",
+        "version": "40.2.8"
+    },
+    {
+        "_id": "647a2e300bbbb25aaf1bda41",
+        "__v": 0,
+        "build": 40020009,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "4151de64fa22cf693f23ead37f325ab970cf01e8"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "357c5efd564521d3bab3975a48298f8d423ffe29"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "82e121917ccaf9c2435fcdbf8950e32573d969e8"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-06-01T16:54:39.000Z",
+        "version": "40.2.9"
+    },
+    {
+        "_id": "64b18d7d0bbbb25aaff1d99c",
+        "__v": 0,
+        "build": 40020010,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c87b711fa70d0e01361870d21fbd4f046efe5f8a"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "6964cd3f470ea2a296e23677ac15f4cf8840eb34"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "f8ac09252e6e789ad8f320b60192c37c2ddf6f12"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-07-13T18:06:50.000Z",
+        "version": "40.2.10"
+    },
+    {
+        "_id": "654292360bbbb25aafefaef3",
+        "__v": 0,
+        "build": 40020011,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "34d0dd0d3a09eca9b58e3c3f4d888db6e861800d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b0e8437c3938ad53d0f3bd68adaea9f8af36a21e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "0bed92732339ab3aa156eb51c12c999f850c873a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-10-31T11:20:45.000Z",
+        "version": "40.2.11"
+    },
+    {
+        "_id": "6545353f0bbbb25aaf440ed3",
+        "__v": 0,
+        "build": 40020013,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e58961f96e697c18cbc5233526a77d0fe0cf8621"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "8bb057cb5f8e0091c4fc2279b9e2c3e697990901"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "bf1e5346bdc449b7a18ae087b63e681f9d61d889"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-11-02T14:30:23.000Z",
+        "version": "40.2.13"
+    },
+    {
+        "_id": "654bccb40bbbb25aaf30da19",
+        "__v": 0,
+        "build": 40020014,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "703de3cfd0da08ce84ac68c1062ff73a171c3b30"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "04a16d9abe2a00935e76c4dc4e6321a4a049724b"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "6ced62f3f49ea9866498f516dc9017820fd3a619"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-11-07T21:55:33.000Z",
+        "version": "40.2.14"
+    },
+    {
+        "_id": "6591ac330bbbb25aaf97f62a",
+        "__v": 0,
+        "build": 40020017,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "1e2531c523aa5f59d75062b8b82022bc55aa9f72"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "dc12b399a682b86ae63f91a458a3b7435696d012"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5989b1a7f136b62f721b3015d4bd0eae03558e36"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-12-31T08:21:41.000Z",
+        "version": "40.2.17"
+    },
+    {
+        "_id": "6591ac330bbbb25aaf97f689",
+        "__v": 0,
+        "build": 40020015,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f096478c3fd1134d7f2530b50f3c684bae172b12"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "2fb21d3c8f239a3605a4c1077e804c9cd196354e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "055bad4c3a5446c3173fd82c462d1eadccb97df5"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2023-12-30T13:57:42.000Z",
+        "version": "40.2.15"
+    },
+    {
+        "_id": "65f5de3756d223dd9f453612",
+        "__v": 0,
+        "build": 40020018,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "f464235bbf808ed3e4cd4b5d470fe8a707e6c875"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "11ad04c539fcf7896b0effff986555ea25a1dafa"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "5fb658f490669394b95f61641616ddd97ebd74ab"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-03-15T16:09:08.000Z",
+        "version": "40.2.18"
+    },
+    {
+        "_id": "663677e98dd411d8f85d7d4b",
+        "__v": 0,
+        "build": 40020021,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "3a6e463aefd3442a5dd844007177b17e55fce931"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "5507eebfe3ca62545419e7aa8ee7b5dc559f0e26"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "e748aad674fb1e5583f8c14c1307cd87bbbda3eb"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-05-01T14:11:41.000Z",
+        "version": "40.2.21"
+    },
+    {
+        "_id": "663677ea8dd411d8f85d7de2",
+        "__v": 0,
+        "build": 40020019,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "a1ceb92c8dc885e3c78ac3d9416abc25f103b780"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "e3cd38eeb4c71b1ae766fe8a362524e3204863f2"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "f36b4dbc1c66824b22bf427cc911d796be521410"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-05-01T13:50:57.000Z",
+        "version": "40.2.19"
+    },
+    {
+        "_id": "673b819ac93eef3cbd0b5ff0",
+        "__v": 0,
+        "build": 40020024,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "d4ea1913d6ef11cb2367fd5194d744dbd5387e22"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "4caa2cfcf16d46f14586c804bd6b6af74f20021e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "36c5f8317020ecd43f4e71122cb4f6e7f636a53e"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-11-17T11:46:54.000Z",
+        "version": "40.2.24"
+    },
+    {
+        "_id": "67475f6ac93eef3cbdce428f",
+        "__v": 0,
+        "build": 40020025,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "dd52f8cafcc758d6b3ce6bd85fba18aff1681122"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "ccd0fe94db1eb532fe56bb155be7efb40ee896bc"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "78638422bd201f52e5ea1deef171a25e084778b6"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-11-26T13:10:38.000Z",
+        "version": "40.2.25"
+    },
+    {
+        "_id": "674df700c93eef3cbd73413b",
+        "__v": 0,
+        "build": 40020026,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "6f2b4c376c5c0e554cf370229425dd89fe20075b"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "b50a54eeda71d5edf506605f310a931545adf29e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "94c674fa74f5b0b29da351769f9b68f1b08da6e6"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-12-01T10:59:45.000Z",
+        "version": "40.2.26"
+    },
+    {
+        "_id": "676af83ec93eef3cbd0e5702",
+        "__v": 0,
+        "build": 40020031,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e600a8f0470031e3c148f313a9e0f6f1010274ff"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d721702b360b53c585c2ed03bbf4e9cd3b66f111"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "edfd430cd9888dad4065e4411df91b01b48ad17a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-12-23T23:00:09.000Z",
+        "version": "40.2.31"
+    },
+    {
+        "_id": "676af83fc93eef3cbd0e5922",
+        "__v": 0,
+        "build": 40020029,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "44fbf882e0f80b3e7bfaac8965454623b5c60679"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "db194a4f9387ab150662be63124d76190f9d333e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "3bd181a79f968d634f4f66b61752d28c5f4f2603"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-12-23T22:45:47.000Z",
+        "version": "40.2.29"
+    },
+    {
+        "_id": "676af841c93eef3cbd0e5d82",
+        "__v": 0,
+        "build": 40020027,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "ad4f5cd1ab37cb8626a4f7b6e359bf8fbb94e8c6"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "69d77ea92b8fa7350232645af45789699f57d6c8"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "0a22367dc1c5b07ce7bfea52d272f865011e17d9"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-12-23T22:32:22.000Z",
+        "version": "40.2.27"
+    },
+    {
+        "_id": "677432d9c93eef3cbd474030",
+        "__v": 0,
+        "build": 40020033,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "be8966c614a45c8c24d3d44ee9636cd362439e4e"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "a8676a340c538236ed6be0ce0ebce2ecae55ef8a"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "d23de9da38f1a192713aa196b2d86b5cdde3b450"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-12-31T09:57:59.000Z",
+        "version": "40.2.33"
+    },
+    {
+        "_id": "677583cac93eef3cbd9e8a6a",
+        "__v": 0,
+        "build": 40030000,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e3e7a818e64991f9a51188e4ddffaa5b588b6f5e"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d267e3dbd2df4e6849bdb2a81aa0b920c354efa6"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "333e61b146ea3ef2b7a0ac9bf5e31cb63ac424b1"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-12-31T11:00:00.000Z",
+        "version": "40.3.0"
+    },
+    {
+        "_id": "677583cbc93eef3cbd9e8ec0",
+        "__v": 0,
+        "build": 40020034,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "5c5842342e4764dab2dda3ae9e5507b80c61b412"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "74022dfcc21df35193ae32cc785265e3d7d96f27"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "1b9893e1b356cb2b5f8fec5e90064850ccac669f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2024-12-31T10:27:17.000Z",
+        "version": "40.2.34"
+    },
+    {
+        "_id": "6792854ac93eef3cbdf734bd",
+        "__v": 0,
+        "build": 40030001,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "a0dd9544412086f89d60ad5be43544c35cbe0890"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "dec1b0143b76f0f60ed6752c12ae48137acd978c"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "66b61f44f8c3e90876a15fd3efa23a943da12e23"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-01-22T15:08:37.000Z",
+        "version": "40.3.1"
+    },
+    {
+        "_id": "67991d1cc93eef3cbddf4da3",
+        "__v": 0,
+        "build": 40030003,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "e15c0972e3d6bc1aec667cffeb15b5d1de94756d"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "6e314e5611a3f78ff4f5b71ef4b935a86b0fca2e"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "f1b6a5c44d2b7523e487f66fef42a9ba9804efc1"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-01-27T21:02:38.000Z",
+        "version": "40.3.3"
+    },
+    {
+        "_id": "67b61dbbc93eef3cbdd7dc7f",
+        "__v": 0,
+        "build": 40030006,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "c33f116891b701431a9aba0e4a405019cfdc01fb"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "f0534c28a861369cab01e37f127184d3092398f7"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "55a3c15f4edce7c74e8d5de015c0cef6e0236b1f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-02-18T14:47:33.000Z",
+        "version": "40.3.6"
+    },
+    {
+        "_id": "67c9e429c93eef3cbd4982a7",
+        "__v": 0,
+        "build": 40030009,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "4bbe09b60f6126253a1c6eba68f6678bdf894e65"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "5d582bf0e39da9c51b3d2cd4e7911ceedd5d42e7"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "7151c0cf62b08982e7a7256844f48a907f74705f"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-03-04T15:28:04.000Z",
+        "version": "40.3.9"
+    },
+    {
+        "_id": "67c9e42ac93eef3cbd498319",
+        "__v": 0,
+        "build": 40030007,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "1b0c09103a12878c23a29f2e8e622c34225aae17"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "0db24306543edef70d8110eceb12d7e0efae2430"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "615ce1e97932788787311c3d279bb1d765779efa"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-03-04T15:21:46.000Z",
+        "version": "40.3.7"
+    },
+    {
+        "_id": "67f56431c93eef3cbde54796",
+        "__v": 0,
+        "build": 40030010,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "06eabd43d1f7d224793a8833d3c5d9607175b829"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "a728110028c613f0b393d1108ebea1410de86b0b"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "605741d0b25c1515c4916b4bca651d6bf857e97e"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-04-06T20:59:56.000Z",
+        "version": "40.3.10"
+    },
+    {
+        "_id": "6877e9f4c93eef3cbda3b3e4",
+        "__v": 0,
+        "build": 40030011,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "6ea01723393c548424fd108386234ec4d45cfd83"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "97410c659dd7a845ddfd81445aca4f7a94efb57b"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "b71ca2e706392f4a58f45843781f00fd003d1ead"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-07-16T09:57:20.000Z",
+        "version": "40.3.11"
+    },
+    {
+        "_id": "693470b8c93eef3cbd5b3d24",
+        "__v": 0,
+        "build": 40030012,
+        "files": [
+            {
+                "format": "txt",
+                "category": "changelog",
+                "hash": "2094db26bf95a4390ad1afdc80f2ede85dc89120"
+            },
+            {
+                "format": "jar",
+                "category": "installer",
+                "hash": "d7f759dec5b52ddb342c3e12511da1674d0401bf"
+            },
+            {
+                "format": "zip",
+                "category": "mdk",
+                "hash": "09f37844ff263853972902a7c2cebb6e90eddb3a"
+            }
+        ],
+        "mcversion": "1.18.2",
+        "modified": "2025-12-02T16:05:19.000Z",
+        "version": "40.3.12"
+    }
+]
