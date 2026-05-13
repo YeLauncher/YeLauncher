@@ -21,19 +21,42 @@ class MinecraftService {
       final jvmArgs = <String>[];
 
       if (model.jvmArguments.isEmpty) {
+        jvmArgs.add('-Djava.library.path=${model.nativesDirectory}');
         jvmArgs.add('-cp');
         jvmArgs.add(classpath);
       } else {
         jvmArgs.addAll(model.jvmArguments);
       }
 
+      final originalArgs = <String>[
+        '-Xmx2G',
+        ...jvmArgs,
+        model.mainClass,
+        ...model.gameArguments,
+      ];
+
+      final filteredArgs = <String>[];
+      for (int i = 0; i < originalArgs.length; i++) {
+        final arg = originalArgs[i];
+        // If it's a quickplay flag, skip it and its following argument (the value)
+        if (arg == '--quickPlayPath' ||
+            arg == '--quickPlaySingleplayer' ||
+            arg == '--quickPlayMultiplayer' ||
+            arg == '--quickPlayRealms') {
+          // check if next argument is a variable for this flag
+          if (i + 1 < originalArgs.length && originalArgs[i + 1].startsWith('\${quickPlay')) {
+            i++;
+          }
+          continue;
+        }
+        if (arg.contains('\${quickPlay') || arg == '--demo') {
+          continue;
+        }
+        filteredArgs.add(arg);
+      }
+
       final finalArgs = await _replaceArgs(
-        <String>[
-          '-Xmx2G',
-          ...jvmArgs,
-          model.mainClass,
-          ...model.gameArguments,
-        ].where((arg) => _isSupportedArgument(arg)).toList(),
+        filteredArgs,
         model,
         classpath,
       );
@@ -103,17 +126,5 @@ class MinecraftService {
       );
     }
     return finalArgs;
-  }
-
-  bool _isSupportedArgument(String arg) {
-    return arg != '\${quickPlayPath}' &&
-        arg != '\${quickPlayMultiplayer}' &&
-        arg != '\${quickPlayRealms}' &&
-        arg != '\${quickPlaySingleplayer}' &&
-        arg != '--quickPlayRealms' &&
-        arg != '--quickPlayMultiplayer' &&
-        arg != '--quickPlaySingleplayer' &&
-        arg != '--quickPlayPath' &&
-        arg != '--demo';
   }
 }

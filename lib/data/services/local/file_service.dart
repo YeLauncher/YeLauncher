@@ -6,15 +6,12 @@ import 'package:path_provider/path_provider.dart';
 
 class FileService {
   Future<void> extractNatives(
-    String relativeJarPath,
-    String outputRelativeDirectory,
+    String absoluteJarPath,
+    String absoluteOutputDir,
   ) async {
-    final jarPath = await getAbsolutePath([relativeJarPath]);
-    final outputDir = await getAbsolutePath([outputRelativeDirectory]);
-
-    final jarFile = File(jarPath);
+    final jarFile = File(absoluteJarPath);
     if (!await jarFile.exists()) {
-      throw Exception('Native JAR not found: $jarPath');
+      throw Exception('Native JAR not found: $absoluteJarPath');
     }
 
     final bytes = await jarFile.readAsBytes();
@@ -27,7 +24,7 @@ class FileService {
             name.endsWith('.so') ||
             name.endsWith('.dylib') ||
             name.endsWith('.jnilib')) {
-          final outFile = File(p.join(outputDir, p.basename(file.name)));
+          final outFile = File(p.join(absoluteOutputDir, p.basename(file.name)));
           await outFile.parent.create(recursive: true);
           await outFile.writeAsBytes(file.content as List<int>);
         }

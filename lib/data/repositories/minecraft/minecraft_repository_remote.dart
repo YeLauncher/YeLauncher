@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:logging/logging.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
 import 'package:yelauncher/data/services/api/models/rule_api_model.dart';
@@ -17,6 +18,7 @@ import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'dart:ffi';
 
 class MinecraftRepositoryRemote implements MinecraftRepository {
+  final _log = Logger('MinecraftRepositoryRemote');
   final MinecraftApiClient _apiClient;
   final MinecraftService _minecraftService;
   final DownloadService _downloadService;
@@ -205,7 +207,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
                 if (!_isAllowed(lib.rules)) continue;
                 if (lib.isNative) {
                   await _fileService.extractNatives(
-                    lib.path,
+                    await _fileService.getLibraryPath(lib.path),
                     await _fileService.getNativesDirectory(id),
                   );
                 }
@@ -231,12 +233,15 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               );
               return _minecraftService.run(model);
             case Failure<VersionRequirementsApiModel>():
+              _log.warning('Failed to get version requirements for $id: ${requirementsResult.error}');
               return Result.failure(requirementsResult.error);
           }
         case Failure<VersionApiModel>():
+          _log.warning('Failed to get version info for $id: ${versionResult.error}');
           return Result.failure(versionResult.error);
       }
     } on Exception catch (e) {
+      _log.severe('Exception while trying to run Minecraft version $id: $e');
       return Result.failure(e);
     }
   }
@@ -253,36 +258,51 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     if (rules == null || rules.isEmpty) return true;
     bool allowed = false;
 
-    final String currentArch = Abi.current().toString().contains('arm64')
-        ? 'arm64'
-        : (Abi.current().toString().contains('ia32') ||
-                  Abi.current().toString().contains('x86')
-              ? 'x86'
-              : 'x64');
+    String currentOs = Platform.operatingSystem;
+    if (currentOs == 'macos') currentOs = 'osx';
+
+    final String abiString = Abi.current().toString();
+    String currentArch;
+
+    if (abiString.contains('arm64')) {
+      currentArch = 'arm64';
+    } else if (abiString.contains('arm')) {
+      currentArch = 'arm';
+    } else if (abiString.contains('ia32') || abiString.contains('x86')) {
+      currentArch = 'x86';
+    } else {
+      currentArch = 'x64';
+    }
 
     for (final rule in rules) {
       bool osMatch = true;
       bool archMatch = true;
 
       if (rule.os != null) {
-        if (rule.os!.name != null) {
-          String currentOs = Platform.operatingSystem;
-          if (currentOs == 'macos') currentOs = 'osx';
-          if (rule.os!.name != currentOs) osMatch = false;
+        if (rule.os!.name != null && rule.os!.name != currentOs) {
+          osMatch = false;
         }
-        if (rule.os!.arch != null) {
-          if (rule.os!.arch != currentArch && rule.os!.arch != 'x86') {
-            archMatch = (rule.os!.arch == currentArch);
-          } else if (rule.os!.arch != currentArch) {
-            archMatch = false;
+
+        if (rule.os!.arch != null && rule.os!.arch != currentArch && rule.os!.arch != 'x86') {
+          // Some x86 rules might apply to everyone if x86 compatibility exists,
+          // but strict Mojang matching relies on specific strings.
+          // For strict matching we will match exactly unless we know a better way.
+          if (rule.os!.arch == currentArch) {
+            archMatch = true;
+          } else {
+             archMatch = false;
           }
+        } else if (rule.os!.arch != null && rule.os!.arch != currentArch) {
+             archMatch = false;
         }
       }
 
       if (osMatch && archMatch) {
-        allowed = (rule.action == 'allow');
-      } else if (osMatch && !archMatch) {
-        // if OS matches but arch doesn't, this rule doesn't apply to us
+         if (rule.action == 'allow') {
+           allowed = true;
+         } else if (rule.action == 'disallow') {
+           allowed = false;
+         }
       }
     }
     return allowed;

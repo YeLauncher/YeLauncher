@@ -87,6 +87,10 @@ abstract class VersionRequirementsStrategy {
               }
 
               final classifierRules = rules?.toList() ?? [];
+              // Standard Mojang libraries don't include rules for classifiers, they use "natives" map.
+              // We should append a disallow for anything else, or just replace the rules completely
+              // to restrict strictly to this OS since it's a native classifier.
+              classifierRules.clear();
               classifierRules.add(
                 RuleApiModel(
                   action: 'allow',
