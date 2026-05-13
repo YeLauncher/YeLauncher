@@ -7,9 +7,11 @@ import 'package:yelauncher/routing/router.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 
 void main() async {
-  Logger.root.level = Level.INFO; // Set the logging level to capture all logs
+  Logger.root.level = Level.FINE; // Set the logging level to capture all logs
   Logger.root.onRecord.listen((record) {
-    debugPrint('${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}');
+    debugPrint(
+      '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}',
+    );
   });
   WidgetsFlutterBinding.ensureInitialized();
 

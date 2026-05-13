@@ -41,7 +41,6 @@ abstract class Command<T> extends ChangeNotifier {
 }
 
 class Command0<T> extends Command<T> {
-
   final CommandAction0<T> _action;
 
   Command0(this._action);
@@ -50,7 +49,6 @@ class Command0<T> extends Command<T> {
 }
 
 class Command1<T, P1> extends Command<T> {
-
   final CommandAction1<T, P1> _action;
 
   Command1(this._action);

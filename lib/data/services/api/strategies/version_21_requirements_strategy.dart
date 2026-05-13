@@ -38,4 +38,3 @@ class Version21RequirementsStrategy extends VersionRequirementsStrategy {
     }
   }
 }
-

@@ -18,6 +18,12 @@ class InstanceCardViewModel extends ChangeNotifier {
   late final Command0 stopInstance;
   late final Command0 openFolder;
 
+  String? _currentInstallStep;
+  String? get currentInstallStep => _currentInstallStep;
+
+  double? _javaDownloadProgress;
+  double? get javaDownloadProgress => _javaDownloadProgress;
+
   InstanceCardViewModel({
     required InstanceModel instance,
     required MinecraftRepository minecraftRepository,
@@ -50,21 +56,46 @@ class InstanceCardViewModel extends ChangeNotifier {
       _downloadService.getProgress(_instance.minecraftVersion);
 
   bool get isDownloading =>
-      _downloadService.isDownloading(_instance.minecraftVersion);
-
-  bool get isRunning => _instanceRepository.isRunning(_instance);
+      _downloadService.isDownloading(_instance.minecraftVersion) ||
+      _javaDownloadProgress != null;
 
   Future<Result<void>> _installInstance() async {
+    _currentInstallStep = 'Installation client & assets';
+    notifyListeners();
+
     final result = await _minecraftRepository.install(
       _instance.minecraftVersion,
     );
     switch (result) {
       case Success<void>():
-        final javaIsInstalled = await _javaRepository.isInstalled(_instance.);
-        if (javaIsInstalled case Success<bool>(value: false)) {
-          await _javaRepository.install(_instance.javaVersion);
+        final javaVersionResult = await _minecraftRepository.getJavaVersion(
+          _instance.minecraftVersion,
+        );
+        if (javaVersionResult case Success<String>(
+          value: final javaVersionStr,
+        )) {
+          final javaVersion = int.tryParse(javaVersionStr) ?? 17;
+          final javaIsInstalled = await _javaRepository.isInstalled(
+            javaVersion,
+          );
+
+          if (javaIsInstalled case Success<bool>(value: false)) {
+            _currentInstallStep = 'Downloading Java $javaVersion';
+            _javaDownloadProgress = 0.0;
+            notifyListeners();
+
+            await _javaRepository.install(
+              javaVersion,
+              onProgress: (progress) {
+                _javaDownloadProgress = progress;
+                notifyListeners();
+              },
+            );
+            _javaDownloadProgress = null;
+          }
         }
 
+        _currentInstallStep = null;
         _downloadService.clearTrackedModels(_instance.minecraftVersion);
         _instance = _instance.copyWith(isInstalled: true);
         notifyListeners();
@@ -77,7 +108,7 @@ class InstanceCardViewModel extends ChangeNotifier {
   Future<Result<void>> _runInstance() async {
     try {
       notifyListeners();
-      await _instanceRepository.run(_instance);
+      await _minecraftRepository.run(_instance.minecraftVersion);
       notifyListeners();
       return const Result.success(null);
     } on Exception catch (e) {

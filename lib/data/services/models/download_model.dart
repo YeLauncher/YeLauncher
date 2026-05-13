@@ -1,9 +1,4 @@
-enum DownloadStatus {
-  pending,
-  downloading,
-  finished,
-  failed,
-}
+enum DownloadStatus { pending, downloading, finished, failed }
 
 class DownloadModel {
   final String url;

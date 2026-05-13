@@ -4,6 +4,7 @@ class InstanceModel {
   final String minecraftVersion;
   final String modLoader;
   final String modLoaderVersion;
+  final bool isInstalled;
 
   InstanceModel({
     required this.id,
@@ -11,6 +12,7 @@ class InstanceModel {
     required this.minecraftVersion,
     required this.modLoader,
     required this.modLoaderVersion,
+    this.isInstalled = false,
   });
 
   factory InstanceModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class InstanceModel {
       minecraftVersion: json['minecraftVersion'] as String,
       modLoader: json['modLoader'] as String,
       modLoaderVersion: json['modLoaderVersion'] as String,
+      isInstalled: json['isInstalled'] as bool? ?? false,
     );
   }
 
@@ -30,6 +33,7 @@ class InstanceModel {
       'minecraftVersion': minecraftVersion,
       'modLoader': modLoader,
       'modLoaderVersion': modLoaderVersion,
+      'isInstalled': isInstalled,
     };
   }
 
@@ -39,6 +43,7 @@ class InstanceModel {
     String? minecraftVersion,
     String? modLoader,
     String? modLoaderVersion,
+    bool? isInstalled,
   }) {
     return InstanceModel(
       id: id ?? this.id,
@@ -46,6 +51,7 @@ class InstanceModel {
       minecraftVersion: minecraftVersion ?? this.minecraftVersion,
       modLoader: modLoader ?? this.modLoader,
       modLoaderVersion: modLoaderVersion ?? this.modLoaderVersion,
+      isInstalled: isInstalled ?? this.isInstalled,
     );
   }
 }

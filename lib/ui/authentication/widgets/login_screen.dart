@@ -39,10 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: AppColors.dark.surfaceContainer,
               ),
               padding: const EdgeInsets.all(30),
-              constraints: const BoxConstraints(
-                minWidth: 230,
-                maxWidth: 430,
-              ),
+              constraints: const BoxConstraints(minWidth: 230, maxWidth: 430),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -65,10 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _email,
-                    labelText: "Введіть пошту",
-                  ),
+                  TextFormField(controller: _email, labelText: "Введіть пошту"),
                   const SizedBox(height: 8),
                   Align(
                     alignment: Alignment.centerLeft,

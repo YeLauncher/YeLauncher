@@ -1,36 +1,39 @@
 import 'dart:io';
-
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
-import 'package:yelauncher/data/services/api/models/library_api_model.dart';
 import 'package:yelauncher/data/services/api/models/rule_api_model.dart';
 import 'package:yelauncher/data/services/api/models/version_api_model.dart';
 import 'package:yelauncher/data/services/api/models/version_manifest_api_model.dart';
 import 'package:yelauncher/data/services/api/models/version_requirements_api_model.dart';
+import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/local/file_service.dart';
 import 'package:yelauncher/data/services/local/minecraft_service.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_run_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/utilities/result.dart';
-import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/models/download_model.dart';
 import 'package:yelauncher/data/services/api/models/asset_index_file_api_model.dart';
+import 'package:yelauncher/data/repositories/java/java_repository.dart';
+import 'dart:ffi';
 
 class MinecraftRepositoryRemote implements MinecraftRepository {
   final MinecraftApiClient _apiClient;
   final MinecraftService _minecraftService;
   final DownloadService _downloadService;
   final FileService _fileService;
+  final JavaRepository _javaRepository;
 
   MinecraftRepositoryRemote({
     required MinecraftApiClient apiClient,
     required MinecraftService minecraftService,
     required DownloadService downloadService,
     required FileService fileService,
+    required JavaRepository javaRepository,
   }) : _apiClient = apiClient,
        _minecraftService = minecraftService,
        _downloadService = downloadService,
-       _fileService = fileService;
+       _fileService = fileService,
+       _javaRepository = javaRepository;
 
   @override
   Future<Result<List<MinecraftVersionModel>>> getVersions() async {
@@ -146,7 +149,6 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
                 _downloadService.clearTrackedModels(id);
                 return Result.failure(indexResult.error);
             }
-
             _downloadService.clearTrackedModels(id);
             return const Result.success(null);
           case Failure<VersionRequirementsApiModel>():
@@ -158,9 +160,10 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   }
 
   @override
-  Future<Result<bool>> isInstalled(String id) {
-    // TODO: implement isInstalled
-    throw UnimplementedError();
+  Future<Result<bool>> isInstalled(String id) async {
+    final clientJarPath = await _fileService.getClientJarPath(id);
+    final file = File(clientJarPath);
+    return Result.success(await file.exists());
   }
 
   @override
@@ -201,23 +204,30 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               for (final lib in requirements.libraries) {
                 if (!_isAllowed(lib.rules)) continue;
                 if (lib.isNative) {
-                  nativeLibraryPaths.add(await _getNativeLibraryPath(lib));
-                  continue;
+                  await _fileService.extractNatives(
+                    lib.path,
+                    await _fileService.getNativesDirectory(id),
+                  );
                 }
-                libraryPaths.add(await _getLibraryPath(lib));
+                libraryPaths.add(await _fileService.getLibraryPath(lib.path));
               }
 
               var model = MinecraftRunModel(
+                libraryDirectory: await _fileService.getLibraryDirectory(),
                 libraryPaths: libraryPaths,
                 nativeLibraryPaths: nativeLibraryPaths,
                 jvmArguments: _getJvmArguments(requirements),
                 gameArguments: _getGameArguments(requirements),
                 mainClass: requirements.mainClass,
-                assetsDirectory: await _getAssetDirectory(requirements),
-                gameDirectory: await _getGameDirectory(id),
-                nativesDirectory: await _getNativesDirectory(id),
-                clientJarPath: await _getClientJarPath(id),
-                javaExecutablePath: await _getJavaExecutablePath(requirements.javaVersion),
+                assetsDirectory: await _fileService.getAssetDirectory(),
+                gameDirectory: await _fileService.getGameDirectory(id),
+                nativesDirectory: await _fileService.getNativesDirectory(id),
+                clientJarPath: await _fileService.getClientJarPath(id),
+                javaExecutablePath: await _getJavaExecutablePathAbs(
+                  int.tryParse(requirements.javaVersion) ?? 17,
+                ),
+                assetIndex: requirements.assetIndex.id,
+                minecraftVersion: versionResult.value.id,
               );
               return _minecraftService.run(model);
             case Failure<VersionRequirementsApiModel>():
@@ -231,47 +241,70 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     }
   }
 
+  Future<String> _getJavaExecutablePathAbs(int javaVersion) async {
+    final result = await _javaRepository.getJavaExecutablePath(javaVersion);
+    return switch (result) {
+      Success<String>(value: final path) => path,
+      Failure<String>() => 'java', // fallback
+    };
+  }
+
   bool _isAllowed(List<RuleApiModel>? rules) {
     if (rules == null || rules.isEmpty) return true;
     bool allowed = false;
+
+    final String currentArch = Abi.current().toString().contains('arm64')
+        ? 'arm64'
+        : (Abi.current().toString().contains('ia32') ||
+                  Abi.current().toString().contains('x86')
+              ? 'x86'
+              : 'x64');
+
     for (final rule in rules) {
       bool osMatch = true;
-      if (rule.os != null && rule.os!.name != null) {
-        String currentOs = Platform.operatingSystem;
-        if (currentOs == 'macos') currentOs = 'osx';
-        osMatch = (rule.os!.name == currentOs);
+      bool archMatch = true;
+
+      if (rule.os != null) {
+        if (rule.os!.name != null) {
+          String currentOs = Platform.operatingSystem;
+          if (currentOs == 'macos') currentOs = 'osx';
+          if (rule.os!.name != currentOs) osMatch = false;
+        }
+        if (rule.os!.arch != null) {
+          if (rule.os!.arch != currentArch && rule.os!.arch != 'x86') {
+            archMatch = (rule.os!.arch == currentArch);
+          } else if (rule.os!.arch != currentArch) {
+            archMatch = false;
+          }
+        }
       }
-      if (osMatch) {
+
+      if (osMatch && archMatch) {
         allowed = (rule.action == 'allow');
+      } else if (osMatch && !archMatch) {
+        // if OS matches but arch doesn't, this rule doesn't apply to us
       }
     }
     return allowed;
   }
 
-  Future<String> _getLibraryPath(LibraryApiModel library) async {
-  }
-
-  Future<String> _getNativeLibraryPath(LibraryApiModel library) async {
-  }
-  
-  Future<String> _getAssetDirectory(VersionRequirementsApiModel requirements) async {
-  }
-
-  Future<String> _getGameDirectory(String id) async {
-  }
-
-  Future<String> _getNativesDirectory(String id) async {
-  }
-
-  Future<String> _getClientJarPath(String id) async {
-  }
-
-  Future<String> _getJavaExecutablePath(String id) async {
-  }
-
   List<String> _getJvmArguments(VersionRequirementsApiModel requirements) {
+    final List<String> args = [];
+    for (final arg in requirements.arguments) {
+      if (arg.type == 'jvm' && _isAllowed(arg.rules)) {
+        args.addAll(arg.values);
+      }
+    }
+    return args;
   }
 
   List<String> _getGameArguments(VersionRequirementsApiModel requirements) {
+    final List<String> args = [];
+    for (final arg in requirements.arguments) {
+      if (arg.type == 'game' && _isAllowed(arg.rules)) {
+        args.addAll(arg.values);
+      }
+    }
+    return args;
   }
 }

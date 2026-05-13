@@ -65,16 +65,24 @@ class _InstanceCardState extends State<InstanceCard> {
                   ),
                 ],
               ),
-              if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running) ...[
-                SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(
-                      value: widget.viewModel.downloadProgress,
-                      color: AppColors.dark.primary,
-                      backgroundColor: AppColors.dark.surfaceContainerHigh,
+              if (widget.viewModel.isDownloading ||
+                  widget.viewModel.installInstance.running) ...[
+                Tooltip(
+                  message:
+                      widget.viewModel.currentInstallStep ?? 'Installing...',
+                  preferBelow: false,
+                  child: SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(
+                        value:
+                            widget.viewModel.javaDownloadProgress ??
+                            widget.viewModel.downloadProgress,
+                        color: AppColors.dark.primary,
+                        backgroundColor: AppColors.dark.surfaceContainerHigh,
+                      ),
                     ),
                   ),
                 ),

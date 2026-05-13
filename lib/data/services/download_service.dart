@@ -23,14 +23,14 @@ class DownloadService extends ChangeNotifier {
   double? getProgress(String tag) {
     final tasks = _activeDownloads[tag];
     if (tasks == null || tasks.isEmpty) return null;
-    
+
     int totalExpected = 0;
     int totalDownloaded = 0;
     for (final task in tasks) {
       totalExpected += task.expectedSize;
       totalDownloaded += task.downloadedSize;
     }
-    
+
     if (totalExpected == 0) return null;
     return totalDownloaded / totalExpected;
   }
@@ -38,7 +38,11 @@ class DownloadService extends ChangeNotifier {
   bool isDownloading(String tag) {
     final tasks = _activeDownloads[tag];
     if (tasks == null || tasks.isEmpty) return false;
-    return tasks.any((t) => t.status == DownloadStatus.downloading || t.status == DownloadStatus.pending);
+    return tasks.any(
+      (t) =>
+          t.status == DownloadStatus.downloading ||
+          t.status == DownloadStatus.pending,
+    );
   }
 
   Future<Result<void>> download(DownloadModel model) async {
@@ -52,7 +56,7 @@ class DownloadService extends ChangeNotifier {
       }
 
       final request = http.Request('GET', Uri.parse(model.url));
-      _log.fine('Starting download: ${model.url} -> ${model.path}');
+      _log.finer('Starting download: ${model.url} -> ${model.path}');
       final response = await http.Client().send(request);
 
       model.status = DownloadStatus.downloading;
@@ -74,12 +78,12 @@ class DownloadService extends ChangeNotifier {
         await sink.close();
         model.status = DownloadStatus.finished;
         notifyListeners();
-        _log.fine('Download finished: ${model.path} (Size: total bytes)');
+        _log.finer('Download finished: ${model.path} (Size: total bytes)');
         return const Result.success(null);
       } else {
         model.status = DownloadStatus.failed;
         notifyListeners();
-        _log.fine(
+        _log.finer(
           'Download failed: ${model.path} (HTTP ${response.statusCode})',
         );
         return Result.failure(
@@ -89,14 +93,14 @@ class DownloadService extends ChangeNotifier {
     } catch (e) {
       model.status = DownloadStatus.failed;
       notifyListeners();
-      _log.fine('Download exception: ${model.path} ($e)');
+      _log.finer('Download exception: ${model.path} ($e)');
       return Result.failure(Exception('Failed to download: $e'));
     }
   }
 
   Future<Result<bool>> isDownloaded(DownloadModel model) async {
     try {
-      _log.fine('Checking if downloaded: ${model.path}');
+      _log.finer('Checking if downloaded: ${model.path}');
       final appData = await getApplicationSupportDirectory();
       final fullPath = p.join(appData.path, model.path);
 
@@ -108,7 +112,7 @@ class DownloadService extends ChangeNotifier {
       if (model.sha1.isEmpty) {
         model.status = DownloadStatus.finished;
         model.downloadedSize = await file.length();
-        _log.fine(
+        _log.finer(
           'File exists, no SHA1 provided (assuming valid): ${model.path}',
         );
         notifyListeners();
@@ -121,16 +125,16 @@ class DownloadService extends ChangeNotifier {
       if (digest.toString() == model.sha1) {
         model.status = DownloadStatus.finished;
         model.downloadedSize = await file.length();
-        _log.fine('File SHA1 matches: ${model.path}');
+        _log.finer('File SHA1 matches: ${model.path}');
         notifyListeners();
         return const Result.success(true);
       }
-      _log.fine(
+      _log.finer(
         'File SHA1 mismatch for ${model.path} (expected: ${model.sha1}, got: $digest)',
       );
       return const Result.success(false);
     } catch (e) {
-      _log.fine('Check download exception: ${model.path} ($e)');
+      _log.finer('Check download exception: ${model.path} ($e)');
       return Result.failure(Exception('Failed to check download: $e'));
     }
   }

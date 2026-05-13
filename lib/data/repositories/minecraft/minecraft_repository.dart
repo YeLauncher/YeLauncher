@@ -3,10 +3,8 @@ import 'package:yelauncher/utilities/result.dart';
 
 abstract class MinecraftRepository {
   Future<Result<List<MinecraftVersionModel>>> getVersions();
-
   Future<Result<void>> install(String id);
-
-  Future<Result<String>> getJavaVersion(String id);
-
   Future<Result<bool>> isInstalled(String id);
+  Future<Result<String>> getJavaVersion(String id);
+  Future<Result<void>> run(String id);
 }

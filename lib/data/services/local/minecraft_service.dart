@@ -16,98 +16,35 @@ class MinecraftService {
       }
       cp.add(model.clientJarPath);
 
-      // Extract native libraries from native JARs into the natives directory.
-      // final nativesDir = Directory(p.join(gameDir, 'natives'));
-      // if (!await nativesDir.exists()) {
-      //   await nativesDir.create(recursive: true);
-      // }
-      // for (final jarPath in nativeJarPaths) {
-      //   final jarFile = File(jarPath);
-      //   if (!await jarFile.exists()) {
-      //     _log.warning('Native JAR not found: $jarPath');
-      //     continue;
-      //   }
-      //   _log.info('Extracting natives from: $jarPath');
-      //   final bytes = await jarFile.readAsBytes();
-      //   final archive = ZipDecoder().decodeBytes(bytes);
-      //   for (final file in archive) {
-      //     if (file.isFile) {
-      //       final name = file.name.toLowerCase();
-      //       if (name.endsWith('.dll') ||
-      //           name.endsWith('.so') ||
-      //           name.endsWith('.dylib') ||
-      //           name.endsWith('.jnilib')) {
-      //         final outFile = File(
-      //           p.join(nativesDir.path, p.basename(file.name)),
-      //         );
-      //         await outFile.writeAsBytes(file.content as List<int>);
-      //         _log.fine('Extracted: ${p.basename(file.name)}');
-      //       }
-      //     }
-      //   }
-      // }
-
       final classpath = cp.join(Platform.isWindows ? ';' : ':');
 
       final jvmArgs = <String>[];
 
-      // for (final arg in requirements.arguments) {
-      //   if (!_isAllowed(arg.rules)) continue;
-
-      //   for (final val in arg.values) {
-      //     final replaced = val
-      //         .replaceAll('\${auth_player_name}', 'Player')
-      //         .replaceAll('\${version_name}', instance.minecraftVersion)
-      //         .replaceAll('\${game_directory}', gameDir)
-      //         .replaceAll('\${assets_root}', assetsDir)
-      //         .replaceAll('\${assets_index_name}', requirements.assetIndex.id)
-      //         .replaceAll('\${auth_uuid}', '00000000-0000-0000-0000-000000000000')
-      //         .replaceAll('\${auth_access_token}', '0')
-      //         .replaceAll('\${clientid}', '')
-      //         .replaceAll('\${auth_xuid}', '')
-      //         .replaceAll('\${user_type}', 'mojang')
-      //         .replaceAll('\${user_properties}', '{}')
-      //         .replaceAll('\${version_type}', 'release')
-      //         .replaceAll('\${resolution_width}', '854')
-      //         .replaceAll('\${resolution_height}', '480')
-      //         .replaceAll('\${natives_directory}', p.join(gameDir, 'natives'))
-      //         .replaceAll('\${launcher_name}', 'yelauncher')
-      //         .replaceAll('\${launcher_version}', '1.0.0')
-      //         .replaceAll('\${classpath}', classpath)
-      //         .replaceAll('\${path}', p.join(gameDir, 'natives'))
-      //         .replaceAll('\${quickPlayPath}', '')
-      //         .replaceAll('\${quickPlayMultiplayer}', '')
-      //         .replaceAll('\${quickPlayRealms}', '')
-      //         .replaceAll('\${quickPlaySingleplayer}', '')
-      //         .replaceAll('\${library_directory}', p.join(gameDir, 'libraries'))
-      //         .replaceAll(
-      //           '\${classpath_separator}',
-      //           Platform.isWindows ? ';' : ':',
-      //         );
-
-      //     if (replaced == '--sun-misc-unsafe-memory-access=allow') {
-      //       continue; // Strip unsupported JVM arg that causes startup failures on older JREs
-      //     }
-
-      //     if (arg.type == 'jvm') {
-      //       jvmArgs.add(replaced);
-      //     } else {
-      //       gameArgs.add(replaced);
-      //     }
-      //   }
-      // }
-
       if (model.jvmArguments.isEmpty) {
         jvmArgs.add('-cp');
         jvmArgs.add(classpath);
+      } else {
+        jvmArgs.addAll(model.jvmArguments);
       }
 
-      final finalArgs = <String>[
-        '-Xmx2G',
-        ...jvmArgs,
-        model.mainClass,
-        ...model.gameArguments,
-      ];
+      final finalArgs = await _replaceArgs(
+        <String>[
+          '-Xmx2G',
+          ...jvmArgs,
+          model.mainClass,
+          ...model.gameArguments,
+        ].where((arg) => _isSupportedArgument(arg)).toList(),
+        model,
+        classpath,
+      );
+
+      // We need to create the gameDirectory to avoid launch errors when it doesn't exist
+      final workingDir = Directory(model.gameDirectory);
+      if (!await workingDir.exists()) {
+        await workingDir.create(recursive: true);
+      }
+
+      _log.fine("Launching Minecraft with args: ${finalArgs.join(' ')}");
       final process = await Process.start(
         model.javaExecutablePath,
         finalArgs,
@@ -128,5 +65,55 @@ class MinecraftService {
     } on Exception catch (e) {
       return Result.failure(e);
     }
+  }
+
+  Future<List<String>> _replaceArgs(
+    List<String> args,
+    MinecraftRunModel model,
+    String classpath,
+  ) async {
+    List<String> finalArgs = [];
+    for (var value in args) {
+      finalArgs.add(
+        value
+            .replaceAll('\${auth_player_name}', 'Player')
+            .replaceAll('\${version_name}', model.minecraftVersion)
+            .replaceAll('\${game_directory}', model.gameDirectory)
+            .replaceAll('\${assets_root}', model.assetsDirectory)
+            .replaceAll('\${assets_index_name}', model.assetIndex)
+            .replaceAll('\${auth_uuid}', '00000000-0000-0000-0000-000000000000')
+            .replaceAll('\${auth_access_token}', '0')
+            .replaceAll('\${clientid}', 'test')
+            .replaceAll('\${auth_xuid}', 'test')
+            .replaceAll('\${user_type}', 'mojang')
+            .replaceAll('\${user_properties}', '{}')
+            .replaceAll('\${version_type}', 'release')
+            .replaceAll('\${resolution_width}', '854')
+            .replaceAll('\${resolution_height}', '480')
+            .replaceAll('\${natives_directory}', model.nativesDirectory)
+            .replaceAll('\${launcher_name}', 'yelauncher')
+            .replaceAll('\${launcher_version}', '1.0.0')
+            .replaceAll('\${classpath}', classpath)
+            .replaceAll('\${path}', model.nativesDirectory)
+            .replaceAll('\${library_directory}', model.libraryDirectory)
+            .replaceAll(
+              '\${classpath_separator}',
+              Platform.isWindows ? ';' : ':',
+            ),
+      );
+    }
+    return finalArgs;
+  }
+
+  bool _isSupportedArgument(String arg) {
+    return arg != '\${quickPlayPath}' &&
+        arg != '\${quickPlayMultiplayer}' &&
+        arg != '\${quickPlayRealms}' &&
+        arg != '\${quickPlaySingleplayer}' &&
+        arg != '--quickPlayRealms' &&
+        arg != '--quickPlayMultiplayer' &&
+        arg != '--quickPlaySingleplayer' &&
+        arg != '--quickPlayPath' &&
+        arg != '--demo';
   }
 }

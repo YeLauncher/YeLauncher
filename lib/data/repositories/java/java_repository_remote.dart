@@ -44,7 +44,9 @@ class JavaRepositoryRemote implements JavaRepository {
       final execPath = await _findExecutable(javaDir);
       return Result.success(execPath != null);
     } catch (e) {
-      return Result.failure(Exception('Failed to check Java install status: $e'));
+      return Result.failure(
+        Exception('Failed to check Java install status: $e'),
+      );
     }
   }
 
@@ -57,7 +59,9 @@ class JavaRepositoryRemote implements JavaRepository {
       }
       final execPath = await _findExecutable(javaDir);
       if (execPath == null) {
-        return Result.failure(Exception('Java $version executable not found in $javaDir'));
+        return Result.failure(
+          Exception('Java $version executable not found in $javaDir'),
+        );
       }
       return Result.success(execPath);
     } catch (e) {
@@ -66,14 +70,33 @@ class JavaRepositoryRemote implements JavaRepository {
   }
 
   @override
-  Future<Result<void>> install(int version) async {
+  Future<Result<void>> install(
+    int version, {
+    void Function(double)? onProgress,
+  }) async {
     try {
-      final url = 'https://corretto.aws/downloads/latest/amazon-corretto-$version-$_cpuArch-$_os-jdk.$_ext';
+      final url =
+          'https://corretto.aws/downloads/latest/amazon-corretto-$version-$_cpuArch-$_os-jdk.$_ext';
       _log.info('Downloading Java $version from $url');
 
-      final response = await http.get(Uri.parse(url));
+      final request = http.Request('GET', Uri.parse(url));
+      final response = await http.Client().send(request);
       if (response.statusCode != 200) {
-        return Result.failure(Exception('Failed to download Java $version: ${response.statusCode}'));
+        return Result.failure(
+          Exception('Failed to download Java $version: ${response.statusCode}'),
+        );
+      }
+
+      final contentLength = response.contentLength ?? 0;
+      var downloadedBytes = 0;
+      final bytesBuilder = BytesBuilder();
+
+      await for (final chunk in response.stream) {
+        bytesBuilder.add(chunk);
+        downloadedBytes += chunk.length;
+        if (contentLength > 0 && onProgress != null) {
+          onProgress(downloadedBytes / contentLength);
+        }
       }
 
       final javaDir = await _getJavaDir(version);
@@ -83,7 +106,7 @@ class JavaRepositoryRemote implements JavaRepository {
       await javaDir.create(recursive: true);
 
       if (_ext == 'zip') {
-        final archive = ZipDecoder().decodeBytes(response.bodyBytes);
+        final archive = ZipDecoder().decodeBytes(bytesBuilder.toBytes());
         for (final file in archive) {
           final filename = file.name;
           if (file.isFile) {
@@ -91,12 +114,16 @@ class JavaRepositoryRemote implements JavaRepository {
             await outFile.parent.create(recursive: true);
             await outFile.writeAsBytes(file.content as List<int>);
           } else {
-            await Directory(p.join(javaDir.path, filename)).create(recursive: true);
+            await Directory(
+              p.join(javaDir.path, filename),
+            ).create(recursive: true);
           }
         }
       } else {
         // tar.gz
-        final archive = TarDecoder().decodeBytes(GZipDecoder().decodeBytes(response.bodyBytes));
+        final archive = TarDecoder().decodeBytes(
+          GZipDecoder().decodeBytes(bytesBuilder.toBytes()),
+        );
         for (final file in archive) {
           final filename = file.name;
           if (file.isFile) {
@@ -111,7 +138,9 @@ class JavaRepositoryRemote implements JavaRepository {
               }
             }
           } else {
-            await Directory(p.join(javaDir.path, filename)).create(recursive: true);
+            await Directory(
+              p.join(javaDir.path, filename),
+            ).create(recursive: true);
           }
         }
       }
@@ -136,4 +165,3 @@ class JavaRepositoryRemote implements JavaRepository {
     return null;
   }
 }
-

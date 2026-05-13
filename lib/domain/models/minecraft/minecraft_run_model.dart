@@ -3,9 +3,12 @@ class MinecraftRunModel {
   final List<String> nativeLibraryPaths;
   final List<String> jvmArguments;
   final List<String> gameArguments;
+  final String minecraftVersion;
   final String mainClass;
+  final String assetIndex;
   final String assetsDirectory;
   final String gameDirectory;
+  final String libraryDirectory;
   final String nativesDirectory;
   final String clientJarPath;
   final String javaExecutablePath;
@@ -21,5 +24,8 @@ class MinecraftRunModel {
     required this.nativesDirectory,
     required this.clientJarPath,
     required this.javaExecutablePath,
+    required this.libraryDirectory,
+    required this.assetIndex,
+    required this.minecraftVersion,
   });
 }

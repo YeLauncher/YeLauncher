@@ -49,10 +49,7 @@ class _ButtonState extends State<Button> {
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
         child: AnimatedContainer(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 12,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           decoration: BoxDecoration(
             color: _backgroundColor,
             borderRadius: BorderRadius.circular(12),
