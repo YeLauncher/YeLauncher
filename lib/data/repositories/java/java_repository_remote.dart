@@ -1,12 +1,14 @@
-import 'dart:io';
 import 'dart:ffi';
-import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:archive/archive.dart';
+import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/utilities/result.dart';
-import 'package:logging/logging.dart';
 
 class JavaRepositoryRemote implements JavaRepository {
   final _log = Logger('JavaRepositoryRemote');

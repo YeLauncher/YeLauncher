@@ -1,26 +1,28 @@
+import 'dart:ffi';
 import 'dart:io';
+
 import 'package:logging/logging.dart';
+import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
+import 'package:yelauncher/data/services/api/models/asset_index_file_api_model.dart';
 import 'package:yelauncher/data/services/api/models/rule_api_model.dart';
-import 'package:yelauncher/data/services/api/models/version_api_model.dart';
 import 'package:yelauncher/data/services/api/models/version_manifest_api_model.dart';
 import 'package:yelauncher/data/services/api/models/version_requirements_api_model.dart';
 import 'package:yelauncher/data/services/download_service.dart';
-import 'package:yelauncher/data/services/local/file_service.dart';
-import 'package:yelauncher/data/services/local/minecraft_service.dart';
+import 'package:yelauncher/data/services/file_service.dart';
+import 'package:yelauncher/data/services/minecraft_service.dart';
+import 'package:yelauncher/data/services/models/download_model.dart';
+import 'package:yelauncher/data/services/task_service.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_run_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/utilities/result.dart';
-import 'package:yelauncher/data/services/models/download_model.dart';
-import 'package:yelauncher/data/services/api/models/asset_index_file_api_model.dart';
-import 'package:yelauncher/data/repositories/java/java_repository.dart';
-import 'dart:ffi';
 
 class MinecraftRepositoryRemote implements MinecraftRepository {
   final _log = Logger('MinecraftRepositoryRemote');
   final MinecraftApiClient _apiClient;
   final MinecraftService _minecraftService;
+  final TaskService _taskService;
   final DownloadService _downloadService;
   final FileService _fileService;
   final JavaRepository _javaRepository;
@@ -31,7 +33,9 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     required DownloadService downloadService,
     required FileService fileService,
     required JavaRepository javaRepository,
-  }) : _apiClient = apiClient,
+    required TaskService taskService,
+  }) : _taskService = taskService,
+       _apiClient = apiClient,
        _minecraftService = minecraftService,
        _downloadService = downloadService,
        _fileService = fileService,
@@ -62,184 +66,126 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   @override
   Future<Result<void>> install(String id) async {
     var versionResult = await _apiClient.getVersion(id);
-    switch (versionResult) {
-      case Success<VersionApiModel>():
-        var requirementsResult = await _apiClient.getRequirements(
-          versionResult.value,
-        );
-        switch (requirementsResult) {
-          case Success<VersionRequirementsApiModel>():
-            var requirements = requirementsResult.value;
+    return versionResult
+        .flatMapAsync((version) => _apiClient.getRequirements(version))
+        .foldAsync((requirements) async {
+          // 1, 2, 3. Client, Libraries, and Asset Index
+          final downloads = _createCoreDownloads(id, requirements);
 
-            final downloads = <DownloadModel>[];
+          final initialDownloadsResult = await _downloadService.downloadAll(
+            downloads,
+          );
 
-            // 1. Client
-            downloads.add(
-              DownloadModel(
-                url: requirements.client.url,
-                path: 'versions/$id/$id.jar',
-                sha1: requirements.client.sha1,
-                expectedSize: requirements.client.size,
-                tag: id,
-              ),
-            );
-
-            // 2. Libraries
-            for (final lib in requirements.libraries) {
-              if (lib.url.isEmpty) continue;
-              downloads.add(
-                DownloadModel(
-                  url: lib.url,
-                  path: 'libraries/${lib.path}',
-                  sha1: lib.sha1,
-                  expectedSize: lib.size,
-                  tag: id,
-                ),
-              );
-            }
-
-            // 3. Asset Index
-            final assetIndex = requirements.assetIndex;
-            downloads.add(
-              DownloadModel(
-                url: assetIndex.url,
-                path: 'assets/indexes/${assetIndex.id}.json',
-                sha1: assetIndex.sha1,
-                expectedSize: assetIndex.size,
-                tag: id,
-              ),
-            );
-
-            final initialDownloadsResult = await _downloadService.downloadAll(
-              downloads,
-            );
-            if (initialDownloadsResult is Failure<void>) {
-              _downloadService.clearTrackedModels(id);
-              return initialDownloadsResult;
-            }
-
-            // 4. Download Assets
-            final assetDownloads = <DownloadModel>[];
-            final indexResult = await _apiClient.getAssetIndex(assetIndex.url);
-            switch (indexResult) {
-              case Success<AssetIndexFileApiModel>():
-                final objects = indexResult.value.objects;
-                for (final entry in objects.entries) {
-                  final hash = entry.value.hash;
-                  final size = entry.value.size;
-                  final prefix = hash.substring(0, 2);
-                  assetDownloads.add(
-                    DownloadModel(
-                      url:
-                          'https://resources.download.minecraft.net/$prefix/$hash',
-                      path: 'assets/objects/$prefix/$hash',
-                      sha1: hash,
-                      expectedSize: size,
-                      tag: id,
-                    ),
-                  );
-                }
-
-                final assetDownloadsResult = await _downloadService.downloadAll(
-                  assetDownloads,
-                );
-                if (assetDownloadsResult is Failure<void>) {
-                  _downloadService.clearTrackedModels(id);
-                  return assetDownloadsResult;
-                }
-              case Failure<AssetIndexFileApiModel>():
-                _downloadService.clearTrackedModels(id);
-                return Result.failure(indexResult.error);
-            }
+          if (initialDownloadsResult is Failure<void>) {
             _downloadService.clearTrackedModels(id);
-            return const Result.success(null);
-          case Failure<VersionRequirementsApiModel>():
-            return Result.failure(requirementsResult.error);
-        }
-      case Failure<VersionApiModel>():
-        return Result.failure(versionResult.error);
-    }
+            return initialDownloadsResult;
+          }
+
+          // 4. Download Assets
+          final indexResult = await _apiClient.getAssetIndex(
+            requirements.assetIndex.url,
+          );
+          switch (indexResult) {
+            case Success<AssetIndexFileApiModel>():
+              final assetDownloads = _createAssetDownloads(
+                id,
+                indexResult.value,
+              );
+              final assetDownloadsResult = await _downloadService.downloadAll(
+                assetDownloads,
+              );
+
+              if (assetDownloadsResult is Failure<void>) {
+                _downloadService.clearTrackedModels(id);
+                return assetDownloadsResult;
+              }
+            case Failure<AssetIndexFileApiModel>():
+              _downloadService.clearTrackedModels(id);
+              return Result.failure(indexResult.error);
+          }
+
+          _downloadService.clearTrackedModels(id);
+          return const Result.success(null);
+        }, (error) async => Result.failure(error));
   }
 
   @override
   Future<Result<bool>> isInstalled(String id) async {
+    // 1. Fast path: Check if the main client jar exists first.
+    // If it doesn't, we immediately know it's not installed.
     final clientJarPath = await _fileService.getClientJarPath(id);
-    final file = File(clientJarPath);
-    return Result.success(await file.exists());
+    if (!await File(clientJarPath).exists()) {
+      return const Result.success(false);
+    }
+
+    // 2. Slow path: Check if the required assets for this version exist.
+    final versionResult = await _apiClient.getVersion(id);
+    return versionResult
+        .flatMapAsync((version) => _apiClient.getRequirements(version))
+        .foldAsync((requirements) async {
+          // Check if the specific asset index file for this version exists
+          final assetIndexId = requirements.assetIndex.id;
+          final indexPath = await _fileService.getAbsolutePath([
+            'assets',
+            'indexes',
+            '$assetIndexId.json',
+          ]);
+
+          final indexExists = await File(indexPath).exists();
+          return Result.success(indexExists);
+        }, (error) async => Result.failure(error));
   }
 
   @override
   Future<Result<String>> getJavaVersion(String id) async {
     var versionResult = await _apiClient.getVersion(id);
-    switch (versionResult) {
-      case Success<VersionApiModel>():
-        var requirementsResult = await _apiClient.getRequirements(
-          versionResult.value,
-        );
-        switch (requirementsResult) {
-          case Success<VersionRequirementsApiModel>():
-            return Result.success(requirementsResult.value.javaVersion);
-          case Failure<VersionRequirementsApiModel>():
-            return Result.failure(requirementsResult.error);
-        }
-      case Failure<VersionApiModel>():
-        return Result.failure(versionResult.error);
-    }
+    return versionResult
+        .flatMapAsync((version) => _apiClient.getRequirements(version))
+        .map((requirements) => requirements.javaVersion);
   }
 
   @override
   Future<Result<void>> run(String id) async {
     try {
       final versionResult = await _apiClient.getVersion(id);
-      switch (versionResult) {
-        case Success<VersionApiModel>():
-          final requirementsResult = await _apiClient.getRequirements(
-            versionResult.value,
-          );
-          switch (requirementsResult) {
-            case Success<VersionRequirementsApiModel>():
-              var requirements = requirementsResult.value;
+      return versionResult
+        .flatMapAsync((version) => _apiClient.getRequirements(version))
+        .foldAsync((requirements) async {
 
-              final List<String> libraryPaths = [];
-              final List<String> nativeLibraryPaths = [];
+        final List<String> libraryPaths = [];
+        final List<String> nativeLibraryPaths = [];
 
-              for (final lib in requirements.libraries) {
-                if (!_isAllowed(lib.rules)) continue;
-                if (lib.isNative) {
-                  await _fileService.extractNatives(
-                    await _fileService.getLibraryPath(lib.path),
-                    await _fileService.getNativesDirectory(id),
-                  );
-                }
-                libraryPaths.add(await _fileService.getLibraryPath(lib.path));
-              }
-
-              var model = MinecraftRunModel(
-                libraryDirectory: await _fileService.getLibraryDirectory(),
-                libraryPaths: libraryPaths,
-                nativeLibraryPaths: nativeLibraryPaths,
-                jvmArguments: _getJvmArguments(requirements),
-                gameArguments: _getGameArguments(requirements),
-                mainClass: requirements.mainClass,
-                assetsDirectory: await _fileService.getAssetDirectory(),
-                gameDirectory: await _fileService.getGameDirectory(id),
-                nativesDirectory: await _fileService.getNativesDirectory(id),
-                clientJarPath: await _fileService.getClientJarPath(id),
-                javaExecutablePath: await _getJavaExecutablePathAbs(
-                  int.tryParse(requirements.javaVersion) ?? 17,
-                ),
-                assetIndex: requirements.assetIndex.id,
-                minecraftVersion: versionResult.value.id,
-              );
-              return _minecraftService.run(model);
-            case Failure<VersionRequirementsApiModel>():
-              _log.warning('Failed to get version requirements for $id: ${requirementsResult.error}');
-              return Result.failure(requirementsResult.error);
+        for (final lib in requirements.libraries) {
+          if (!_isAllowed(lib.rules)) continue;
+          if (lib.isNative) {
+            await _fileService.extractNatives(
+              await _fileService.getLibraryPath(lib.path),
+              await _fileService.getNativesDirectory(id),
+            );
           }
-        case Failure<VersionApiModel>():
-          _log.warning('Failed to get version info for $id: ${versionResult.error}');
-          return Result.failure(versionResult.error);
-      }
+          libraryPaths.add(await _fileService.getLibraryPath(lib.path));
+        }
+
+        var model = MinecraftRunModel(
+          libraryDirectory: await _fileService.getLibraryDirectory(),
+          libraryPaths: libraryPaths,
+          nativeLibraryPaths: nativeLibraryPaths,
+          jvmArguments: _getJvmArguments(requirements),
+          gameArguments: _getGameArguments(requirements),
+          mainClass: requirements.mainClass,
+          assetsDirectory: await _fileService.getAssetDirectory(),
+          gameDirectory: await _fileService.getGameDirectory(id),
+          nativesDirectory: await _fileService.getNativesDirectory(id),
+          clientJarPath: await _fileService.getClientJarPath(id),
+          javaExecutablePath: await _getJavaExecutablePathAbs(
+            int.tryParse(requirements.javaVersion) ?? 17,
+          ),
+          assetIndex: requirements.assetIndex.id,
+          minecraftVersion: requirements.id,
+        );
+        return _minecraftService.run(model);
+
+      }, (error) async => Result.failure(error));
     } on Exception catch (e) {
       _log.severe('Exception while trying to run Minecraft version $id: $e');
       return Result.failure(e);
@@ -283,26 +229,28 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
           osMatch = false;
         }
 
-        if (rule.os!.arch != null && rule.os!.arch != currentArch && rule.os!.arch != 'x86') {
+        if (rule.os!.arch != null &&
+            rule.os!.arch != currentArch &&
+            rule.os!.arch != 'x86') {
           // Some x86 rules might apply to everyone if x86 compatibility exists,
           // but strict Mojang matching relies on specific strings.
           // For strict matching we will match exactly unless we know a better way.
           if (rule.os!.arch == currentArch) {
             archMatch = true;
           } else {
-             archMatch = false;
+            archMatch = false;
           }
         } else if (rule.os!.arch != null && rule.os!.arch != currentArch) {
-             archMatch = false;
+          archMatch = false;
         }
       }
 
       if (osMatch && archMatch) {
-         if (rule.action == 'allow') {
-           allowed = true;
-         } else if (rule.action == 'disallow') {
-           allowed = false;
-         }
+        if (rule.action == 'allow') {
+          allowed = true;
+        } else if (rule.action == 'disallow') {
+          allowed = false;
+        }
       }
     }
     return allowed;
@@ -326,5 +274,73 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
       }
     }
     return args;
+  }
+
+  List<DownloadModel> _createCoreDownloads(
+    String id,
+    VersionRequirementsApiModel requirements,
+  ) {
+    final downloads = <DownloadModel>[];
+
+    // 1. Client
+    downloads.add(
+      DownloadModel(
+        url: requirements.client.url,
+        path: 'versions/$id/$id.jar',
+        sha1: requirements.client.sha1,
+        expectedSize: requirements.client.size,
+        tag: id,
+      ),
+    );
+
+    // 2. Libraries
+    for (final lib in requirements.libraries) {
+      if (lib.url.isEmpty) continue;
+      downloads.add(
+        DownloadModel(
+          url: lib.url,
+          path: 'libraries/${lib.path}',
+          sha1: lib.sha1,
+          expectedSize: lib.size,
+          tag: id,
+        ),
+      );
+    }
+
+    // 3. Asset Index
+    final assetIndex = requirements.assetIndex;
+    downloads.add(
+      DownloadModel(
+        url: assetIndex.url,
+        path: 'assets/indexes/${assetIndex.id}.json',
+        sha1: assetIndex.sha1,
+        expectedSize: assetIndex.size,
+        tag: id,
+      ),
+    );
+
+    return downloads;
+  }
+
+  List<DownloadModel> _createAssetDownloads(
+    String id,
+    AssetIndexFileApiModel indexModel,
+  ) {
+    final assetDownloads = <DownloadModel>[];
+    for (final entry in indexModel.objects.entries) {
+      final hash = entry.value.hash;
+      final size = entry.value.size;
+      final prefix = hash.substring(0, 2);
+      assetDownloads.add(
+        DownloadModel(
+          url: 'https://resources.download.minecraft.net/$prefix/$hash',
+          path: 'assets/objects/$prefix/$hash',
+          sha1: hash,
+          expectedSize: size,
+          tag: id,
+        ),
+      );
+    }
+    return assetDownloads;
   }
 }

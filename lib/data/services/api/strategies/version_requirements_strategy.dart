@@ -116,6 +116,7 @@ abstract class VersionRequirementsStrategy {
     }
 
     final mainClass = json['mainClass'] as String;
+    final id = json['id'] as String;
 
     return VersionRequirementsApiModel(
       arguments: arguments,
@@ -124,6 +125,7 @@ abstract class VersionRequirementsStrategy {
       javaVersion: javaVersion,
       libraries: libraries,
       mainClass: mainClass,
+      id: id,
     );
   }
 

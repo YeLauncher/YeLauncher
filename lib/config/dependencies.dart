@@ -18,25 +18,34 @@ import 'package:yelauncher/data/repositories/mod_loader/forge_repository_remote.
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/instance_service.dart';
-import 'package:yelauncher/data/services/local/file_service.dart';
-import 'package:yelauncher/data/services/local/minecraft_service.dart';
+import 'package:yelauncher/data/services/file_service.dart';
+import 'package:yelauncher/data/services/minecraft_service.dart';
+import 'package:yelauncher/data/services/task_service.dart';
 
-List<SingleChildWidget> get providersLocal {
+List<SingleChildWidget> get _sharedProviders {
   return [
-    Provider.value(value: LocalDataService()),
     Provider(create: (_) => FileService()),
     Provider(create: (_) => MinecraftService()),
-    Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
-    ChangeNotifierProvider(create: (context) => DownloadService()),
     Provider.value(
       value: MinecraftApiClient(
         baseUrl:
-            'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json',
+        'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json',
       ),
     ),
+    Provider(create: (_) => TaskService())
+  ];
+}
+
+List<SingleChildWidget> get providersLocal {
+  return [
+    ..._sharedProviders,
+    Provider.value(value: LocalDataService()),
+    Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
+    ChangeNotifierProvider(create: (context) => DownloadService()),
     Provider<MinecraftRepository>(
       create: (context) => MinecraftRepositoryRemote(
         apiClient: context.read(),
+        taskService: context.read(),
         minecraftService: context.read(),
         downloadService: context.read(),
         fileService: context.read(),
@@ -71,14 +80,7 @@ List<SingleChildWidget> get providersLocal {
 
 List<SingleChildWidget> get providersRemote {
   return [
-    Provider.value(
-      value: MinecraftApiClient(
-        baseUrl:
-            'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json',
-      ),
-    ),
-    Provider(create: (_) => FileService()),
-    Provider(create: (_) => MinecraftService()),
+    ..._sharedProviders,
     Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
     ChangeNotifierProvider(create: (context) => DownloadService()),
     Provider<InstanceService>(create: (context) => InstanceService()),
@@ -93,6 +95,7 @@ List<SingleChildWidget> get providersRemote {
     Provider<MinecraftRepository>(
       create: (context) => MinecraftRepositoryRemote(
         apiClient: context.read(),
+        taskService: context.read(),
         minecraftService: context.read(),
         downloadService: context.read(),
         fileService: context.read(),

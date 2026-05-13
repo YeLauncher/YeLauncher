@@ -117,16 +117,6 @@ class InstanceCardViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Result<void>> _stopInstance() async {
-    try {
-      _instanceRepository.stop(_instance);
-      notifyListeners();
-      return const Result.success(null);
-    } on Exception catch (e) {
-      return Result.failure(e);
-    }
-  }
-
   Future<Result<void>> _openFolder() async {
     try {
       await _instanceRepository.openFolder(_instance);
@@ -134,5 +124,9 @@ class InstanceCardViewModel extends ChangeNotifier {
     } on Exception catch (e) {
       return Result.failure(e);
     }
+  }
+
+  Future<Result<void>> _stopInstance() async {
+    return Result.success(null);
   }
 }

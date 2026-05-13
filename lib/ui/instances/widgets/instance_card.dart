@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Tooltip;
+import 'package:flutter/widgets.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/ui/core/button.dart';
+import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
@@ -76,12 +78,10 @@ class _InstanceCardState extends State<InstanceCard> {
                     height: 48,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(
+                      child: CircularProgressIndicator.primary(
                         value:
                             widget.viewModel.javaDownloadProgress ??
                             widget.viewModel.downloadProgress,
-                        color: AppColors.dark.primary,
-                        backgroundColor: AppColors.dark.surfaceContainerHigh,
                       ),
                     ),
                   ),

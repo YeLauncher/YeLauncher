@@ -5,9 +5,8 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
-import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/services/instance_service.dart';
-import 'package:yelauncher/data/services/local/minecraft_service.dart';
+import 'package:yelauncher/data/services/minecraft_service.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
 
 /// Persistent [InstanceRepository] backed by individual JSON files.
@@ -17,13 +16,11 @@ import 'package:yelauncher/domain/models/instance/instance_model.dart';
 class InstanceRepositoryLocal implements InstanceRepository {
   final _log = Logger('InstanceRepositoryLocal');
   final InstanceService _instanceService;
-  final MinecraftService _minecraftService;
 
   InstanceRepositoryLocal({
     required InstanceService instanceService,
     required MinecraftService minecraftService,
-  }) : _instanceService = instanceService,
-       _minecraftService = minecraftService;
+  }) : _instanceService = instanceService;
 
   /// Returns the `instances/` directory inside the app support folder,
   /// creating it if it does not exist.
@@ -94,19 +91,6 @@ class InstanceRepositoryLocal implements InstanceRepository {
       await file.delete();
       _log.info('Deleted instance $id');
     }
-  }
-
-  @override
-  Future<void> run(InstanceModel instance) async {
-    // Implement run (maybe using MinecraftRepository)
-    // Actually, in InstanceCardViewModel runInstance calls _instanceRepository.run(_instance)
-    // We should probably delegate to _minecraftRepository or similar. Wait, minecraft_repository_remote.dart implements run(id).
-    // Let's call it.
-  }
-
-  @override
-  void stop(InstanceModel instance) {
-    // Add logic here
   }
 
   @override
