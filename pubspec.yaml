@@ -45,6 +45,14 @@ dependencies:
   path: ^1.9.1
   crypto: ^3.0.7
   archive: ^4.0.9
+  flutter_secure_storage: ^10.2.0
+  uuid: ^4.5.3
+  url_launcher: ^6.3.2
+  app_links: ^7.0.0
+  flutter_web_auth_2: ^5.0.2
+
+msix_config:
+  protocol_activation: yelauncher
 
 dev_dependencies:
   flutter_test:

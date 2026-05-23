@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:yelauncher/config/dependencies.dart';
+import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/routing/router.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 
@@ -40,12 +41,16 @@ class YeLauncherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WidgetsApp.router(
-      title: "YeLauncher",
-      color: AppColors.dark.surface,
-      routerConfig: router,
-      builder: (context, child) {
-        return child!;
+    return Consumer<MinecraftRepository>(
+      builder: (context, minecraftRepository, _) {
+        return WidgetsApp.router(
+          title: "YeLauncher",
+          color: AppColors.dark.surface,
+          routerConfig: getRouter(minecraftRepository),
+          builder: (context, child) {
+            return child!;
+          },
+        );
       },
     );
   }

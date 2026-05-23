@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
@@ -14,25 +15,27 @@ import 'package:yelauncher/data/services/api/fabric_api_client.dart';
 import 'package:yelauncher/data/services/api/forge_api_client.dart';
 import 'package:yelauncher/data/repositories/mod_loader/fabric_repository_remote.dart';
 import 'package:yelauncher/data/repositories/mod_loader/forge_repository_remote.dart';
+import 'package:yelauncher/data/services/secure_storage_service.dart';
 
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/instance_service.dart';
 import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
-import 'package:yelauncher/data/services/task_service.dart';
+
 
 List<SingleChildWidget> get _sharedProviders {
   return [
     Provider(create: (_) => FileService()),
     Provider(create: (_) => MinecraftService()),
+    Provider(create: (_) => const FlutterSecureStorage()),
+    Provider(create: (_) => SecureStorageService()),
     Provider.value(
       value: MinecraftApiClient(
         baseUrl:
         'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json',
       ),
     ),
-    Provider(create: (_) => TaskService())
   ];
 }
 
@@ -41,15 +44,15 @@ List<SingleChildWidget> get providersLocal {
     ..._sharedProviders,
     Provider.value(value: LocalDataService()),
     Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
-    ChangeNotifierProvider(create: (context) => DownloadService()),
+    Provider(create: (context) => DownloadService()),
     Provider<MinecraftRepository>(
       create: (context) => MinecraftRepositoryRemote(
         apiClient: context.read(),
-        taskService: context.read(),
         minecraftService: context.read(),
         downloadService: context.read(),
         fileService: context.read(),
         javaRepository: context.read(),
+        secureStorage: context.read(),
       ),
     ),
     Provider<InstanceService>(create: (context) => InstanceService()),
@@ -82,7 +85,7 @@ List<SingleChildWidget> get providersRemote {
   return [
     ..._sharedProviders,
     Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
-    ChangeNotifierProvider(create: (context) => DownloadService()),
+    Provider(create: (context) => DownloadService()),
     Provider<InstanceService>(create: (context) => InstanceService()),
     Provider<InstanceRepository>(
       create: (context) =>
@@ -95,11 +98,11 @@ List<SingleChildWidget> get providersRemote {
     Provider<MinecraftRepository>(
       create: (context) => MinecraftRepositoryRemote(
         apiClient: context.read(),
-        taskService: context.read(),
         minecraftService: context.read(),
         downloadService: context.read(),
         fileService: context.read(),
         javaRepository: context.read(),
+        secureStorage: context.read(),
       ),
     ),
     Provider.value(value: FabricApiClient()),

@@ -99,16 +99,16 @@ class MinecraftService {
     for (var value in args) {
       finalArgs.add(
         value
-            .replaceAll('\${auth_player_name}', 'Player')
+            .replaceAll('\${auth_player_name}', model.profile.nickname)
             .replaceAll('\${version_name}', model.minecraftVersion)
             .replaceAll('\${game_directory}', model.gameDirectory)
             .replaceAll('\${assets_root}', model.assetsDirectory)
             .replaceAll('\${assets_index_name}', model.assetIndex)
-            .replaceAll('\${auth_uuid}', '00000000-0000-0000-0000-000000000000')
-            .replaceAll('\${auth_access_token}', '0')
-            .replaceAll('\${clientid}', 'test')
-            .replaceAll('\${auth_xuid}', 'test')
-            .replaceAll('\${user_type}', 'mojang')
+            .replaceAll('\${auth_uuid}', model.profile.uuid)
+            .replaceAll('\${auth_access_token}', model.profile.accessToken)
+            .replaceAll('\${clientid}', 'yelauncher')
+            .replaceAll('\${auth_xuid}', '0')
+            .replaceAll('\${user_type}', model.profile.userType)
             .replaceAll('\${user_properties}', '{}')
             .replaceAll('\${version_type}', 'release')
             .replaceAll('\${resolution_width}', '854')

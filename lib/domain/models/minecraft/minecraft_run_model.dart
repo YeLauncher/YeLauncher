@@ -1,3 +1,5 @@
+import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart';
+
 class MinecraftRunModel {
   final List<String> libraryPaths;
   final List<String> nativeLibraryPaths;
@@ -12,6 +14,7 @@ class MinecraftRunModel {
   final String nativesDirectory;
   final String clientJarPath;
   final String javaExecutablePath;
+  final MinecraftProfileModel profile;
 
   MinecraftRunModel({
     required this.libraryPaths,
@@ -27,5 +30,6 @@ class MinecraftRunModel {
     required this.libraryDirectory,
     required this.assetIndex,
     required this.minecraftVersion,
+    required this.profile,
   });
 }
