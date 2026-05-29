@@ -1,9 +1,9 @@
-import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
+import 'package:yelauncher/data/repositories/mod_loader/forge_repository.dart';
 import 'package:yelauncher/data/services/api/forge_api_client.dart';
 import 'package:yelauncher/domain/models/mod_loader/mod_loader_version_model.dart';
 import 'package:yelauncher/utilities/result.dart';
 
-class ForgeRepositoryRemote implements ModLoaderRepository {
+class ForgeRepositoryRemote implements ForgeRepository {
   final ForgeApiClient _apiClient;
 
   ForgeRepositoryRemote({required ForgeApiClient apiClient})
@@ -32,6 +32,24 @@ class ForgeRepositoryRemote implements ModLoaderRepository {
         );
       }).toList();
       return Result.success(mappedVersions);
+    } on Exception catch (e) {
+      return Result.failure(e);
+    }
+  }
+
+  @override
+  Future<Result<String?>> getLatestVersion(String minecraftVersion) async {
+    try {
+      return Result.success(await _apiClient.getLatestVersion(minecraftVersion));
+    } on Exception catch (e) {
+      return Result.failure(e);
+    }
+  }
+
+  @override
+  Future<Result<String?>> getRecommendedVersion(String minecraftVersion) async {
+    try {
+      return Result.success(await _apiClient.getRecommendedVersion(minecraftVersion));
     } on Exception catch (e) {
       return Result.failure(e);
     }

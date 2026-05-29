@@ -5,4 +5,6 @@ abstract final class Assets {
   static const minecraftLogo = 'assets/minecraft.svg';
   static const fabric1182 = 'assets/fabric-1.18.2.json';
   static const forge1182 = 'assets/forge-1.18.2.json';
+  static const forgeMavenMetadata = 'assets/forge-maven-metadata.xml';
+  static const forgePromotionsSlim = 'assets/promotions_slim.json';
 }

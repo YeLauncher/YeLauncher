@@ -303,50 +303,168 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   }
 
   Widget get _stepModLoader {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            spacing: 8,
+            children: [
+              Icon(
+                Symbols.extension_rounded,
+                size: 20,
+                weight: 600,
+                color: AppColors.dark.primary,
+              ),
+              Text(
+                "Завантажувач модів",
+                style: AppText.defaultTheme.label.copyWith(
+                  color: AppColors.dark.onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+          ListenableBuilder(
+            listenable: widget.viewModel.loadModLoaders,
+            builder: (context, _) {
+              if (widget.viewModel.loadModLoaders.running) {
+                return Center(
+                  child: Text(
+                    "Завантаження...",
+                    style: AppText.defaultTheme.body.copyWith(
+                      color: AppColors.dark.primary,
+                    ),
+                  ),
+                );
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 24,
+                children: [
+                  _modLoaderButton('vanilla', 'Vanilla', Assets.minecraftLogo),
+                  for (final loader in widget.viewModel.availableModLoaders)
+                    _modLoaderButton(loader.id, loader.name, loader.icon),
+                ],
+              );
+            },
+          ),
+          if (widget.viewModel.selectedModLoader == 'forge') ...[
+            const SizedBox(height: 24),
+            _forgeVersionSelector,
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget get _forgeVersionSelector {
+    final isRecommended = widget.viewModel.selectedForgeVersionSource == 'recommended';
+    final isLatest = widget.viewModel.selectedForgeVersionSource == 'latest';
+    final isCustom = widget.viewModel.selectedForgeVersionSource == 'custom';
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           spacing: 8,
           children: [
             Icon(
-              Symbols.extension_rounded,
+              Symbols.app_badging_rounded,
               size: 20,
               weight: 600,
               color: AppColors.dark.primary,
             ),
             Text(
-              "Завантажувач модів",
+              "Forge версія",
               style: AppText.defaultTheme.label.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 32),
-        ListenableBuilder(
-          listenable: widget.viewModel.loadModLoaders,
-          builder: (context, _) {
-            if (widget.viewModel.loadModLoaders.running) {
-              return Center(
-                child: Text(
-                  "Завантаження...",
-                  style: AppText.defaultTheme.body.copyWith(
-                    color: AppColors.dark.primary,
-                  ),
-                ),
-              );
-            }
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 24,
-              children: [
-                _modLoaderButton('vanilla', 'Vanilla', Assets.minecraftLogo),
-                for (final loader in widget.viewModel.availableModLoaders)
-                  _modLoaderButton(loader.id, loader.name, loader.icon),
-              ],
-            );
-          },
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: isRecommended
+                  ? Button.primary(
+                      "Recommended",
+                      onPressed: () => widget.viewModel.selectForgeVersionSource('recommended'),
+                    )
+                  : Button.surface(
+                      "Recommended",
+                      onPressed: () => widget.viewModel.selectForgeVersionSource('recommended'),
+                    ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: isLatest
+                  ? Button.primary(
+                      "Latest",
+                      onPressed: () => widget.viewModel.selectForgeVersionSource('latest'),
+                    )
+                  : Button.surface(
+                      "Latest",
+                      onPressed: () => widget.viewModel.selectForgeVersionSource('latest'),
+                    ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: isCustom
+                  ? Button.primary(
+                      "Custom",
+                      onPressed: () => widget.viewModel.selectForgeVersionSource('custom'),
+                    )
+                  : Button.surface(
+                      "Custom",
+                      onPressed: () => widget.viewModel.selectForgeVersionSource('custom'),
+                    ),
+            ),
+          ],
         ),
+        const SizedBox(height: 12),
+        if (!isCustom)
+          Text(
+            "Selected Forge version: ${widget.viewModel.selectedForgeVersion ?? '-'}",
+            style: AppText.defaultTheme.bodySmall.copyWith(
+              color: AppColors.dark.onSurfaceVariant,
+            ),
+          ),
+        if (isCustom) ...[
+          Text(
+            "Виберіть одну з доступних версій Forge",
+            style: AppText.defaultTheme.bodySmall.copyWith(
+              color: AppColors.dark.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (widget.viewModel.forgeVersions.isEmpty)
+            Text(
+              "Немає доступних версій Forge для цієї версії Minecraft",
+              style: AppText.defaultTheme.bodySmall.copyWith(
+                color: AppColors.dark.onSurfaceVariant,
+              ),
+            )
+          else
+            SizedBox(
+              height: 180,
+              child: ListView.separated(
+                itemCount: widget.viewModel.forgeVersions.length,
+                separatorBuilder: (context, index) => const SizedBox(height: 8),
+                itemBuilder: (context, index) {
+                  final version = widget.viewModel.forgeVersions[index];
+                  final isSelected = widget.viewModel.selectedForgeVersion == version.version;
+                  return ListItem(
+                    title: version.version,
+                    badgeText: index == 0 ? 'Newest' : null,
+                    isSelected: isSelected,
+                    onTap: () => widget.viewModel.selectForgeVersion(version.version),
+                  );
+                },
+              ),
+            ),
+        ],
       ],
     );
   }
