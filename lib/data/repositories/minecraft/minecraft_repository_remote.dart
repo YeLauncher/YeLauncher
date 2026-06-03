@@ -5,8 +5,10 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart' as crypto;
 
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
+import 'package:yelauncher/data/repositories/mod_loader/forge_repository.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
 import 'package:yelauncher/data/services/api/microsoft_api_client.dart';
 import 'package:yelauncher/data/services/api/models/minecraft_profile_api_model.dart';
@@ -18,10 +20,12 @@ import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
 import 'package:yelauncher/data/services/secure_storage_service.dart';
+import 'package:yelauncher/domain/models/instance/instance_model.dart';
 import 'package:yelauncher/domain/models/download/download_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_run_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
 import 'package:yelauncher/utilities/result.dart';
 
 class MinecraftRepositoryRemote implements MinecraftRepository {
@@ -32,6 +36,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   final FileService _fileService;
   final JavaRepository _javaRepository;
   final SecureStorageService _secureStorage;
+  final ForgeRepository _forgeRepository;
 
   MinecraftRepositoryRemote({
     required MinecraftApiClient apiClient,
@@ -40,16 +45,19 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     required FileService fileService,
     required JavaRepository javaRepository,
     required SecureStorageService secureStorage,
+    required ForgeRepository forgeRepository,
   }) : _apiClient = apiClient,
        _minecraftService = minecraftService,
        _downloadService = downloadService,
        _fileService = fileService,
        _javaRepository = javaRepository,
-       _secureStorage = secureStorage;
+        _secureStorage = secureStorage,
+        _forgeRepository = forgeRepository;
 
   @override
   Future<Result<List<MinecraftVersionModel>>> getVersions() async {
     try {
+      _log.info('Fetching available Minecraft versions');
       final result = await _apiClient.getManifest();
       switch (result) {
         case Success<VersionManifestApiModel>():
@@ -60,24 +68,36 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               releaseTime: apiModel.releaseTime,
             );
           }).toList();
+          _log.info('Fetched ${versions.length} Minecraft versions');
           return Result.success(versions);
         case Failure<VersionManifestApiModel>():
+          _log.warning('Failed to fetch Minecraft versions: ${result.error}');
           return Result.failure(result.error);
       }
     } on Exception catch (error) {
+      _log.severe('Unexpected error while fetching Minecraft versions: $error');
       return Result.failure(error);
     }
   }
 
   @override
   Future<Result<void>> install(
-    String id, {
+    InstanceModel instance, {
     void Function(int, int?)? onProgress,
   }) async {
-    var versionResult = await _apiClient.getVersion(id);
-    final result = await versionResult
+    try {
+      _log.info(
+        'Starting install for instance ${instance.id} '
+        '(${instance.minecraftVersion}, loader=${instance.modLoader}:${instance.modLoaderVersion})',
+      );
+      final versionResult = await _apiClient.getVersion(instance.minecraftVersion);
+      return await versionResult
         .flatMapAsync((version) => _apiClient.getRequirements(version))
         .foldAsync((requirements) async {
+          _log.info(
+            'Resolved install requirements for ${instance.minecraftVersion}; '
+            'downloading assets, client, and libraries',
+          );
           // 1. Download Asset Index
           final assetIndex = requirements.assetIndex;
           final indexDownload = DownloadModel(
@@ -91,6 +111,10 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
             indexDownload,
           ]);
           if (indexDownloadResult is Failure<void>) {
+            _log.warning(
+              'Failed to download asset index for ${instance.minecraftVersion}: '
+              '${indexDownloadResult.error}',
+            );
             return indexDownloadResult;
           }
 
@@ -106,7 +130,8 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               downloads.add(
                 DownloadModel(
                   url: requirements.client.url,
-                  path: 'versions/$id/$id.jar',
+                  path:
+                      'versions/${instance.minecraftVersion}/${instance.minecraftVersion}.jar',
                   sha1: requirements.client.sha1,
                   expectedSize: requirements.client.size,
                 ),
@@ -126,7 +151,13 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               }
 
               // Assets
-              downloads.addAll(_createAssetDownloads(id, indexResult.value));
+              downloads.addAll(
+                _createAssetDownloads(instance.minecraftVersion, indexResult.value),
+              );
+
+              _log.info(
+                'Prepared ${downloads.length} downloads for ${instance.minecraftVersion}',
+              );
 
               final downloadsResult = await _downloadService.downloadAll(
                 downloads,
@@ -134,103 +165,317 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               );
 
               if (downloadsResult is Failure<void>) {
+                _log.warning(
+                  'Download batch failed for ${instance.minecraftVersion}: '
+                  '${downloadsResult.error}',
+                );
                 return downloadsResult;
               }
+
+              if (instance.modLoader == 'forge') {
+                final forgeId = _forgeId(instance);
+                _log.info('Installing Forge metadata and libraries for $forgeId');
+                final forgeResult = await _forgeRepository.processInstallation(
+                  forgeId,
+                  instance.minecraftVersion,
+                );
+                if (forgeResult is Failure<void>) {
+                  _log.warning(
+                    'Forge installation failed for $forgeId: ${forgeResult.error}',
+                  );
+                  return forgeResult;
+                }
+                _log.info('Forge installation completed for $forgeId');
+              }
             case Failure<AssetIndexFileApiModel>():
+              _log.warning(
+                'Failed to download asset index metadata for '
+                '${instance.minecraftVersion}: ${indexResult.error}',
+              );
               return Result.failure(indexResult.error);
           }
 
+          _log.info('Install finished successfully for ${instance.id}');
           return const Result.success(null);
         }, (error) async => Result.failure(error));
-
-    return result;
+    } on Exception catch (e) {
+      _log.severe(
+        'Exception while trying to install Minecraft version '
+        '${instance.minecraftVersion}: $e',
+      );
+      return Result.failure(e);
+    }
   }
 
   @override
-  Future<Result<bool>> isInstalled(String id) async {
-    // 1. Fast path: Check if the main client jar exists first.
-    // If it doesn't, we immediately know it's not installed.
-    final clientJarPath = await _fileService.getClientJarPath(id);
-    if (!await File(clientJarPath).exists()) {
-      return const Result.success(false);
+  Future<Result<bool>> isInstalled(InstanceModel instance) async {
+    try {
+      _log.info(
+        'Checking installation status for instance ${instance.id} '
+        '(${instance.minecraftVersion}, loader=${instance.modLoader})',
+      );
+      final clientJarPath = await _fileService.getClientJarPath(instance.minecraftVersion);
+      if (!await File(clientJarPath).exists()) {
+        _log.info('Client JAR is missing for ${instance.minecraftVersion}');
+        return const Result.success(false);
+      }
+
+      if (instance.modLoader == 'forge') {
+        final forgeId = _forgeId(instance);
+        final forgeInstalled = await _forgeRepository.isInstalled(forgeId);
+        if (forgeInstalled is Failure<bool>) {
+          _log.warning('Failed to check Forge installation for $forgeId: ${forgeInstalled.error}');
+          return Result.failure(forgeInstalled.error);
+        }
+
+        if (!(forgeInstalled as Success<bool>).value) {
+          _log.info('Forge metadata is missing for $forgeId');
+          return const Result.success(false);
+        }
+      }
+
+      final versionResult = await _apiClient.getVersion(instance.minecraftVersion);
+      return versionResult
+          .flatMapAsync((version) => _apiClient.getRequirements(version))
+          .foldAsync((requirements) async {
+            final assetIndexId = requirements.assetIndex.id;
+            final indexPath = await _fileService.getAbsolutePath([
+              'assets',
+              'indexes',
+              '$assetIndexId.json',
+            ]);
+
+            final indexExists = await File(indexPath).exists();
+              _log.info(
+                'Installation check for ${instance.minecraftVersion} completed: '
+                '${indexExists ? 'installed' : 'missing asset index'}',
+              );
+            return Result.success(indexExists);
+          }, (error) async => Result.failure(error));
+    } on Exception catch (e) {
+          _log.severe(
+            'Exception while checking installation status for '
+            '${instance.minecraftVersion}: $e',
+          );
+      return Result.failure(e);
     }
-
-    // 2. Slow path: Check if the required assets for this version exist.
-    final versionResult = await _apiClient.getVersion(id);
-    return versionResult
-        .flatMapAsync((version) => _apiClient.getRequirements(version))
-        .foldAsync((requirements) async {
-          // Check if the specific asset index file for this version exists
-          final assetIndexId = requirements.assetIndex.id;
-          final indexPath = await _fileService.getAbsolutePath([
-            'assets',
-            'indexes',
-            '$assetIndexId.json',
-          ]);
-
-          final indexExists = await File(indexPath).exists();
-          return Result.success(indexExists);
-        }, (error) async => Result.failure(error));
   }
 
   @override
   Future<Result<String>> getJavaVersion(String id) async {
+    _log.info('Resolving Java version for Minecraft version $id');
     var versionResult = await _apiClient.getVersion(id);
-    return versionResult
+    final result = await versionResult
         .flatMapAsync((version) => _apiClient.getRequirements(version))
         .map((requirements) => requirements.javaVersion);
+    if (result is Success<String>) {
+      _log.info('Resolved Java version for $id: ${result.value}');
+    } else if (result is Failure<String>) {
+      _log.warning('Failed to resolve Java version for $id: ${result.error}');
+    }
+    return result;
   }
 
   @override
-  Future<Result<void>> run(String id) async {
+  Future<Result<MinecraftProcessModel>> run(InstanceModel instance) async {
     try {
-      final versionResult = await _apiClient.getVersion(id);
+      _log.info(
+        'Starting run for instance ${instance.id} '
+        '(${instance.minecraftVersion}, loader=${instance.modLoader}:${instance.modLoaderVersion})',
+      );
+      final versionResult = await _apiClient.getVersion(instance.minecraftVersion);
       return versionResult
           .flatMapAsync((version) => _apiClient.getRequirements(version))
           .foldAsync((requirements) async {
+            _log.info('Resolved launch requirements for ${instance.minecraftVersion}');
             final List<String> libraryPaths = [];
             final List<String> nativeLibraryPaths = [];
+            final seenLibraryPaths = <String>{};
+
+            void addLibraryPath(String path) {
+              if (path.isNotEmpty && seenLibraryPaths.add(path)) {
+                libraryPaths.add(path);
+              }
+            }
+
+            var mainClass = requirements.mainClass;
+            final jvmArguments = List<String>.of(_getJvmArguments(requirements));
+            var gameArguments = List<String>.of(_getGameArguments(requirements));
+            var minecraftVersion = requirements.id;
+            var clientJarPath = await _fileService.getClientJarPath(instance.minecraftVersion);
+
+            if (instance.modLoader == 'forge') {
+              _log.info('Loading Forge launch data for ${instance.minecraftVersion}');
+              final forgeLaunchResult = await _loadForgeLaunchData(instance);
+              if (forgeLaunchResult is Failure<_ForgeLaunchData>) {
+                _log.warning(
+                  'Failed to load Forge launch data for ${instance.minecraftVersion}: '
+                  '${forgeLaunchResult.error}',
+                );
+                return Result.failure(forgeLaunchResult.error);
+              }
+
+              final forgeLaunchData = (forgeLaunchResult as Success<_ForgeLaunchData>).value;
+              mainClass = forgeLaunchData.mainClass;
+              minecraftVersion = forgeLaunchData.minecraftVersion;
+              clientJarPath = forgeLaunchData.clientJarPath;
+              jvmArguments.insertAll(0, forgeLaunchData.jvmArguments);
+              if (forgeLaunchData.replaceGameArguments) {
+                gameArguments = forgeLaunchData.gameArguments;
+              } else {
+                gameArguments.insertAll(0, forgeLaunchData.gameArguments);
+              }
+              for (final path in forgeLaunchData.libraryPaths) {
+                addLibraryPath(await _fileService.getLibraryPath(path));
+              }
+              _log.info(
+                'Applied Forge launch data for ${instance.minecraftVersion} '
+                '(mainClass=$mainClass)',
+              );
+            }
 
             for (final lib in requirements.libraries) {
               if (!_isAllowed(lib.rules)) continue;
               if (lib.isNative) {
                 await _fileService.extractNatives(
                   await _fileService.getLibraryPath(lib.path),
-                  await _fileService.getNativesDirectory(id),
+                  await _fileService.getNativesDirectory(instance.id),
                 );
               }
-              libraryPaths.add(await _fileService.getLibraryPath(lib.path));
+              addLibraryPath(await _fileService.getLibraryPath(lib.path));
             }
+
+            _log.info(
+              'Collected ${libraryPaths.length} library paths and '
+              '${nativeLibraryPaths.length} native library paths for '
+              '${instance.minecraftVersion}',
+            );
+
+            final profileResult = await getProfile();
+            final profile = switch (profileResult) {
+              Success<MinecraftProfileModel>(value: final cachedProfile) => cachedProfile,
+              Failure<MinecraftProfileModel>() => _fallbackProfile(),
+            };
+
+            _log.info(
+              'Using profile ${profile.nickname} for ${instance.minecraftVersion}',
+            );
 
             var model = MinecraftRunModel(
               libraryDirectory: await _fileService.getLibraryDirectory(),
               libraryPaths: libraryPaths,
               nativeLibraryPaths: nativeLibraryPaths,
-              jvmArguments: _getJvmArguments(requirements),
-              gameArguments: _getGameArguments(requirements),
-              mainClass: requirements.mainClass,
+              jvmArguments: jvmArguments,
+              gameArguments: gameArguments,
+              mainClass: mainClass,
               assetsDirectory: await _fileService.getAssetDirectory(),
-              gameDirectory: await _fileService.getGameDirectory(id),
-              nativesDirectory: await _fileService.getNativesDirectory(id),
-              clientJarPath: await _fileService.getClientJarPath(id),
+              gameDirectory: await _fileService.getGameDirectory(instance.id),
+              nativesDirectory: await _fileService.getNativesDirectory(instance.id),
+              clientJarPath: clientJarPath,
               javaExecutablePath: await _getJavaExecutablePathAbs(
                 int.tryParse(requirements.javaVersion) ?? 17,
               ),
               assetIndex: requirements.assetIndex.id,
-              minecraftVersion: requirements.id,
-              profile: MinecraftProfileModel(
-                nickname: "Xemii16",
-                uuid: "1fd9c8be-50cb-49c3-a755-b29dc8483184",
-                accessToken: "test",
-                userType: "offline",
-              ),
+              minecraftVersion: minecraftVersion,
+              profile: profile,
+            );
+            _log.info(
+              'Launching ${instance.minecraftVersion} with main class $mainClass',
             );
             return _minecraftService.run(model);
           }, (error) async => Result.failure(error));
     } on Exception catch (e) {
-      _log.severe('Exception while trying to run Minecraft version $id: $e');
+      _log.severe(
+        'Exception while trying to run Minecraft version ${instance.minecraftVersion}: $e',
+      );
       return Result.failure(e);
     }
+  }
+
+  Future<Result<_ForgeLaunchData>> _loadForgeLaunchData(InstanceModel instance) async {
+    try {
+      final forgeId = _forgeId(instance);
+      _log.info('Resolving Forge launch data for $forgeId');
+      final librariesResult = await _forgeRepository.getLibrariesPath(forgeId);
+      if (librariesResult is Failure<List<String>>) {
+        _log.warning('Failed to resolve Forge libraries for $forgeId: ${librariesResult.error}');
+        return Result.failure(librariesResult.error);
+      }
+
+      final libraries = switch (librariesResult) {
+        Success<List<String>>(value: final value) => value,
+        Failure<List<String>>() => const <String>[],
+      };
+
+      final versionJson = await _readForgeVersionJson(forgeId);
+      if (versionJson == null) {
+        _log.warning('Forge version JSON missing for $forgeId');
+        return Result.failure(Exception('Forge version JSON not found for $forgeId'));
+      }
+
+      _log.info(
+        'Forge launch data resolved for $forgeId (libraries=${libraries.length})',
+      );
+
+      final bool replaceGameArguments = versionJson.containsKey('minecraftArguments') && !versionJson.containsKey('arguments');
+      final gameArgs = replaceGameArguments
+          ? (versionJson['minecraftArguments'] as String).split(' ')
+          : _extractForgeArguments(versionJson, 'game');
+
+      return Result.success(
+        _ForgeLaunchData(
+          libraryPaths: libraries,
+          jvmArguments: _extractForgeArguments(versionJson, 'jvm'),
+          gameArguments: gameArgs,
+          replaceGameArguments: replaceGameArguments,
+          mainClass: versionJson['mainClass'] as String? ?? 'net.minecraftforge.bootstrap.ForgeBootstrap',
+          clientJarPath: await _fileService.getClientJarPath(forgeId),
+          minecraftVersion: forgeId,
+        ),
+      );
+    } catch (e) {
+      _log.severe('Failed to load Forge launch data for ${instance.minecraftVersion}: $e');
+      return Result.failure(Exception('Failed to load Forge launch data: $e'));
+    }
+  }
+
+  Future<Map<String, dynamic>?> _readForgeVersionJson(String forgeId) async {
+    final file = await _forgeVersionJsonFile(forgeId);
+    if (!await file.exists()) {
+      _log.fine('Forge version JSON file does not exist for $forgeId');
+      return null;
+    }
+
+    _log.fine('Reading Forge version JSON from ${file.path}');
+    return jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+  }
+
+  Future<File> _forgeVersionJsonFile(String forgeId) async {
+    final versionsDir = await _fileService.getAbsolutePath(['versions', forgeId]);
+    return File(p.join(versionsDir, '$forgeId.json'));
+  }
+
+  List<String> _extractForgeArguments(Map<String, dynamic> versionJson, String key) {
+    final arguments = versionJson['arguments'] as Map<String, dynamic>?;
+    final rawArgs = arguments?[key] as List<dynamic>? ?? const [];
+    return rawArgs.whereType<String>().toList();
+  }
+
+  String _forgeId(InstanceModel instance) {
+    return '${instance.minecraftVersion}-forge-${instance.modLoaderVersion}';
+  }
+
+  MinecraftProfileModel _fallbackProfile() {
+    return MinecraftProfileModel(
+      nickname: 'Player',
+      uuid: _fallbackProfileUuid(),
+      accessToken: 'offline',
+      userType: 'offline',
+    );
+  }
+
+  String _fallbackProfileUuid() {
+    return '00000000-0000-0000-0000-000000000000';
   }
 
   Future<String> _getJavaExecutablePathAbs(int javaVersion) async {
@@ -335,6 +580,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
         ),
       );
     }
+    _log.fine('Prepared ${assetDownloads.length} asset downloads for $id');
     return assetDownloads;
   }
 
@@ -459,3 +705,24 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     }
   }
 }
+
+class _ForgeLaunchData {
+  final List<String> libraryPaths;
+  final List<String> jvmArguments;
+  final List<String> gameArguments;
+  final bool replaceGameArguments;
+  final String mainClass;
+  final String clientJarPath;
+  final String minecraftVersion;
+
+  const _ForgeLaunchData({
+    required this.libraryPaths,
+    required this.jvmArguments,
+    required this.gameArguments,
+    this.replaceGameArguments = false,
+    required this.mainClass,
+    required this.clientJarPath,
+    required this.minecraftVersion,
+  });
+}
+

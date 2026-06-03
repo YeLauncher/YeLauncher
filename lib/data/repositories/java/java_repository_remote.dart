@@ -1,14 +1,12 @@
-import 'dart:ffi';
 import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:archive/archive.dart';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
+import 'package:archive/archive.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/utilities/result.dart';
+import 'package:logging/logging.dart';
 
 class JavaRepositoryRemote implements JavaRepository {
   final _log = Logger('JavaRepositoryRemote');
@@ -46,9 +44,7 @@ class JavaRepositoryRemote implements JavaRepository {
       final execPath = await _findExecutable(javaDir);
       return Result.success(execPath != null);
     } catch (e) {
-      return Result.failure(
-        Exception('Failed to check Java install status: $e'),
-      );
+      return Result.failure(Exception('Failed to check Java install status: $e'));
     }
   }
 
@@ -61,9 +57,7 @@ class JavaRepositoryRemote implements JavaRepository {
       }
       final execPath = await _findExecutable(javaDir);
       if (execPath == null) {
-        return Result.failure(
-          Exception('Java $version executable not found in $javaDir'),
-        );
+        return Result.failure(Exception('Java $version executable not found in $javaDir'));
       }
       return Result.success(execPath);
     } catch (e) {
@@ -72,23 +66,17 @@ class JavaRepositoryRemote implements JavaRepository {
   }
 
   @override
-  Future<Result<void>> install(
-    int version, {
-    void Function(double)? onProgress,
-  }) async {
+  Future<Result<void>> install(int version, {void Function(double)? onProgress}) async {
     try {
-      final url =
-          'https://corretto.aws/downloads/latest/amazon-corretto-$version-$_cpuArch-$_os-jdk.$_ext';
+      final url = 'https://corretto.aws/downloads/latest/amazon-corretto-$version-$_cpuArch-$_os-jdk.$_ext';
       _log.info('Downloading Java $version from $url');
 
       final request = http.Request('GET', Uri.parse(url));
       final response = await http.Client().send(request);
       if (response.statusCode != 200) {
-        return Result.failure(
-          Exception('Failed to download Java $version: ${response.statusCode}'),
-        );
+        return Result.failure(Exception('Failed to download Java $version: ${response.statusCode}'));
       }
-
+      
       final contentLength = response.contentLength ?? 0;
       var downloadedBytes = 0;
       final bytesBuilder = BytesBuilder();
@@ -116,16 +104,12 @@ class JavaRepositoryRemote implements JavaRepository {
             await outFile.parent.create(recursive: true);
             await outFile.writeAsBytes(file.content as List<int>);
           } else {
-            await Directory(
-              p.join(javaDir.path, filename),
-            ).create(recursive: true);
+            await Directory(p.join(javaDir.path, filename)).create(recursive: true);
           }
         }
       } else {
         // tar.gz
-        final archive = TarDecoder().decodeBytes(
-          GZipDecoder().decodeBytes(bytesBuilder.toBytes()),
-        );
+        final archive = TarDecoder().decodeBytes(GZipDecoder().decodeBytes(bytesBuilder.toBytes()));
         for (final file in archive) {
           final filename = file.name;
           if (file.isFile) {
@@ -140,9 +124,7 @@ class JavaRepositoryRemote implements JavaRepository {
               }
             }
           } else {
-            await Directory(
-              p.join(javaDir.path, filename),
-            ).create(recursive: true);
+            await Directory(p.join(javaDir.path, filename)).create(recursive: true);
           }
         }
       }

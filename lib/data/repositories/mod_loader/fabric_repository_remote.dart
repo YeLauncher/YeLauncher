@@ -36,4 +36,32 @@ class FabricRepositoryRemote implements ModLoaderRepository {
       return Result.failure(e);
     }
   }
+
+  @override
+  Future<Result<List<String>>> getLibrariesPath(String id) {
+    // TODO: implement getLibrariesPath
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<void>> install(
+    String id, {
+    String? minecraftVersion,
+    void Function(int, int?)? onProgress,
+  }) {
+    // TODO: implement install
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<bool>> isInstalled(String id) {
+    // TODO: implement isInstalled
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Result<void>> processInstallation(String id, String minecraftVersion) {
+    // TODO: implement processInstallation
+    throw UnimplementedError();
+  }
 }

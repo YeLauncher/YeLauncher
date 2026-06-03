@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
 import 'package:yelauncher/utilities/command.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:yelauncher/data/services/download_service.dart';
@@ -20,6 +21,9 @@ class InstanceCardViewModel extends ChangeNotifier {
   String? _currentInstallStep;
   int? _totalInstallBytes;
   int? _completedInstallBytes;
+  MinecraftProcessModel? _activeProcess;
+
+  bool get isRunning => _activeProcess != null;
 
   String? get currentInstallStep {
     if (_currentInstallStep != null && _totalInstallBytes != null && _completedInstallBytes != null) {
@@ -74,7 +78,7 @@ class InstanceCardViewModel extends ChangeNotifier {
     notifyListeners();
 
     final installFuture = _minecraftRepository.install(
-      _instance.minecraftVersion,
+      _instance,
       onProgress: (completed, total) {
         _completedInstallBytes = completed;
         _totalInstallBytes = total;
@@ -131,9 +135,25 @@ class InstanceCardViewModel extends ChangeNotifier {
   Future<Result<void>> _runInstance() async {
     try {
       notifyListeners();
-      await _minecraftRepository.run(_instance.minecraftVersion);
-      notifyListeners();
-      return const Result.success(null);
+      final result = await _minecraftRepository.run(_instance);
+      
+      switch (result) {
+        case Success<MinecraftProcessModel>(value: final process):
+          _activeProcess = process;
+          notifyListeners();
+          
+          process.exitCode.then((_) {
+            if (_activeProcess == process) {
+              _activeProcess = null;
+              notifyListeners();
+            }
+          });
+          
+          return const Result.success(null);
+        case Failure<MinecraftProcessModel>(error: final error):
+          notifyListeners();
+          return Result.failure(error);
+      }
     } on Exception catch (e) {
       notifyListeners();
       return Result.failure(e);
@@ -150,6 +170,11 @@ class InstanceCardViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> _stopInstance() async {
-    return Result.success(null);
+    if (_activeProcess != null) {
+      _activeProcess!.kill();
+      _activeProcess = null;
+      notifyListeners();
+    }
+    return const Result.success(null);
   }
 }

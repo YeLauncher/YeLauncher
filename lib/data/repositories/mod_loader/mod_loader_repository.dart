@@ -9,4 +9,13 @@ abstract class ModLoaderRepository {
   Future<Result<List<ModLoaderVersionModel>>> getVersions(
     String minecraftVersion,
   );
+
+  Future<Result<void>> install(
+    String id, {
+    String? minecraftVersion,
+    void Function(int, int?)? onProgress,
+  });
+  Future<Result<bool>> isInstalled(String id);
+  Future<Result<void>> processInstallation(String id, String minecraftVersion);
+  Future<Result<List<String>>> getLibrariesPath(String id);
 }

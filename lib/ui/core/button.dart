@@ -30,6 +30,10 @@ class Button extends StatefulWidget {
     : backgroundColor = AppColors.dark.surfaceContainerHigh,
       textColor = AppColors.dark.onSurface;
 
+  Button.error(this.label, {this.onPressed, super.key, this.iconData})
+    : backgroundColor = AppColors.dark.error,
+      textColor = AppColors.dark.scrim;
+
   @override
   State<StatefulWidget> createState() => _ButtonState();
 }
@@ -49,7 +53,10 @@ class _ButtonState extends State<Button> {
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
         child: AnimatedContainer(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 12,
+          ),
           decoration: BoxDecoration(
             color: _backgroundColor,
             borderRadius: BorderRadius.circular(12),

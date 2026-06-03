@@ -67,11 +67,9 @@ class _InstanceCardState extends State<InstanceCard> {
                   ),
                 ],
               ),
-              if (widget.viewModel.isDownloading ||
-                  widget.viewModel.installInstance.running) ...[
+              if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running) ...[
                 Tooltip(
-                  message:
-                      widget.viewModel.currentInstallStep ?? 'Installing...',
+                  message: widget.viewModel.currentInstallStep ?? 'Installing...',
                   preferBelow: false,
                   child: SizedBox(
                     width: 48,
@@ -93,11 +91,27 @@ class _InstanceCardState extends State<InstanceCard> {
                   onPressed: widget.viewModel.installInstance.execute,
                 ),
               ] else if (widget.viewModel.instance.isInstalled == true) ...[
-                Button.primary(
-                  "Грати",
-                  iconData: Symbols.play_arrow_rounded,
-                  onPressed: widget.viewModel.runInstance.execute,
-                ),
+                if (widget.viewModel.isRunning)
+                  Button.error(
+                    "Зупинити",
+                    iconData: Symbols.stop_rounded,
+                    onPressed: widget.viewModel.stopInstance.execute,
+                  )
+                else if (widget.viewModel.runInstance.running)
+                  SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator.primary(),
+                    ),
+                  )
+                else
+                  Button.primary(
+                    "Грати",
+                    iconData: Symbols.play_arrow_rounded,
+                    onPressed: widget.viewModel.runInstance.execute,
+                  ),
               ],
             ],
           ),

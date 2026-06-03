@@ -7,6 +7,7 @@ import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/data/repositories/java/java_repository_remote.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository_remote.dart';
+import 'package:yelauncher/data/repositories/mod_loader/forge_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/fabric_repository_local.dart';
 import 'package:yelauncher/data/repositories/mod_loader/forge_repository_local.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
@@ -45,17 +46,12 @@ List<SingleChildWidget> get providersLocal {
     Provider.value(value: LocalDataService()),
     Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
     Provider(create: (context) => DownloadService()),
-    Provider<MinecraftRepository>(
-      create: (context) => MinecraftRepositoryRemote(
+    Provider<InstanceService>(
+      create: (context) => InstanceService(
         apiClient: context.read(),
-        minecraftService: context.read(),
-        downloadService: context.read(),
-        fileService: context.read(),
         javaRepository: context.read(),
-        secureStorage: context.read(),
       ),
     ),
-    Provider<InstanceService>(create: (context) => InstanceService()),
     Provider<InstanceRepository>(
       create: (context) =>
           InstanceRepositoryLocal(
@@ -72,10 +68,24 @@ List<SingleChildWidget> get providersLocal {
       create: (context) =>
           ForgeRepositoryLocal(localDataService: context.read()),
     ),
+    Provider<ForgeRepository>(
+      create: (context) => context.read<ForgeRepositoryLocal>(),
+    ),
+    Provider<MinecraftRepository>(
+      create: (context) => MinecraftRepositoryRemote(
+        apiClient: context.read(),
+        minecraftService: context.read(),
+        downloadService: context.read(),
+        fileService: context.read(),
+        javaRepository: context.read(),
+        secureStorage: context.read(),
+        forgeRepository: context.read(),
+      ),
+    ),
     Provider<List<ModLoaderRepository>>(
       create: (context) => [
         context.read<FabricRepositoryLocal>(),
-        context.read<ForgeRepositoryLocal>(),
+        context.read<ForgeRepository>(),
       ],
     ),
   ];
@@ -86,7 +96,12 @@ List<SingleChildWidget> get providersRemote {
     ..._sharedProviders,
     Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
     Provider(create: (context) => DownloadService()),
-    Provider<InstanceService>(create: (context) => InstanceService()),
+    Provider<InstanceService>(
+      create: (context) => InstanceService(
+        apiClient: context.read(),
+        javaRepository: context.read(),
+      ),
+    ),
     Provider<InstanceRepository>(
       create: (context) =>
           InstanceRepositoryLocal(
@@ -94,6 +109,18 @@ List<SingleChildWidget> get providersRemote {
                 minecraftService: context.read<MinecraftService>(),
               )
               as InstanceRepository,
+    ),
+    Provider.value(value: FabricApiClient()),
+    Provider.value(value: ForgeApiClient()),
+    Provider<FabricRepositoryRemote>(
+      create: (context) => FabricRepositoryRemote(apiClient: context.read()),
+    ),
+    Provider<ForgeRepository>(
+      create: (context) => ForgeRepositoryRemote(
+        apiClient: context.read(),
+        downloadService: context.read(),
+        fileService: context.read(),
+      ),
     ),
     Provider<MinecraftRepository>(
       create: (context) => MinecraftRepositoryRemote(
@@ -103,20 +130,13 @@ List<SingleChildWidget> get providersRemote {
         fileService: context.read(),
         javaRepository: context.read(),
         secureStorage: context.read(),
+        forgeRepository: context.read(),
       ),
-    ),
-    Provider.value(value: FabricApiClient()),
-    Provider.value(value: ForgeApiClient()),
-    Provider<FabricRepositoryRemote>(
-      create: (context) => FabricRepositoryRemote(apiClient: context.read()),
-    ),
-    Provider<ForgeRepositoryRemote>(
-      create: (context) => ForgeRepositoryRemote(apiClient: context.read()),
     ),
     Provider<List<ModLoaderRepository>>(
       create: (context) => [
         context.read<FabricRepositoryRemote>(),
-        context.read<ForgeRepositoryRemote>(),
+        context.read<ForgeRepository>(),
       ],
     ),
   ];
