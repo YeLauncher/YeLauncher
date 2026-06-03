@@ -3,12 +3,13 @@ import 'dart:io';
 
 import 'package:logging/logging.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_run_model.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
 import 'package:yelauncher/utilities/result.dart';
 
 class MinecraftService {
   final _log = Logger('MinecraftService');
 
-  Future<Result<void>> run(MinecraftRunModel model) async {
+  Future<Result<MinecraftProcessModel>> run(MinecraftRunModel model) async {
     try {
       final cp = <String>[];
       for (final libPath in model.libraryPaths) {
@@ -74,17 +75,25 @@ class MinecraftService {
         workingDirectory: model.gameDirectory,
       );
 
-      process.stdout
+      final stdoutStream = process.stdout.asBroadcastStream();
+      final stderrStream = process.stderr.asBroadcastStream();
+      
+      stdoutStream
           .transform(utf8.decoder)
           .listen((data) => _log.info('Minecraft: $data'));
-      process.stderr
+      stderrStream
           .transform(utf8.decoder)
           .listen((data) => _log.severe('Minecraft: $data'));
 
       process.exitCode.then((code) {
         _log.info('Minecraft process exited with code $code');
       });
-      return Result.success(null);
+      return Result.success(MinecraftProcessModel(
+        exitCode: process.exitCode,
+        stdout: stdoutStream,
+        stderr: stderrStream,
+        kill: process.kill,
+      ));
     } on Exception catch (e) {
       return Result.failure(e);
     }
@@ -103,9 +112,11 @@ class MinecraftService {
             .replaceAll('\${version_name}', model.minecraftVersion)
             .replaceAll('\${game_directory}', model.gameDirectory)
             .replaceAll('\${assets_root}', model.assetsDirectory)
+            .replaceAll('\${game_assets}', model.assetsDirectory)
             .replaceAll('\${assets_index_name}', model.assetIndex)
             .replaceAll('\${auth_uuid}', model.profile.uuid)
             .replaceAll('\${auth_access_token}', model.profile.accessToken)
+            .replaceAll('\${auth_session}', model.profile.accessToken)
             .replaceAll('\${clientid}', 'yelauncher')
             .replaceAll('\${auth_xuid}', '0')
             .replaceAll('\${user_type}', model.profile.userType)

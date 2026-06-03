@@ -10,6 +10,9 @@ import 'package:yelauncher/utilities/result.dart';
 
 class DownloadService {
   final _log = Logger('DownloadService');
+  final http.Client _client;
+
+  DownloadService({http.Client? client}) : _client = client ?? http.Client();
 
   Future<Result<void>> download(
     DownloadModel model, {
@@ -26,7 +29,7 @@ class DownloadService {
 
       final request = http.Request('GET', Uri.parse(model.url));
       _log.finer('Starting download: ${model.url} -> ${model.path}');
-      final response = await http.Client().send(request);
+      final response = await _client.send(request);
 
       // model.status = DownloadStatus.downloading;
 
@@ -96,7 +99,7 @@ class DownloadService {
         // model.status = DownloadStatus.finished;
         // model.downloadedSize = await file.length();
         await file.length();
-        _log.finer('File SHA1 matches: ${model.path}');
+        _log.finest('File SHA1 matches: ${model.path}');
         // notifyListeners();
         return const Result.success(true);
       }
@@ -111,9 +114,9 @@ class DownloadService {
   }
 
   Future<Result<void>> downloadIfMissing(
-      DownloadModel model, {
-        void Function(int downloadedBytes, int? totalBytes)? onProgress,
-      }) async {
+    DownloadModel model, {
+    void Function(int downloadedBytes, int? totalBytes)? onProgress,
+  }) async {
     final downloadedResult = await isDownloaded(model);
     switch (downloadedResult) {
       case Success<bool>(value: final isDownloaded):
@@ -139,31 +142,42 @@ class DownloadService {
   }
 
   Future<Result<void>> downloadAll(
-      List<DownloadModel> models, {
-        void Function(int totalDownloadedBytes, int? totalExpectedBytes)? onProgress,
-      }) async {
+    List<DownloadModel> models, {
+    void Function(int totalDownloadedBytes, int? totalExpectedBytes)?
+    onProgress,
+  }) async {
     int accumulatedTotalBytes = 0;
     bool hasUnknownTotal = false;
 
     // --- PASS 1: PRE-FLIGHT SIZE CHECK ---
     _log.finer('Starting pre-flight size check for ${models.length} files...');
-    for (final model in models) {
-      final downloadedResult = await isDownloaded(model);
-
-      if (downloadedResult is Success<bool> && downloadedResult.value) {
-        // File exists locally, check its size on disk
-        try {
-          final appData = await getApplicationSupportDirectory();
-          final file = File(p.join(appData.path, model.path));
-          accumulatedTotalBytes += await file.length();
-        } catch (_) {
-          hasUnknownTotal = true;
+    final checkBatchSize = 50;
+    for (int i = 0; i < models.length; i += checkBatchSize) {
+      final batch = models.skip(i).take(checkBatchSize).toList();
+      final futures = batch.map((model) async {
+        final downloadedResult = await isDownloaded(model);
+        if (downloadedResult is Success<bool> && downloadedResult.value) {
+          // File exists locally, check its size on disk
+          try {
+            final appData = await getApplicationSupportDirectory();
+            final file = File(p.join(appData.path, model.path));
+            return await file.length();
+          } catch (_) {
+            return null; // Unknown total
+          }
+        } else {
+          // File needs downloading, ask the server for Content-Length via HEAD request if not provided
+          if (model.expectedSize != null) {
+            return model.expectedSize!;
+          } else {
+            return await _getRemoteFileSize(model.url);
+          }
         }
-      } else {
-        // File needs downloading, ask the server for Content-Length via HEAD request
-        final remoteSize = await _getRemoteFileSize(model.url);
-        if (remoteSize != null) {
-          accumulatedTotalBytes += remoteSize;
+      });
+      final results = await Future.wait(futures);
+      for (final result in results) {
+        if (result != null) {
+          accumulatedTotalBytes += result;
         } else {
           hasUnknownTotal = true;
         }
@@ -177,25 +191,31 @@ class DownloadService {
     onProgress?.call(accumulatedDownloadedBytes, grandTotalBytes);
 
     // --- PASS 2: ACTUAL DOWNLOAD ---
-    for (final model in models) {
-      int lastReportedDownloaded = 0;
+    final batchSize = 20;
+    for (int i = 0; i < models.length; i += batchSize) {
+      final batch = models.skip(i).take(batchSize).toList();
+      final futures = batch.map((model) async {
+        int lastReportedDownloaded = 0;
+        final result = await downloadIfMissing(
+          model,
+          onProgress: (downloadedBytes, _) {
+            // Calculate differential progress for the current file
+            int diffDownloaded = downloadedBytes - lastReportedDownloaded;
+            accumulatedDownloadedBytes += diffDownloaded;
+            lastReportedDownloaded = downloadedBytes;
 
-      final result = await downloadIfMissing(
-        model,
-        onProgress: (downloadedBytes, _) {
-          // Calculate differential progress for the current file
-          int diffDownloaded = downloadedBytes - lastReportedDownloaded;
-          accumulatedDownloadedBytes += diffDownloaded;
-          lastReportedDownloaded = downloadedBytes;
-
-          // Emit unified progress using the pre-calculated grand total
-          onProgress?.call(accumulatedDownloadedBytes, grandTotalBytes);
-        },
-      );
-
-      // Fast-fail if a file fails to download
-      if (result is Failure<void>) {
+            // Emit unified progress using the pre-calculated grand total
+            onProgress?.call(accumulatedDownloadedBytes, grandTotalBytes);
+          },
+        );
         return result;
+      });
+
+      final results = await Future.wait(futures);
+      for (final result in results) {
+        if (result is Failure<void>) {
+          return result; // Fast-fail
+        }
       }
     }
 
@@ -204,7 +224,7 @@ class DownloadService {
 
   Future<int?> _getRemoteFileSize(String url) async {
     try {
-      final response = await http.head(Uri.parse(url));
+      final response = await _client.head(Uri.parse(url));
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final contentLengthStr = response.headers['content-length'];
         if (contentLengthStr != null) {

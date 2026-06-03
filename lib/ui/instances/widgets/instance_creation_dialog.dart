@@ -24,6 +24,7 @@ class InstanceCreationDialog extends StatefulWidget {
 class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
+  bool _isForgeVersionMenuOpen = false;
 
   @override
   void initState() {
@@ -42,6 +43,12 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
     _nameController.dispose();
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _toggleForgeVersionMenu() {
+    setState(() {
+      _isForgeVersionMenuOpen = !_isForgeVersionMenuOpen;
+    });
   }
 
   @override
@@ -362,6 +369,8 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
     final isRecommended = widget.viewModel.selectedForgeVersionSource == 'recommended';
     final isLatest = widget.viewModel.selectedForgeVersionSource == 'latest';
     final isCustom = widget.viewModel.selectedForgeVersionSource == 'custom';
+    final selectedForgeVersion =
+        widget.viewModel.selectedForgeVersion ?? widget.viewModel.forgeVersions.first.version;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -390,11 +399,17 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               child: isRecommended
                   ? Button.primary(
                       "Recommended",
-                      onPressed: () => widget.viewModel.selectForgeVersionSource('recommended'),
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('recommended');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
                     )
                   : Button.surface(
                       "Recommended",
-                      onPressed: () => widget.viewModel.selectForgeVersionSource('recommended'),
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('recommended');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
                     ),
             ),
             const SizedBox(width: 12),
@@ -402,11 +417,17 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               child: isLatest
                   ? Button.primary(
                       "Latest",
-                      onPressed: () => widget.viewModel.selectForgeVersionSource('latest'),
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('latest');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
                     )
                   : Button.surface(
                       "Latest",
-                      onPressed: () => widget.viewModel.selectForgeVersionSource('latest'),
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('latest');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
                     ),
             ),
             const SizedBox(width: 12),
@@ -418,7 +439,10 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                     )
                   : Button.surface(
                       "Custom",
-                      onPressed: () => widget.viewModel.selectForgeVersionSource('custom'),
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('custom');
+                        setState(() => _isForgeVersionMenuOpen = true);
+                      },
                     ),
             ),
           ],
@@ -439,19 +463,56 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             ),
           ),
           const SizedBox(height: 12),
-          if (widget.viewModel.forgeVersions.isEmpty)
-            Text(
-              "Немає доступних версій Forge для цієї версії Minecraft",
-              style: AppText.defaultTheme.bodySmall.copyWith(
-                color: AppColors.dark.onSurfaceVariant,
+          GestureDetector(
+            onTap: _toggleForgeVersionMenu,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: AppColors.dark.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+                ),
               ),
-            )
-          else
-            SizedBox(
-              height: 180,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      selectedForgeVersion,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.defaultTheme.body.copyWith(
+                        color: AppColors.dark.onSurface,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _isForgeVersionMenuOpen
+                        ? Symbols.expand_less_rounded
+                        : Symbols.expand_more_rounded,
+                    color: AppColors.dark.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_isForgeVersionMenuOpen) ...[
+            const SizedBox(height: 8),
+            Container(
+              constraints: const BoxConstraints(maxHeight: 180),
+              decoration: BoxDecoration(
+                color: AppColors.dark.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+                ),
+              ),
               child: ListView.separated(
+                shrinkWrap: true,
                 itemCount: widget.viewModel.forgeVersions.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 8),
+                separatorBuilder: (context, index) => Container(
+                  height: 1,
+                  color: AppColors.dark.onSurface.withValues(alpha: 0.08),
+                ),
                 itemBuilder: (context, index) {
                   final version = widget.viewModel.forgeVersions[index];
                   final isSelected = widget.viewModel.selectedForgeVersion == version.version;
@@ -459,11 +520,15 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                     title: version.version,
                     badgeText: index == 0 ? 'Newest' : null,
                     isSelected: isSelected,
-                    onTap: () => widget.viewModel.selectForgeVersion(version.version),
+                    onTap: () {
+                      widget.viewModel.selectForgeVersion(version.version);
+                      setState(() => _isForgeVersionMenuOpen = false);
+                    },
                   );
                 },
               ),
             ),
+          ],
         ],
       ],
     );

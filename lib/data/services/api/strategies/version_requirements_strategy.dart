@@ -119,13 +119,13 @@ abstract class VersionRequirementsStrategy {
     final id = json['id'] as String;
 
     return VersionRequirementsApiModel(
+      id: id,
       arguments: arguments,
       assetIndex: assetIndex,
       client: client,
       javaVersion: javaVersion,
       libraries: libraries,
       mainClass: mainClass,
-      id: id,
     );
   }
 

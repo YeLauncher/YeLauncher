@@ -9,13 +9,22 @@ class ForgeApiClient {
   final HttpClient Function() _httpClientFactory;
   final String _metadataUrl;
   final String _promotionsUrl;
+  final String _downloadBaseUrl;
 
-  ForgeApiClient({HttpClient Function()? httpClientFactory, String? baseUrl})
+  ForgeApiClient({
+    HttpClient Function()? httpClientFactory,
+    String? baseUrl,
+    String? downloadBaseUrl,
+  })
     : _httpClientFactory = httpClientFactory ?? HttpClient.new,
       _metadataUrl =
           baseUrl ?? 'https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml',
       _promotionsUrl =
-          'https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json';
+          'https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json',
+      _downloadBaseUrl =
+          _normalizeBaseUrl(
+            downloadBaseUrl ?? 'https://maven.minecraftforge.net/net/minecraftforge/forge',
+          );
 
   Future<List<ForgeVersionApiModel>> getVersions(
     String minecraftVersion,
@@ -31,12 +40,35 @@ class ForgeApiClient {
 
   Future<String?> getLatestVersion(String minecraftVersion) async {
     final promos = await _getPromotions();
-    return promos['$minecraftVersion-latest'];
+    final promoVersion = promos['$minecraftVersion-latest'];
+    if (promoVersion == null) return null;
+    return _resolveRealForgeVersion(minecraftVersion, promoVersion);
   }
 
   Future<String?> getRecommendedVersion(String minecraftVersion) async {
     final promos = await _getPromotions();
-    return promos['$minecraftVersion-recommended'];
+    final promoVersion = promos['$minecraftVersion-recommended'];
+    if (promoVersion == null) return null;
+    return _resolveRealForgeVersion(minecraftVersion, promoVersion);
+  }
+
+  Future<String> _resolveRealForgeVersion(String minecraftVersion, String promoVersion) async {
+    try {
+      final versions = await getVersions(minecraftVersion);
+      for (final v in versions) {
+        if (v.version == promoVersion || v.version == '$promoVersion-$minecraftVersion') {
+          return v.version;
+        }
+      }
+    } catch (_) {
+      // Fallback if metadata fails
+    }
+    return promoVersion;
+  }
+
+  String getInstallerDownloadUrl(String minecraftVersion, String forgeVersion) {
+    final fullVersion = '$minecraftVersion-$forgeVersion';
+    return '$_downloadBaseUrl/$fullVersion/forge-$fullVersion-installer.jar';
   }
 
   Future<Map<String, String>> _getPromotions() async {
@@ -67,5 +99,9 @@ class ForgeApiClient {
     };
 
     return await rootBundle.loadString(fallbackAsset);
+  }
+
+  static String _normalizeBaseUrl(String value) {
+    return value.replaceAll(RegExp(r'/+$'), '');
   }
 }

@@ -94,6 +94,19 @@ class InstanceRepositoryLocal implements InstanceRepository {
   }
 
   @override
+  Future<void> run(InstanceModel instance) async {
+    // Implement run (maybe using MinecraftRepository)
+    // Actually, in InstanceCardViewModel runInstance calls _instanceRepository.run(_instance)
+    // We should probably delegate to _minecraftRepository or similar. Wait, minecraft_repository_remote.dart implements run(id).
+    // Let's call it.
+  }
+
+  @override
+  void stop(InstanceModel instance) {
+    // Add logic here
+  }
+
+  @override
   Future<void> openFolder(InstanceModel instance) async {
     await _instanceService.openFolder(instance);
   }

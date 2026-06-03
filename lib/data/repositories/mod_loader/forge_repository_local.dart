@@ -62,4 +62,40 @@ class ForgeRepositoryLocal implements ForgeRepository {
       return Result.failure(e);
     }
   }
+
+  @override
+  Future<Result<List<String>>> getLibrariesPath(String id) {
+    return Future.value(
+      Result.failure(
+        Exception('Forge library lookup is not available in local mode for $id'),
+      ),
+    );
+  }
+
+  @override
+  Future<Result<void>> install(
+    String id, {
+    String? minecraftVersion,
+    void Function(int, int?)? onProgress,
+  }) {
+    return Future.value(
+      Result.failure(
+        Exception('Forge installation is not available in local mode for $id'),
+      ),
+    );
+  }
+
+  @override
+  Future<Result<bool>> isInstalled(String id) {
+    return Future.value(const Result.success(false));
+  }
+
+  @override
+  Future<Result<void>> processInstallation(String id, String minecraftVersion) {
+    return Future.value(
+      Result.failure(
+        Exception('Forge installation processing is not available in local mode for $id'),
+      ),
+    );
+  }
 }
