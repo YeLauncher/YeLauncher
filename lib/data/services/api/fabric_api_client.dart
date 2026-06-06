@@ -25,4 +25,16 @@ class FabricApiClient {
         .map((e) => FabricVersionApiModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  Future<Map<String, dynamic>> getProfileJson(
+    String minecraftVersion,
+    String loaderVersion,
+  ) async {
+    final HttpClient client = _httpClientFactory();
+    final Uri uri = Uri.parse('$_baseUrl/$minecraftVersion/$loaderVersion/profile/json');
+    final HttpClientRequest request = await client.getUrl(uri);
+    final HttpClientResponse response = await request.close();
+    final String body = await response.transform(utf8.decoder).join();
+    return jsonDecode(body) as Map<String, dynamic>;
+  }
 }

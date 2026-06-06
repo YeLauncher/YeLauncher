@@ -80,6 +80,7 @@ List<SingleChildWidget> get providersLocal {
         javaRepository: context.read(),
         secureStorage: context.read(),
         forgeRepository: context.read(),
+        fabricRepository: context.read<FabricRepositoryLocal>(),
       ),
     ),
     Provider<List<ModLoaderRepository>>(
@@ -113,7 +114,11 @@ List<SingleChildWidget> get providersRemote {
     Provider.value(value: FabricApiClient()),
     Provider.value(value: ForgeApiClient()),
     Provider<FabricRepositoryRemote>(
-      create: (context) => FabricRepositoryRemote(apiClient: context.read()),
+      create: (context) => FabricRepositoryRemote(
+        apiClient: context.read(),
+        downloadService: context.read(),
+        fileService: context.read(),
+      ),
     ),
     Provider<ForgeRepository>(
       create: (context) => ForgeRepositoryRemote(
@@ -131,6 +136,7 @@ List<SingleChildWidget> get providersRemote {
         javaRepository: context.read(),
         secureStorage: context.read(),
         forgeRepository: context.read(),
+        fabricRepository: context.read<FabricRepositoryRemote>(),
       ),
     ),
     Provider<List<ModLoaderRepository>>(

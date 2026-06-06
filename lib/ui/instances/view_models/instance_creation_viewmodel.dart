@@ -30,6 +30,9 @@ class InstanceCreationViewModel extends ChangeNotifier {
   String? _forgeLatestVersion;
   String? _forgeRecommendedVersion;
 
+  List<ModLoaderVersionModel> fabricVersions = [];
+  String? selectedFabricVersion;
+
   final _log = Logger('InstanceCreationViewModel');
 
   late final Command0 loadVersions;
@@ -87,6 +90,8 @@ class InstanceCreationViewModel extends ChangeNotifier {
     selectedModLoader = loader;
     if (loader == 'forge') {
       _applyDefaultForgeVersion();
+    } else if (loader == 'fabric') {
+      _applyDefaultFabricVersion();
     }
     notifyListeners();
   }
@@ -113,6 +118,11 @@ class InstanceCreationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void selectFabricVersion(String version) {
+    selectedFabricVersion = version;
+    notifyListeners();
+  }
+
   Future<Result<void>> _loadVersions() async {
     final result = await _minecraftRepository.getVersions();
     switch (result) {
@@ -134,6 +144,8 @@ class InstanceCreationViewModel extends ChangeNotifier {
     _forgeRecommendedVersion = null;
     selectedForgeVersion = null;
     selectedForgeVersionSource = 'recommended';
+    fabricVersions = [];
+    selectedFabricVersion = null;
     selectedModLoader = 'vanilla';
     notifyListeners();
 
@@ -162,6 +174,9 @@ class InstanceCreationViewModel extends ChangeNotifier {
           }
 
           _applyDefaultForgeVersion();
+        } else if (repo.id == 'fabric') {
+          fabricVersions = result.value;
+          _applyDefaultFabricVersion();
         }
 
         return repo;
@@ -182,6 +197,8 @@ class InstanceCreationViewModel extends ChangeNotifier {
     String mlVersion = '';
     if (selectedModLoader == 'forge') {
       mlVersion = selectedForgeVersion ?? _defaultForgeCustomVersion() ?? '';
+    } else if (selectedModLoader == 'fabric') {
+      mlVersion = selectedFabricVersion ?? _defaultFabricVersion() ?? '';
     } else if (selectedModLoader != 'vanilla') {
       mlVersion = _modLoaderLatestVersion[selectedModLoader] ?? '';
     }
@@ -223,5 +240,18 @@ class InstanceCreationViewModel extends ChangeNotifier {
   String? _defaultForgeCustomVersion() {
     if (forgeVersions.isEmpty) return null;
     return forgeVersions.first.version;
+  }
+
+  void _applyDefaultFabricVersion() {
+    selectedFabricVersion = _defaultFabricVersion();
+  }
+
+  String? _defaultFabricVersion() {
+    if (fabricVersions.isEmpty) return null;
+    try {
+      return fabricVersions.firstWhere((v) => v.type == 'stable').version;
+    } catch (_) {
+      return fabricVersions.first.version;
+    }
   }
 }
