@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/forge_repository.dart';
+import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
 import 'package:yelauncher/data/services/api/microsoft_api_client.dart';
 import 'package:yelauncher/data/services/api/models/minecraft_profile_api_model.dart';
@@ -37,6 +38,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   final JavaRepository _javaRepository;
   final SecureStorageService _secureStorage;
   final ForgeRepository _forgeRepository;
+  final ModLoaderRepository _fabricRepository;
 
   MinecraftRepositoryRemote({
     required MinecraftApiClient apiClient,
@@ -46,13 +48,15 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     required JavaRepository javaRepository,
     required SecureStorageService secureStorage,
     required ForgeRepository forgeRepository,
+    required ModLoaderRepository fabricRepository,
   }) : _apiClient = apiClient,
        _minecraftService = minecraftService,
        _downloadService = downloadService,
        _fileService = fileService,
        _javaRepository = javaRepository,
         _secureStorage = secureStorage,
-        _forgeRepository = forgeRepository;
+        _forgeRepository = forgeRepository,
+        _fabricRepository = fabricRepository;
 
   @override
   Future<Result<List<MinecraftVersionModel>>> getVersions() async {
@@ -186,6 +190,20 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
                   return forgeResult;
                 }
                 _log.info('Forge installation completed for $forgeId');
+              } else if (instance.modLoader == 'fabric') {
+                final fabricId = _fabricId(instance);
+                _log.info('Installing Fabric metadata and libraries for $fabricId');
+                final fabricResult = await _fabricRepository.processInstallation(
+                  fabricId,
+                  instance.minecraftVersion,
+                );
+                if (fabricResult is Failure<void>) {
+                  _log.warning(
+                    'Fabric installation failed for $fabricId: ${fabricResult.error}',
+                  );
+                  return fabricResult;
+                }
+                _log.info('Fabric installation completed for $fabricId');
               }
             case Failure<AssetIndexFileApiModel>():
               _log.warning(
@@ -230,6 +248,18 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
 
         if (!(forgeInstalled as Success<bool>).value) {
           _log.info('Forge metadata is missing for $forgeId');
+          return const Result.success(false);
+        }
+      } else if (instance.modLoader == 'fabric') {
+        final fabricId = _fabricId(instance);
+        final fabricInstalled = await _fabricRepository.isInstalled(fabricId);
+        if (fabricInstalled is Failure<bool>) {
+          _log.warning('Failed to check Fabric installation for $fabricId: ${fabricInstalled.error}');
+          return Result.failure(fabricInstalled.error);
+        }
+
+        if (!(fabricInstalled as Success<bool>).value) {
+          _log.info('Fabric metadata is missing for $fabricId');
           return const Result.success(false);
         }
       }
@@ -332,6 +362,34 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
                 'Applied Forge launch data for ${instance.minecraftVersion} '
                 '(mainClass=$mainClass)',
               );
+            } else if (instance.modLoader == 'fabric') {
+              _log.info('Loading Fabric launch data for ${instance.minecraftVersion}');
+              final fabricLaunchResult = await _loadFabricLaunchData(instance);
+              if (fabricLaunchResult is Failure<_ModLoaderLaunchData>) {
+                _log.warning(
+                  'Failed to load Fabric launch data for ${instance.minecraftVersion}: '
+                  '${fabricLaunchResult.error}',
+                );
+                return Result.failure(fabricLaunchResult.error);
+              }
+
+              final fabricLaunchData = (fabricLaunchResult as Success<_ModLoaderLaunchData>).value;
+              mainClass = fabricLaunchData.mainClass;
+              minecraftVersion = fabricLaunchData.minecraftVersion;
+              // clientJarPath remains the vanilla one
+              jvmArguments.insertAll(0, fabricLaunchData.jvmArguments);
+              if (fabricLaunchData.replaceGameArguments) {
+                gameArguments = fabricLaunchData.gameArguments;
+              } else {
+                gameArguments.insertAll(0, fabricLaunchData.gameArguments);
+              }
+              for (final path in fabricLaunchData.libraryPaths) {
+                addLibraryPath(await _fileService.getLibraryPath(path));
+              }
+              _log.info(
+                'Applied Fabric launch data for ${instance.minecraftVersion} '
+                '(mainClass=$mainClass)',
+              );
             }
 
             for (final lib in requirements.libraries) {
@@ -420,12 +478,12 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
       final bool replaceGameArguments = versionJson.containsKey('minecraftArguments') && !versionJson.containsKey('arguments');
       final gameArgs = replaceGameArguments
           ? (versionJson['minecraftArguments'] as String).split(' ')
-          : _extractForgeArguments(versionJson, 'game');
+          : _extractModLoaderArguments(versionJson, 'game');
 
       return Result.success(
         _ForgeLaunchData(
           libraryPaths: libraries,
-          jvmArguments: _extractForgeArguments(versionJson, 'jvm'),
+          jvmArguments: _extractModLoaderArguments(versionJson, 'jvm'),
           gameArguments: gameArgs,
           replaceGameArguments: replaceGameArguments,
           mainClass: versionJson['mainClass'] as String? ?? 'net.minecraftforge.bootstrap.ForgeBootstrap',
@@ -436,6 +494,52 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     } catch (e) {
       _log.severe('Failed to load Forge launch data for ${instance.minecraftVersion}: $e');
       return Result.failure(Exception('Failed to load Forge launch data: $e'));
+    }
+  }
+
+  Future<Result<_ModLoaderLaunchData>> _loadFabricLaunchData(InstanceModel instance) async {
+    try {
+      final fabricId = _fabricId(instance);
+      _log.info('Resolving Fabric launch data for $fabricId');
+      final librariesResult = await _fabricRepository.getLibrariesPath(fabricId);
+      if (librariesResult is Failure<List<String>>) {
+        _log.warning('Failed to resolve Fabric libraries for $fabricId: ${librariesResult.error}');
+        return Result.failure(librariesResult.error);
+      }
+
+      final libraries = switch (librariesResult) {
+        Success<List<String>>(value: final value) => value,
+        Failure<List<String>>() => const <String>[],
+      };
+
+      final versionJson = await _readFabricVersionJson(fabricId);
+      if (versionJson == null) {
+        _log.warning('Fabric version JSON missing for $fabricId');
+        return Result.failure(Exception('Fabric version JSON not found for $fabricId'));
+      }
+
+      _log.info(
+        'Fabric launch data resolved for $fabricId (libraries=${libraries.length})',
+      );
+
+      final bool replaceGameArguments = versionJson.containsKey('minecraftArguments') && !versionJson.containsKey('arguments');
+      final gameArgs = replaceGameArguments
+          ? (versionJson['minecraftArguments'] as String).split(' ')
+          : _extractModLoaderArguments(versionJson, 'game');
+
+      return Result.success(
+        _ModLoaderLaunchData(
+          libraryPaths: libraries,
+          jvmArguments: _extractModLoaderArguments(versionJson, 'jvm'),
+          gameArguments: gameArgs,
+          replaceGameArguments: replaceGameArguments,
+          mainClass: versionJson['mainClass'] as String? ?? 'net.fabricmc.loader.impl.launch.knot.KnotClient',
+          minecraftVersion: fabricId,
+        ),
+      );
+    } catch (e) {
+      _log.severe('Failed to load Fabric launch data for ${instance.minecraftVersion}: $e');
+      return Result.failure(Exception('Failed to load Fabric launch data: $e'));
     }
   }
 
@@ -455,7 +559,23 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     return File(p.join(versionsDir, '$forgeId.json'));
   }
 
-  List<String> _extractForgeArguments(Map<String, dynamic> versionJson, String key) {
+  Future<Map<String, dynamic>?> _readFabricVersionJson(String fabricId) async {
+    final file = await _fabricVersionJsonFile(fabricId);
+    if (!await file.exists()) {
+      _log.fine('Fabric version JSON file does not exist for $fabricId');
+      return null;
+    }
+
+    _log.fine('Reading Fabric version JSON from ${file.path}');
+    return jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+  }
+
+  Future<File> _fabricVersionJsonFile(String fabricId) async {
+    final versionsDir = await _fileService.getAbsolutePath(['versions', fabricId]);
+    return File(p.join(versionsDir, '$fabricId.json'));
+  }
+
+  List<String> _extractModLoaderArguments(Map<String, dynamic> versionJson, String key) {
     final arguments = versionJson['arguments'] as Map<String, dynamic>?;
     final rawArgs = arguments?[key] as List<dynamic>? ?? const [];
     return rawArgs.whereType<String>().toList();
@@ -463,6 +583,10 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
 
   String _forgeId(InstanceModel instance) {
     return '${instance.minecraftVersion}-forge-${instance.modLoaderVersion}';
+  }
+
+  String _fabricId(InstanceModel instance) {
+    return '${instance.minecraftVersion}-fabric-${instance.modLoaderVersion}';
   }
 
   MinecraftProfileModel _fallbackProfile() {
@@ -706,22 +830,34 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   }
 }
 
-class _ForgeLaunchData {
+class _ForgeLaunchData extends _ModLoaderLaunchData {
+  final String clientJarPath;
+
+  const _ForgeLaunchData({
+    required super.libraryPaths,
+    required super.jvmArguments,
+    required super.gameArguments,
+    super.replaceGameArguments = false,
+    required super.mainClass,
+    required this.clientJarPath,
+    required super.minecraftVersion,
+  });
+}
+
+class _ModLoaderLaunchData {
   final List<String> libraryPaths;
   final List<String> jvmArguments;
   final List<String> gameArguments;
   final bool replaceGameArguments;
   final String mainClass;
-  final String clientJarPath;
   final String minecraftVersion;
 
-  const _ForgeLaunchData({
+  const _ModLoaderLaunchData({
     required this.libraryPaths,
     required this.jvmArguments,
     required this.gameArguments,
     this.replaceGameArguments = false,
     required this.mainClass,
-    required this.clientJarPath,
     required this.minecraftVersion,
   });
 }

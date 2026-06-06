@@ -25,6 +25,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
   bool _isForgeVersionMenuOpen = false;
+  bool _isFabricVersionMenuOpen = false;
 
   @override
   void initState() {
@@ -48,6 +49,12 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   void _toggleForgeVersionMenu() {
     setState(() {
       _isForgeVersionMenuOpen = !_isForgeVersionMenuOpen;
+    });
+  }
+
+  void _toggleFabricVersionMenu() {
+    setState(() {
+      _isFabricVersionMenuOpen = !_isFabricVersionMenuOpen;
     });
   }
 
@@ -359,6 +366,9 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
           if (widget.viewModel.selectedModLoader == 'forge') ...[
             const SizedBox(height: 24),
             _forgeVersionSelector,
+          ] else if (widget.viewModel.selectedModLoader == 'fabric') ...[
+            const SizedBox(height: 24),
+            _fabricVersionSelector,
           ],
         ],
       ),
@@ -529,6 +539,117 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               ),
             ),
           ],
+        ],
+      ],
+    );
+  }
+
+  Widget get _fabricVersionSelector {
+    final selectedFabricVersion =
+        widget.viewModel.selectedFabricVersion ?? (widget.viewModel.fabricVersions.isNotEmpty ? widget.viewModel.fabricVersions.first.version : '-');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Icon(
+              Symbols.app_badging_rounded,
+              size: 20,
+              weight: 600,
+              color: AppColors.dark.primary,
+            ),
+            Text(
+              "Fabric версія",
+              style: AppText.defaultTheme.label.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          "Виберіть одну з доступних версій Fabric",
+          style: AppText.defaultTheme.bodySmall.copyWith(
+            color: AppColors.dark.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: _toggleFabricVersionMenu,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: AppColors.dark.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    selectedFabricVersion,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.defaultTheme.body.copyWith(
+                      color: AppColors.dark.onSurface,
+                    ),
+                  ),
+                ),
+                Icon(
+                  _isFabricVersionMenuOpen
+                      ? Symbols.expand_less_rounded
+                      : Symbols.expand_more_rounded,
+                  color: AppColors.dark.onSurfaceVariant,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_isFabricVersionMenuOpen) ...[
+          const SizedBox(height: 8),
+          Container(
+            constraints: const BoxConstraints(maxHeight: 180),
+            decoration: BoxDecoration(
+              color: AppColors.dark.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+              ),
+            ),
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: widget.viewModel.fabricVersions.length,
+              separatorBuilder: (context, index) => Container(
+                height: 1,
+                color: AppColors.dark.onSurface.withValues(alpha: 0.08),
+              ),
+              itemBuilder: (context, index) {
+                final version = widget.viewModel.fabricVersions[index];
+                final isSelected = widget.viewModel.selectedFabricVersion == version.version;
+                String? badgeText;
+                if (version.type == 'stable') badgeText = 'Stable';
+
+                return ListItem(
+                  title: version.version,
+                  badgeText: badgeText,
+                  badgeColor: badgeText == 'Stable'
+                      ? AppColors.dark.onPrimaryContainer
+                      : AppColors.transparent,
+                  badgeBackgroundColor: badgeText == 'Stable'
+                      ? AppColors.dark.primaryContainer
+                      : AppColors.transparent,
+                  isSelected: isSelected,
+                  onTap: () {
+                    widget.viewModel.selectFabricVersion(version.version);
+                    setState(() => _isFabricVersionMenuOpen = false);
+                  },
+                );
+              },
+            ),
+          ),
         ],
       ],
     );
