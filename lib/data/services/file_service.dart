@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'dart:isolate';
+
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -9,27 +11,29 @@ class FileService {
     String absoluteJarPath,
     String absoluteOutputDir,
   ) async {
-    final jarFile = File(absoluteJarPath);
-    if (!await jarFile.exists()) {
-      throw Exception('Native JAR not found: $absoluteJarPath');
-    }
+    await Isolate.run(() async {
+      final jarFile = File(absoluteJarPath);
+      if (!await jarFile.exists()) {
+        throw Exception('Native JAR not found: $absoluteJarPath');
+      }
 
-    final bytes = await jarFile.readAsBytes();
-    final archive = ZipDecoder().decodeBytes(bytes);
+      final bytes = await jarFile.readAsBytes();
+      final archive = ZipDecoder().decodeBytes(bytes);
 
-    for (final file in archive) {
-      if (file.isFile) {
-        final name = file.name.toLowerCase();
-        if (name.endsWith('.dll') ||
-            name.endsWith('.so') ||
-            name.endsWith('.dylib') ||
-            name.endsWith('.jnilib')) {
-          final outFile = File(p.join(absoluteOutputDir, p.basename(file.name)));
-          await outFile.parent.create(recursive: true);
-          await outFile.writeAsBytes(file.content as List<int>);
+      for (final file in archive) {
+        if (file.isFile) {
+          final name = file.name.toLowerCase();
+          if (name.endsWith('.dll') ||
+              name.endsWith('.so') ||
+              name.endsWith('.dylib') ||
+              name.endsWith('.jnilib')) {
+            final outFile = File(p.join(absoluteOutputDir, p.basename(file.name)));
+            await outFile.parent.create(recursive: true);
+            await outFile.writeAsBytes(file.content as List<int>);
+          }
         }
       }
-    }
+    });
   }
 
   Future<String> getLibraryDirectory() async {

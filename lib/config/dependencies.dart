@@ -1,5 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:yelauncher/data/services/api/content_provider.dart';
+import 'package:yelauncher/data/services/api/modrinth_client.dart';
+import 'package:yelauncher/data/repositories/content/content_repository.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository_local.dart';
@@ -23,12 +26,14 @@ import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/instance_service.dart';
 import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
+import 'package:yelauncher/data/services/update_service.dart';
 
 
 List<SingleChildWidget> get _sharedProviders {
   return [
     Provider(create: (_) => FileService()),
     Provider(create: (_) => MinecraftService()),
+    Provider(create: (_) => UpdateService()),
     Provider(create: (_) => const FlutterSecureStorage()),
     Provider(create: (_) => SecureStorageService()),
     Provider.value(
@@ -36,6 +41,10 @@ List<SingleChildWidget> get _sharedProviders {
         baseUrl:
         'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json',
       ),
+    ),
+    Provider<ContentProvider>(create: (_) => ModrinthClient()),
+    Provider<ContentRepository>(
+      create: (context) => ContentRepository(provider: context.read()),
     ),
   ];
 }
