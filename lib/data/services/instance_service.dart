@@ -78,8 +78,14 @@ class InstanceService {
     String javaExecutablePath,
   ) async {
     final appData = await getApplicationSupportDirectory();
-    final gameDir = appData.path;
-    final assetsDir = p.join(gameDir, 'assets');
+    final sharedDir = appData.path;
+    final gameDir = p.join(sharedDir, 'instances', instance.id);
+    final assetsDir = p.join(sharedDir, 'assets');
+
+    final gameDirectory = Directory(gameDir);
+    if (!await gameDirectory.exists()) {
+      await gameDirectory.create(recursive: true);
+    }
 
     final cp = <String>[];
     final nativeJarPaths = <String>[];
@@ -87,7 +93,7 @@ class InstanceService {
       if (!_isAllowed(lib.rules)) continue;
 
       if (lib.path.isNotEmpty) {
-        final libPath = p.join(gameDir, 'libraries', lib.path);
+        final libPath = p.join(sharedDir, 'libraries', lib.path);
         if (lib.isNative) {
           nativeJarPaths.add(libPath);
         } else {
@@ -96,7 +102,7 @@ class InstanceService {
       }
     }
     cp.add(p.join(
-      gameDir,
+      sharedDir,
       'versions',
       instance.minecraftVersion,
       '${instance.minecraftVersion}.jar',
@@ -168,7 +174,7 @@ class InstanceService {
             .replaceAll('\${quickPlayMultiplayer}', '')
             .replaceAll('\${quickPlayRealms}', '')
             .replaceAll('\${quickPlaySingleplayer}', '')
-            .replaceAll('\${library_directory}', p.join(gameDir, 'libraries'))
+            .replaceAll('\${library_directory}', p.join(sharedDir, 'libraries'))
             .replaceAll(
               '\${classpath_separator}',
               Platform.isWindows ? ';' : ':',
@@ -236,7 +242,7 @@ class InstanceService {
   /// Opens the folder containing the instance
   Future<void> openFolder(InstanceModel instance) async {
     final appData = await getApplicationSupportDirectory();
-    final gameDir = appData.path; // Game dir is shared for now
+    final gameDir = p.join(appData.path, 'instances', instance.id);
     
     _log.info('Opening folder: $gameDir');
     

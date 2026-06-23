@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart' show Tooltip;
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' show Tooltip;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
+import 'package:yelauncher/ui/core/icon_button.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
+import 'package:yelauncher/ui/instances/widgets/instance_content_dialog.dart';
 
 class InstanceCard extends StatefulWidget {
   final InstanceCardViewModel viewModel;
@@ -67,52 +69,75 @@ class _InstanceCardState extends State<InstanceCard> {
                   ),
                 ],
               ),
-              if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running) ...[
-                Tooltip(
-                  message: widget.viewModel.currentInstallStep ?? 'Installing...',
-                  preferBelow: false,
-                  child: SizedBox(
-                    width: 48,
-                    height: 48,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator.primary(
-                        value:
-                            widget.viewModel.javaDownloadProgress ??
-                            widget.viewModel.downloadProgress,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 8,
+                children: [
+                  if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running)
+                    Tooltip(
+                      message: widget.viewModel.currentInstallStep ?? 'Installing...',
+                      preferBelow: false,
+                      child: SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator.primary(
+                            value:
+                                widget.viewModel.javaDownloadProgress ??
+                                widget.viewModel.downloadProgress,
+                          ),
+                        ),
                       ),
+                    )
+                  else if (widget.viewModel.instance.isInstalled == false)
+                    Button.primary(
+                      "Встановити",
+                      iconData: Symbols.download_rounded,
+                      onPressed: widget.viewModel.installInstance.execute,
+                    )
+                  else if (widget.viewModel.instance.isInstalled == true) ...[
+                    if (widget.viewModel.isRunning)
+                      Button.error(
+                        "Зупинити",
+                        iconData: Symbols.stop_rounded,
+                        onPressed: widget.viewModel.stopInstance.execute,
+                      )
+                    else if (widget.viewModel.runInstance.running)
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator.primary(),
+                        ),
+                      )
+                    else
+                      Button.primary(
+                        "Грати",
+                        iconData: Symbols.play_arrow_rounded,
+                        onPressed: widget.viewModel.runInstance.execute,
+                      ),
+                    IconButton.surface(
+                      iconData: Symbols.folder_open_rounded,
+                      onPressed: widget.viewModel.openFolder.execute,
                     ),
-                  ),
-                ),
-              ] else if (widget.viewModel.instance.isInstalled == false) ...[
-                Button.primary(
-                  "Встановити",
-                  iconData: Symbols.download_rounded,
-                  onPressed: widget.viewModel.installInstance.execute,
-                ),
-              ] else if (widget.viewModel.instance.isInstalled == true) ...[
-                if (widget.viewModel.isRunning)
-                  Button.error(
-                    "Зупинити",
-                    iconData: Symbols.stop_rounded,
-                    onPressed: widget.viewModel.stopInstance.execute,
-                  )
-                else if (widget.viewModel.runInstance.running)
-                  SizedBox(
-                    width: 48,
-                    height: 48,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator.primary(),
+                    IconButton.surface(
+                      iconData: Symbols.extension_rounded,
+                      onPressed: () {
+                        showGeneralDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          barrierLabel: "Dismiss",
+                          pageBuilder: (context, anim1, anim2) => Center(
+                            child: InstanceContentDialog(instance: widget.viewModel.instance),
+                          ),
+                        );
+                      },
                     ),
-                  )
-                else
-                  Button.primary(
-                    "Грати",
-                    iconData: Symbols.play_arrow_rounded,
-                    onPressed: widget.viewModel.runInstance.execute,
-                  ),
-              ],
+                  ],
+                ],
+              ),
             ],
           ),
         );
