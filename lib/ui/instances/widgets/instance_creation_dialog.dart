@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/config/assets.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/ui/core/button.dart';
+import 'package:yelauncher/ui/core/chip.dart';
 import 'package:yelauncher/ui/core/list_item.dart';
 import 'package:yelauncher/ui/core/step.dart' as core_step;
 import 'package:yelauncher/ui/core/text_field.dart' as core_text_field;
@@ -300,17 +301,11 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
 
     final isSelected = widget.viewModel.selectedVersion?.id == version.id;
 
-    return ListItem(
+    return ListItem.secondary(
       title: version.id,
-      badgeText: typeLabel,
-      badgeColor: typeLabel == 'Stable'
-          ? AppColors.dark.onPrimaryContainer
-          : AppColors.transparent,
-      badgeBackgroundColor: typeLabel == 'Stable'
-          ? AppColors.dark.primaryContainer
-          : AppColors.transparent,
-      trailingText:
-          "${version.releaseTime.day.toString().padLeft(2, '0')}.${version.releaseTime.month.toString().padLeft(2, '0')}.${version.releaseTime.year}",
+      chip: typeLabel == 'Stable' ? Chip.primary(typeLabel) : Chip.secondary(typeLabel),
+      // trailingIcon:
+      //     "${version.releaseTime.day.toString().padLeft(2, '0')}.${version.releaseTime.month.toString().padLeft(2, '0')}.${version.releaseTime.year}",
       isSelected: isSelected,
       onTap: () => widget.viewModel.selectVersion(version),
     );
@@ -526,9 +521,9 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                 itemBuilder: (context, index) {
                   final version = widget.viewModel.forgeVersions[index];
                   final isSelected = widget.viewModel.selectedForgeVersion == version.version;
-                  return ListItem(
+                  return ListItem.primary(
                     title: version.version,
-                    badgeText: index == 0 ? 'Newest' : null,
+                    subtitle: index == 0 ? 'Newest' : null,
                     isSelected: isSelected,
                     onTap: () {
                       widget.viewModel.selectForgeVersion(version.version);
@@ -632,15 +627,9 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                 String? badgeText;
                 if (version.type == 'stable') badgeText = 'Stable';
 
-                return ListItem(
+                return ListItem.primary(
                   title: version.version,
-                  badgeText: badgeText,
-                  badgeColor: badgeText == 'Stable'
-                      ? AppColors.dark.onPrimaryContainer
-                      : AppColors.transparent,
-                  badgeBackgroundColor: badgeText == 'Stable'
-                      ? AppColors.dark.primaryContainer
-                      : AppColors.transparent,
+                  chip: badgeText == 'Stable' ? Chip.primary(badgeText!) : null,
                   isSelected: isSelected,
                   onTap: () {
                     widget.viewModel.selectFabricVersion(version.version);

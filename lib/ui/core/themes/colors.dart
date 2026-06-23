@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:yelauncher/utilities/color_utilities.dart';
 
 final class AppColors {
   final Color primary;
@@ -60,57 +61,65 @@ final class AppColors {
 
   // Dark Theme Colors
   static const AppColors dark = AppColors(
-    primary: Color.fromARGB(255, 6, 147, 62),
-    onPrimary: Color.fromARGB(255, 255, 255, 255),
-    primaryContainer: Color.fromARGB(255, 108, 249, 164),
-    onPrimaryContainer: Color.fromARGB(255, 2, 74, 31),
-    inversePrimary: Color.fromARGB(255, 108, 249, 164),
-    inverseOnPrimary: Color.fromARGB(255, 4, 98, 42),
-    secondary: Color.fromARGB(255, 235, 119, 20),
-    onSecondary: Color.fromARGB(255, 255, 255, 255),
-    inverseSecondary: Color.fromARGB(255, 243, 174, 114),
-    inverseOnSecondary: Color.fromARGB(255, 94, 48, 8),
-    surface: Color.fromARGB(255, 15, 15, 15),
-    surfaceContainerLowest: Color.fromARGB(255, 10, 10, 10),
-    surfaceContainerLow: Color.fromARGB(255, 26, 26, 26),
-    surfaceContainer: Color.fromARGB(255, 31, 31, 31),
-    surfaceContainerHigh: Color.fromARGB(255, 43, 43, 43),
-    surfaceContainerHighest: Color.fromARGB(255, 56, 56, 56),
-    onSurface: Color.fromARGB(255, 230, 230, 230),
-    onSurfaceVariant: Color.fromARGB(255, 204, 204, 204),
-    outline: Color.fromARGB(255, 153, 153, 153),
-    outlineVariant: Color.fromARGB(255, 77, 77, 77),
-    inverseSurface: Color.fromARGB(255, 230, 230, 230),
-    inverseOnSurface: Color.fromARGB(255, 51, 51, 51),
-    error: Color.fromARGB(255, 241, 167, 167),
-    scrim: Color.fromARGB(255, 0, 0, 0),
+    primary: Color(0xFF06933E),
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFF6CF9A4),
+    onPrimaryContainer: Color(0xFF024A1F),
+    inversePrimary: Color(0xFF6CF9A4),
+    inverseOnPrimary: Color(0xFF04622A),
+    secondary: Color(0xFFEB7714),
+    onSecondary: Color(0xFFFFFFFF),
+    inverseSecondary: Color(0xFFF3AE72),
+    inverseOnSecondary: Color(0xFF5E3008),
+    surface: Color(0xFF0F0F0F),
+    surfaceContainerLowest: Color(0xFF0A0A0A),
+    surfaceContainerLow: Color(0xFF1A1A1A),
+    surfaceContainer: Color(0xFF1F1F1F),
+    surfaceContainerHigh: Color(0xFF2B2B2B),
+    surfaceContainerHighest: Color(0xFF383838),
+    onSurface: Color(0xFFE6E6E6),
+    onSurfaceVariant: Color(0xFFCCCCCC),
+    outline: Color(0xFF999999),
+    outlineVariant: Color(0xFF4D4D4D),
+    inverseSurface: Color(0xFFE6E6E6),
+    inverseOnSurface: Color(0xFF333333),
+    error: Color(0xFFF1A7A7),
+    scrim: Color(0xFF000000),
   );
 
   // Light Theme Colors
   static const AppColors light = AppColors(
-    primary: Color.fromARGB(255, 6, 147, 62),
-    onPrimary: Color.fromARGB(255, 255, 255, 255),
-    primaryContainer: Color.fromARGB(255, 108, 249, 164),
-    onPrimaryContainer: Color.fromARGB(255, 2, 74, 31),
-    inversePrimary: Color.fromARGB(255, 108, 249, 164),
-    inverseOnPrimary: Color.fromARGB(255, 4, 98, 42),
-    secondary: Color.fromARGB(255, 235, 119, 20),
-    onSecondary: Color.fromARGB(255, 255, 255, 255),
-    inverseSecondary: Color.fromARGB(255, 243, 174, 114),
-    inverseOnSecondary: Color.fromARGB(255, 94, 48, 8),
-    surface: Color.fromARGB(255, 15, 15, 15),
-    surfaceContainerLowest: Color.fromARGB(255, 10, 10, 10),
-    surfaceContainerLow: Color.fromARGB(255, 26, 26, 26),
-    surfaceContainer: Color.fromARGB(255, 31, 31, 31),
-    surfaceContainerHigh: Color.fromARGB(255, 43, 43, 43),
-    surfaceContainerHighest: Color.fromARGB(255, 56, 56, 56),
-    onSurface: Color.fromARGB(255, 230, 230, 230),
-    onSurfaceVariant: Color.fromARGB(255, 204, 204, 204),
-    outline: Color.fromARGB(255, 153, 153, 153),
-    outlineVariant: Color.fromARGB(255, 77, 77, 77),
-    inverseSurface: Color.fromARGB(255, 230, 230, 230),
-    inverseOnSurface: Color.fromARGB(255, 51, 51, 51),
-    scrim: Color.fromARGB(255, 0, 0, 0),
-    error: Color.fromARGB(255, 154, 25, 25),
+    primary: Color(0xFF06933E),
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFF6CF9A4),
+    onPrimaryContainer: Color(0xFF024A1F),
+    inversePrimary: Color(0xFF6CF9A4),
+    inverseOnPrimary: Color(0xFF04622A),
+    secondary: Color(0xFFEB7714),
+    onSecondary: Color(0xFFFFFFFF),
+    inverseSecondary: Color(0xFFF3AE72),
+    inverseOnSecondary: Color(0xFF5E3008),
+    surface: Color(0xFF0F0F0F),
+    surfaceContainerLowest: Color(0xFF0A0A0A),
+    surfaceContainerLow: Color(0xFF1A1A1A),
+    surfaceContainer: Color(0xFF1F1F1F),
+    surfaceContainerHigh: Color(0xFF2B2B2B),
+    surfaceContainerHighest: Color(0xFF383838),
+    onSurface: Color(0xFFE6E6E6),
+    onSurfaceVariant: Color(0xFFCCCCCC),
+    outline: Color(0xFF999999),
+    outlineVariant: Color(0xFF4D4D4D),
+    inverseSurface: Color(0xFFE6E6E6),
+    inverseOnSurface: Color(0xFF333333),
+    scrim: Color(0xFF000000),
+    error: Color(0xFF9A1919),
   );
+
+  static Color convertToContainerColor(Color color) {
+    return ColorUtilities.changeLightness(color, 0.7);
+  }
+
+  static Color convertToOnContainerColor(Color color) {
+    return ColorUtilities.changeLightness(color, 0.2);
+  }
 }

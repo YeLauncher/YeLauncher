@@ -92,10 +92,12 @@ class DownloadService {
         return const Result.success(true);
       }
 
+      final expectedSha1 = model.sha1;
+      
       final stream = file.openRead();
       final digest = await crypto.sha1.bind(stream).first;
 
-      if (digest.toString() == model.sha1) {
+      if (digest.toString() == expectedSha1) {
         // model.status = DownloadStatus.finished;
         // model.downloadedSize = await file.length();
         await file.length();
@@ -155,6 +157,10 @@ class DownloadService {
     for (int i = 0; i < models.length; i += checkBatchSize) {
       final batch = models.skip(i).take(checkBatchSize).toList();
       final futures = batch.map((model) async {
+        if (model.expectedSize != null) {
+          return model.expectedSize!;
+        }
+
         final downloadedResult = await isDownloaded(model);
         if (downloadedResult is Success<bool> && downloadedResult.value) {
           // File exists locally, check its size on disk
@@ -167,11 +173,7 @@ class DownloadService {
           }
         } else {
           // File needs downloading, ask the server for Content-Length via HEAD request if not provided
-          if (model.expectedSize != null) {
-            return model.expectedSize!;
-          } else {
-            return await _getRemoteFileSize(model.url);
-          }
+          return await _getRemoteFileSize(model.url);
         }
       });
       final results = await Future.wait(futures);

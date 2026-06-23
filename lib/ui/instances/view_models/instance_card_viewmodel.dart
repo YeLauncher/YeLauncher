@@ -121,6 +121,7 @@ class InstanceCardViewModel extends ChangeNotifier {
         _completedInstallBytes = null;
         // _downloadService.clearTrackedModels(_instance.minecraftVersion);
         _instance = _instance.copyWith(isInstalled: true);
+        await _instanceRepository.saveInstance(_instance);
         notifyListeners();
         return const Result.success(null);
       case Failure<void>():
