@@ -39,7 +39,7 @@ jobs:
         include:
           - os: windows-latest
             platform: windows
-            extension: msix
+            extension: exe # Changed from msix to exe
 
     steps:
       - name: Checkout Code
@@ -83,20 +83,31 @@ jobs:
       - name: Run Code Generation
         run: dart run build_runner build --delete-conflicting-outputs
 
-      - name: Build Windows MSIX
+      # 4. BUILD: Standard Windows Executable
+      - name: Build Windows App
         if: matrix.platform == 'windows'
-        run: flutter pub run msix:create
+        run: flutter build windows --release
 
+      # 5. PACKAGING: Compile Inno Setup Installer
+      - name: Create Inno Setup Installer
+        if: matrix.platform == 'windows'
+        shell: cmd
+        # This calls the pre-installed Inno Setup compiler on the GitHub runner
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
+      # 6. ARTIFACTS: Rename and Upload
       - name: Rename Output File
         shell: bash 
         run: |
-          cp build/windows/x64/runner/Release/yelauncher.msix yelauncher-windows.msix
+          # Assuming Inno Setup outputs to an 'Output' folder as defined in the .iss script
+          cp Output/yelauncher-setup.exe yelauncher-windows-installer.exe
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: yelauncher-${{ matrix.platform }}
-          path: yelauncher-windows.msix
+          path: yelauncher-windows-installer.exe
 
   release:
     needs: build
@@ -113,5 +124,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            yelauncher-windows.msix
+            yelauncher-windows-installer.exe
           generate_release_notes: true
