@@ -3,10 +3,36 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*' # Trigger workflow on tags like v1.0.0
+      - 'v*' # Triggers ONLY when a tag starting with 'v' is pushed (e.g., v1.0.0)
 
 jobs:
+  check-version:
+    name: Verify Pubspec Version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Extract and Compare Version
+        run: |
+          # Extract version from pubspec.yaml (e.g., "1.0.0+1" -> "1.0.0")
+          PUBSPEC_VERSION=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | cut -d '+' -f 1 | tr -d '\r')
+          
+          # Extract version from the GitHub tag (e.g., "v1.0.0" -> "1.0.0")
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          
+          echo "Tag Version: $TAG_VERSION"
+          echo "Pubspec Version: $PUBSPEC_VERSION"
+          
+          # Fail the job if they do not match
+          if [ "$TAG_VERSION" != "$PUBSPEC_VERSION" ]; then
+            echo "::error::Tag version ($TAG_VERSION) does not match pubspec.yaml version ($PUBSPEC_VERSION)."
+            exit 1
+          fi
+          echo "Versions match! Proceeding to build."
+
   build:
+    needs: check-version # Only runs if the version check passes
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -14,13 +40,6 @@ jobs:
           - os: windows-latest
             platform: windows
             extension: msix
-          # Example for Linux/macOS
-          # - os: ubuntu-latest
-          #   platform: linux
-          #   extension: AppImage
-          # - os: macos-latest
-          #   platform: macos
-          #   extension: dmg
 
     steps:
       - name: Checkout Code
@@ -29,26 +48,25 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0' # Adjust based on your pubspec
+          flutter-version: '3.22.0' 
 
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build Windows MSIX
         if: matrix.platform == 'windows'
-        run: |
-          flutter pub run msix:create
+        run: flutter pub run msix:create
 
       - name: Rename Output File
+        shell: bash 
         run: |
-          # Copy to a predictable name for the release upload
           cp build/windows/x64/runner/Release/yelauncher.msix yelauncher-windows.msix
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: yelauncher-${{ matrix.platform }}
-          path: yelauncher-${{ matrix.platform }}.${{ matrix.extension }}
+          path: yelauncher-windows.msix
 
   release:
     needs: build
@@ -66,6 +84,4 @@ jobs:
         with:
           files: |
             yelauncher-windows.msix
-            # yelauncher-linux.AppImage
-            # yelauncher-macos.dmg
           generate_release_notes: true
