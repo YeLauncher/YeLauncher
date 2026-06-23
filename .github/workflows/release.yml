@@ -1,0 +1,71 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger workflow on tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+            extension: msix
+          # Example for Linux/macOS
+          # - os: ubuntu-latest
+          #   platform: linux
+          #   extension: AppImage
+          # - os: macos-latest
+          #   platform: macos
+          #   extension: dmg
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0' # Adjust based on your pubspec
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build Windows MSIX
+        if: matrix.platform == 'windows'
+        run: |
+          flutter pub run msix:create
+
+      - name: Rename Output File
+        run: |
+          # Copy to a predictable name for the release upload
+          cp build/windows/x64/runner/Release/yelauncher.msix yelauncher-windows.msix
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yelauncher-${{ matrix.platform }}
+          path: yelauncher-${{ matrix.platform }}.${{ matrix.extension }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            yelauncher-windows.msix
+            # yelauncher-linux.AppImage
+            # yelauncher-macos.dmg
+          generate_release_notes: true

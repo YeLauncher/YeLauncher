@@ -8,5 +8,7 @@ import 'main.dart';
 void main() {
   Logger.root.level = Level.ALL; // Set the logging level to capture all logs
 
-  runApp(MultiProvider(providers: providersLocal, child: const YeLauncherApp()));
+  runApp(
+    MultiProvider(providers: providersLocal, child: const YeLauncherApp()),
+  );
 }

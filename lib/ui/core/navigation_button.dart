@@ -25,7 +25,7 @@ class NavigationButton extends StatefulWidget {
     super.key,
     this.onPressed,
     required this.iconData,
-    required this.isSelected
+    required this.isSelected,
   }) : backgroundColor = AppColors.transparent,
        selectedBackgroundColor = AppColors.dark.inversePrimary,
        iconColor = AppColors.dark.onSurface,

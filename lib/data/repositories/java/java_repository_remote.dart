@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:ffi';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as p;
@@ -66,14 +68,27 @@ class JavaRepositoryRemote implements JavaRepository {
   }
 
   @override
-  Future<Result<void>> install(int version) async {
+  Future<Result<void>> install(int version, {void Function(double)? onProgress}) async {
     try {
       final url = 'https://corretto.aws/downloads/latest/amazon-corretto-$version-$_cpuArch-$_os-jdk.$_ext';
       _log.info('Downloading Java $version from $url');
 
-      final response = await http.get(Uri.parse(url));
+      final request = http.Request('GET', Uri.parse(url));
+      final response = await http.Client().send(request);
       if (response.statusCode != 200) {
         return Result.failure(Exception('Failed to download Java $version: ${response.statusCode}'));
+      }
+      
+      final contentLength = response.contentLength ?? 0;
+      var downloadedBytes = 0;
+      final bytesBuilder = BytesBuilder();
+
+      await for (final chunk in response.stream) {
+        bytesBuilder.add(chunk);
+        downloadedBytes += chunk.length;
+        if (contentLength > 0 && onProgress != null) {
+          onProgress(downloadedBytes / contentLength);
+        }
       }
 
       final javaDir = await _getJavaDir(version);
@@ -82,39 +97,46 @@ class JavaRepositoryRemote implements JavaRepository {
       }
       await javaDir.create(recursive: true);
 
-      if (_ext == 'zip') {
-        final archive = ZipDecoder().decodeBytes(response.bodyBytes);
-        for (final file in archive) {
-          final filename = file.name;
-          if (file.isFile) {
-            final outFile = File(p.join(javaDir.path, filename));
-            await outFile.parent.create(recursive: true);
-            await outFile.writeAsBytes(file.content as List<int>);
-          } else {
-            await Directory(p.join(javaDir.path, filename)).create(recursive: true);
-          }
-        }
-      } else {
-        // tar.gz
-        final archive = TarDecoder().decodeBytes(GZipDecoder().decodeBytes(response.bodyBytes));
-        for (final file in archive) {
-          final filename = file.name;
-          if (file.isFile) {
-            final outFile = File(p.join(javaDir.path, filename));
-            await outFile.parent.create(recursive: true);
-            await outFile.writeAsBytes(file.content as List<int>);
+      final bytes = bytesBuilder.toBytes();
+      final ext = _ext;
+      final javaDirPath = javaDir.path;
+      final isUnix = Platform.isLinux || Platform.isMacOS;
 
-            // On unix, make the executable file truly executable
-            if (filename.endsWith('bin/java')) {
-              if (Platform.isLinux || Platform.isMacOS) {
-                await Process.run('chmod', ['+x', outFile.path]);
-              }
+      await Isolate.run(() async {
+        if (ext == 'zip') {
+          final archive = ZipDecoder().decodeBytes(bytes);
+          for (final file in archive) {
+            final filename = file.name;
+            if (file.isFile) {
+              final outFile = File(p.join(javaDirPath, filename));
+              await outFile.parent.create(recursive: true);
+              await outFile.writeAsBytes(file.content as List<int>);
+            } else {
+              await Directory(p.join(javaDirPath, filename)).create(recursive: true);
             }
-          } else {
-            await Directory(p.join(javaDir.path, filename)).create(recursive: true);
+          }
+        } else {
+          // tar.gz
+          final archive = TarDecoder().decodeBytes(GZipDecoder().decodeBytes(bytes));
+          for (final file in archive) {
+            final filename = file.name;
+            if (file.isFile) {
+              final outFile = File(p.join(javaDirPath, filename));
+              await outFile.parent.create(recursive: true);
+              await outFile.writeAsBytes(file.content as List<int>);
+
+              // On unix, make the executable file truly executable
+              if (filename.endsWith('bin/java')) {
+                if (isUnix) {
+                  await Process.run('chmod', ['+x', outFile.path]);
+                }
+              }
+            } else {
+              await Directory(p.join(javaDirPath, filename)).create(recursive: true);
+            }
           }
         }
-      }
+      });
 
       _log.info('Successfully installed Java $version');
       return Result.success(null);
@@ -136,4 +158,3 @@ class JavaRepositoryRemote implements JavaRepository {
     return null;
   }
 }
-

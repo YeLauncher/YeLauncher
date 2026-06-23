@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/config/assets.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/ui/core/button.dart';
+import 'package:yelauncher/ui/core/chip.dart';
 import 'package:yelauncher/ui/core/list_item.dart';
 import 'package:yelauncher/ui/core/step.dart' as core_step;
 import 'package:yelauncher/ui/core/text_field.dart' as core_text_field;
@@ -24,6 +25,8 @@ class InstanceCreationDialog extends StatefulWidget {
 class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
+  bool _isForgeVersionMenuOpen = false;
+  bool _isFabricVersionMenuOpen = false;
 
   @override
   void initState() {
@@ -42,6 +45,18 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
     _nameController.dispose();
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _toggleForgeVersionMenu() {
+    setState(() {
+      _isForgeVersionMenuOpen = !_isForgeVersionMenuOpen;
+    });
+  }
+
+  void _toggleFabricVersionMenu() {
+    setState(() {
+      _isFabricVersionMenuOpen = !_isFabricVersionMenuOpen;
+    });
   }
 
   @override
@@ -286,67 +301,345 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
 
     final isSelected = widget.viewModel.selectedVersion?.id == version.id;
 
-    return ListItem(
+    return ListItem.secondary(
       title: version.id,
-      badgeText: typeLabel,
-      badgeColor: typeLabel == 'Stable'
-          ? AppColors.dark.onPrimaryContainer
-          : AppColors.transparent,
-      badgeBackgroundColor: typeLabel == 'Stable'
-          ? AppColors.dark.primaryContainer
-          : AppColors.transparent,
-      trailingText:
-          "${version.releaseTime.day.toString().padLeft(2, '0')}.${version.releaseTime.month.toString().padLeft(2, '0')}.${version.releaseTime.year}",
+      chip: typeLabel == 'Stable' ? Chip.primary(typeLabel) : Chip.secondary(typeLabel),
+      // trailingIcon:
+      //     "${version.releaseTime.day.toString().padLeft(2, '0')}.${version.releaseTime.month.toString().padLeft(2, '0')}.${version.releaseTime.year}",
       isSelected: isSelected,
       onTap: () => widget.viewModel.selectVersion(version),
     );
   }
 
   Widget get _stepModLoader {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            spacing: 8,
+            children: [
+              Icon(
+                Symbols.extension_rounded,
+                size: 20,
+                weight: 600,
+                color: AppColors.dark.primary,
+              ),
+              Text(
+                "Завантажувач модів",
+                style: AppText.defaultTheme.label.copyWith(
+                  color: AppColors.dark.onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+          ListenableBuilder(
+            listenable: widget.viewModel.loadModLoaders,
+            builder: (context, _) {
+              if (widget.viewModel.loadModLoaders.running) {
+                return Center(
+                  child: Text(
+                    "Завантаження...",
+                    style: AppText.defaultTheme.body.copyWith(
+                      color: AppColors.dark.primary,
+                    ),
+                  ),
+                );
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 24,
+                children: [
+                  _modLoaderButton('vanilla', 'Vanilla', Assets.minecraftLogo),
+                  for (final loader in widget.viewModel.availableModLoaders)
+                    _modLoaderButton(loader.id, loader.name, loader.icon),
+                ],
+              );
+            },
+          ),
+          if (widget.viewModel.selectedModLoader == 'forge') ...[
+            const SizedBox(height: 24),
+            _forgeVersionSelector,
+          ] else if (widget.viewModel.selectedModLoader == 'fabric') ...[
+            const SizedBox(height: 24),
+            _fabricVersionSelector,
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget get _forgeVersionSelector {
+    final isRecommended = widget.viewModel.selectedForgeVersionSource == 'recommended';
+    final isLatest = widget.viewModel.selectedForgeVersionSource == 'latest';
+    final isCustom = widget.viewModel.selectedForgeVersionSource == 'custom';
+    final selectedForgeVersion =
+        widget.viewModel.selectedForgeVersion ?? widget.viewModel.forgeVersions.first.version;
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           spacing: 8,
           children: [
             Icon(
-              Symbols.extension_rounded,
+              Symbols.app_badging_rounded,
               size: 20,
               weight: 600,
               color: AppColors.dark.primary,
             ),
             Text(
-              "Завантажувач модів",
+              "Forge версія",
               style: AppText.defaultTheme.label.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 32),
-        ListenableBuilder(
-          listenable: widget.viewModel.loadModLoaders,
-          builder: (context, _) {
-            if (widget.viewModel.loadModLoaders.running) {
-              return Center(
-                child: Text(
-                  "Завантаження...",
-                  style: AppText.defaultTheme.body.copyWith(
-                    color: AppColors.dark.primary,
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: isRecommended
+                  ? Button.primary(
+                      "Recommended",
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('recommended');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
+                    )
+                  : Button.surface(
+                      "Recommended",
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('recommended');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
+                    ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: isLatest
+                  ? Button.primary(
+                      "Latest",
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('latest');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
+                    )
+                  : Button.surface(
+                      "Latest",
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('latest');
+                        setState(() => _isForgeVersionMenuOpen = false);
+                      },
+                    ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: isCustom
+                  ? Button.primary(
+                      "Custom",
+                      onPressed: () => widget.viewModel.selectForgeVersionSource('custom'),
+                    )
+                  : Button.surface(
+                      "Custom",
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('custom');
+                        setState(() => _isForgeVersionMenuOpen = true);
+                      },
+                    ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (!isCustom)
+          Text(
+            "Selected Forge version: ${widget.viewModel.selectedForgeVersion ?? '-'}",
+            style: AppText.defaultTheme.bodySmall.copyWith(
+              color: AppColors.dark.onSurfaceVariant,
+            ),
+          ),
+        if (isCustom) ...[
+          Text(
+            "Виберіть одну з доступних версій Forge",
+            style: AppText.defaultTheme.bodySmall.copyWith(
+              color: AppColors.dark.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: _toggleForgeVersionMenu,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: AppColors.dark.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      selectedForgeVersion,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.defaultTheme.body.copyWith(
+                        color: AppColors.dark.onSurface,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _isForgeVersionMenuOpen
+                        ? Symbols.expand_less_rounded
+                        : Symbols.expand_more_rounded,
+                    color: AppColors.dark.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_isForgeVersionMenuOpen) ...[
+            const SizedBox(height: 8),
+            Container(
+              constraints: const BoxConstraints(maxHeight: 180),
+              decoration: BoxDecoration(
+                color: AppColors.dark.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+                ),
+              ),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: widget.viewModel.forgeVersions.length,
+                separatorBuilder: (context, index) => Container(
+                  height: 1,
+                  color: AppColors.dark.onSurface.withValues(alpha: 0.08),
+                ),
+                itemBuilder: (context, index) {
+                  final version = widget.viewModel.forgeVersions[index];
+                  final isSelected = widget.viewModel.selectedForgeVersion == version.version;
+                  return ListItem.primary(
+                    title: version.version,
+                    subtitle: index == 0 ? 'Newest' : null,
+                    isSelected: isSelected,
+                    onTap: () {
+                      widget.viewModel.selectForgeVersion(version.version);
+                      setState(() => _isForgeVersionMenuOpen = false);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
+      ],
+    );
+  }
+
+  Widget get _fabricVersionSelector {
+    final selectedFabricVersion =
+        widget.viewModel.selectedFabricVersion ?? (widget.viewModel.fabricVersions.isNotEmpty ? widget.viewModel.fabricVersions.first.version : '-');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Icon(
+              Symbols.app_badging_rounded,
+              size: 20,
+              weight: 600,
+              color: AppColors.dark.primary,
+            ),
+            Text(
+              "Fabric версія",
+              style: AppText.defaultTheme.label.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          "Виберіть одну з доступних версій Fabric",
+          style: AppText.defaultTheme.bodySmall.copyWith(
+            color: AppColors.dark.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: _toggleFabricVersionMenu,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: AppColors.dark.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    selectedFabricVersion,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.defaultTheme.body.copyWith(
+                      color: AppColors.dark.onSurface,
+                    ),
                   ),
                 ),
-              );
-            }
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 24,
-              children: [
-                _modLoaderButton('vanilla', 'Vanilla', Assets.minecraftLogo),
-                for (final loader in widget.viewModel.availableModLoaders)
-                  _modLoaderButton(loader.id, loader.name, loader.icon),
+                Icon(
+                  _isFabricVersionMenuOpen
+                      ? Symbols.expand_less_rounded
+                      : Symbols.expand_more_rounded,
+                  color: AppColors.dark.onSurfaceVariant,
+                ),
               ],
-            );
-          },
+            ),
+          ),
         ),
+        if (_isFabricVersionMenuOpen) ...[
+          const SizedBox(height: 8),
+          Container(
+            constraints: const BoxConstraints(maxHeight: 180),
+            decoration: BoxDecoration(
+              color: AppColors.dark.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+              ),
+            ),
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: widget.viewModel.fabricVersions.length,
+              separatorBuilder: (context, index) => Container(
+                height: 1,
+                color: AppColors.dark.onSurface.withValues(alpha: 0.08),
+              ),
+              itemBuilder: (context, index) {
+                final version = widget.viewModel.fabricVersions[index];
+                final isSelected = widget.viewModel.selectedFabricVersion == version.version;
+                String? badgeText;
+                if (version.type == 'stable') badgeText = 'Stable';
+
+                return ListItem.primary(
+                  title: version.version,
+                  chip: badgeText == 'Stable' ? Chip.primary(badgeText!) : null,
+                  isSelected: isSelected,
+                  onTap: () {
+                    widget.viewModel.selectFabricVersion(version.version);
+                    setState(() => _isFabricVersionMenuOpen = false);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ],
     );
   }

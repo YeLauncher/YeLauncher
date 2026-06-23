@@ -20,7 +20,10 @@ class AssetIndexFileApiModel {
   factory AssetIndexFileApiModel.fromJson(Map<String, dynamic> json) {
     final objectsJson = json['objects'] as Map<String, dynamic>;
     final objects = objectsJson.map(
-      (key, value) => MapEntry(key, AssetObjectApiModel.fromJson(value as Map<String, dynamic>)),
+      (key, value) => MapEntry(
+        key,
+        AssetObjectApiModel.fromJson(value as Map<String, dynamic>),
+      ),
     );
     return AssetIndexFileApiModel(objects: objects);
   }

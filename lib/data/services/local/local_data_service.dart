@@ -34,13 +34,29 @@ class LocalDataService {
   Future<List<ForgeVersionApiModel>> getForgeVersions(
     String minecraftVersion,
   ) async {
-    if (minecraftVersion != '1.18.2') return [];
-    final localData = await rootBundle.loadString(Assets.forge1182);
-    final jsonList = jsonDecode(localData) as List<dynamic>;
-    return jsonList
-        .map(
-          (json) => ForgeVersionApiModel.fromJson(json as Map<String, dynamic>),
-        )
+    final metadata = await rootBundle.loadString(Assets.forgeMavenMetadata);
+    final matches = RegExp(r'<version>([^<]+)</version>').allMatches(metadata);
+    return matches
+        .map((match) => match.group(1)!)
+        .where((version) => version.startsWith('$minecraftVersion-'))
+        .map((version) => ForgeVersionApiModel(version: version.split('-').sublist(1).join('-')))
         .toList();
+  }
+
+  Future<String?> getForgeLatestVersion(String minecraftVersion) async {
+    final promos = await _loadForgePromotions();
+    return promos['$minecraftVersion-latest'];
+  }
+
+  Future<String?> getForgeRecommendedVersion(String minecraftVersion) async {
+    final promos = await _loadForgePromotions();
+    return promos['$minecraftVersion-recommended'];
+  }
+
+  Future<Map<String, String>> _loadForgePromotions() async {
+    final localData = await rootBundle.loadString(Assets.forgePromotionsSlim);
+    final decoded = jsonDecode(localData) as Map<String, dynamic>;
+    final promos = decoded['promos'] as Map<String, dynamic>;
+    return promos.map((key, value) => MapEntry(key, value.toString()));
   }
 }

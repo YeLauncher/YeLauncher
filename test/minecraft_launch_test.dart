@@ -77,7 +77,10 @@ List<String> buildLaunchArgs({
           .replaceAll('\${quickPlayRealms}', '')
           .replaceAll('\${quickPlaySingleplayer}', '')
           .replaceAll('\${library_directory}', '$gameDir/libraries')
-          .replaceAll('\${classpath_separator}', Platform.isWindows ? ';' : ':');
+          .replaceAll(
+            '\${classpath_separator}',
+            Platform.isWindows ? ';' : ':',
+          );
 
       if (arg.type == 'jvm') {
         jvmArgs.add(replaced);
@@ -149,19 +152,28 @@ void main() {
     final cpSegment = args
         .where((a) => a.contains('$versionId/$versionId.jar'))
         .toList();
-    expect(cpSegment, isNotEmpty,
-        reason: 'Classpath must reference $versionId.jar');
+    expect(
+      cpSegment,
+      isNotEmpty,
+      reason: 'Classpath must reference $versionId.jar',
+    );
 
     // No unresolved placeholders should remain
     for (final arg in args) {
-      expect(arg, isNot(contains('\${')),
-          reason: 'Unresolved placeholder found: $arg');
+      expect(
+        arg,
+        isNot(contains('\${')),
+        reason: 'Unresolved placeholder found: $arg',
+      );
     }
 
     // The mainClass must appear after all JVM args and before game args
     final mainClassIdx = args.indexOf(req.mainClass);
-    expect(mainClassIdx, greaterThan(0),
-        reason: 'mainClass must not be the first argument');
+    expect(
+      mainClassIdx,
+      greaterThan(0),
+      reason: 'mainClass must not be the first argument',
+    );
 
     // Everything before mainClass should be JVM flags (starting with -)
     // or a classpath string. At minimum, -Xmx2G is there.
@@ -184,8 +196,11 @@ void main() {
 
     test('launching: constructs valid launch arguments', () async {
       final req = await loadRequirements('1.8.9');
-      final args =
-          buildLaunchArgs(requirements: req, versionId: '1.8.9', gameDir: 'C:/game');
+      final args = buildLaunchArgs(
+        requirements: req,
+        versionId: '1.8.9',
+        gameDir: 'C:/game',
+      );
       verifyLaunchArgs(args, req, '1.8.9');
 
       // v4 falls back to default JVM args
@@ -207,8 +222,11 @@ void main() {
 
     test('launching: constructs valid launch arguments', () async {
       final req = await loadRequirements('1.12.2');
-      final args =
-          buildLaunchArgs(requirements: req, versionId: '1.12.2', gameDir: 'C:/game');
+      final args = buildLaunchArgs(
+        requirements: req,
+        versionId: '1.12.2',
+        gameDir: 'C:/game',
+      );
       verifyLaunchArgs(args, req, '1.12.2');
 
       // v4 falls back to default JVM args
@@ -233,8 +251,11 @@ void main() {
 
     test('launching: constructs valid launch arguments', () async {
       final req = await loadRequirements('1.16.5');
-      final args =
-          buildLaunchArgs(requirements: req, versionId: '1.16.5', gameDir: 'C:/game');
+      final args = buildLaunchArgs(
+        requirements: req,
+        versionId: '1.16.5',
+        gameDir: 'C:/game',
+      );
       verifyLaunchArgs(args, req, '1.16.5');
 
       // v21 provides JVM args from the manifest — native library path
@@ -260,8 +281,11 @@ void main() {
 
     test('launching: constructs valid launch arguments', () async {
       final req = await loadRequirements('1.18.2');
-      final args =
-          buildLaunchArgs(requirements: req, versionId: '1.18.2', gameDir: 'C:/game');
+      final args = buildLaunchArgs(
+        requirements: req,
+        versionId: '1.18.2',
+        gameDir: 'C:/game',
+      );
       verifyLaunchArgs(args, req, '1.18.2');
     });
   });
@@ -283,8 +307,11 @@ void main() {
 
     test('launching: constructs valid launch arguments', () async {
       final req = await loadRequirements('1.21.1');
-      final args =
-          buildLaunchArgs(requirements: req, versionId: '1.21.1', gameDir: 'C:/game');
+      final args = buildLaunchArgs(
+        requirements: req,
+        versionId: '1.21.1',
+        gameDir: 'C:/game',
+      );
       verifyLaunchArgs(args, req, '1.21.1');
     });
   });
@@ -303,8 +330,11 @@ void main() {
 
     test('launching: constructs valid launch arguments', () async {
       final req = await loadRequirements('26.1');
-      final args =
-          buildLaunchArgs(requirements: req, versionId: '26.1', gameDir: 'C:/game');
+      final args = buildLaunchArgs(
+        requirements: req,
+        versionId: '26.1',
+        gameDir: 'C:/game',
+      );
       verifyLaunchArgs(args, req, '26.1');
     });
   });

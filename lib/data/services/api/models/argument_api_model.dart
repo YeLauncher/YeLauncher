@@ -11,7 +11,10 @@ class ArgumentApiModel {
     this.type = 'game',
   });
 
-  factory ArgumentApiModel.fromJson(Map<String, dynamic> json, {String type = 'game'}) {
+  factory ArgumentApiModel.fromJson(
+    Map<String, dynamic> json, {
+    String type = 'game',
+  }) {
     List<String> values = [];
     if (json['value'] is String) {
       values.add(json['value'] as String);
@@ -26,10 +29,6 @@ class ArgumentApiModel {
           .toList();
     }
 
-    return ArgumentApiModel(
-      values: values,
-      rules: rules,
-      type: type,
-    );
+    return ArgumentApiModel(values: values, rules: rules, type: type);
   }
 }

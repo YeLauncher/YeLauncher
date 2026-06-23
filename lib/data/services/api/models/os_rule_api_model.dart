@@ -6,20 +6,17 @@ class OsRuleApiModel {
   final String? arch;
   final VersionRangeApiModel? versionRange;
 
-  const OsRuleApiModel({
-    this.name,
-    this.version,
-    this.arch,
-    this.versionRange,
-  });
+  const OsRuleApiModel({this.name, this.version, this.arch, this.versionRange});
 
   factory OsRuleApiModel.fromJson(Map<String, dynamic> json) {
     return OsRuleApiModel(
       name: json['name'] as String?,
       version: json['version'] as String?,
       arch: json['arch'] as String?,
-      versionRange: json['versionRange'] != null 
-          ? VersionRangeApiModel.fromJson(json['versionRange'] as Map<String, dynamic>) 
+      versionRange: json['versionRange'] != null
+          ? VersionRangeApiModel.fromJson(
+              json['versionRange'] as Map<String, dynamic>,
+            )
           : null,
     );
   }

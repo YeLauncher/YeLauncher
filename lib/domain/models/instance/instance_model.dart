@@ -1,9 +1,22 @@
+import 'package:json_annotation/json_annotation.dart';
+import 'package:yelauncher/domain/models/instance/installed_content_model.dart';
+
+part 'instance_model.g.dart';
+
+@JsonSerializable()
 class InstanceModel {
   final String id;
   final String name;
+  @JsonKey(name: 'minecraftVersion')
   final String minecraftVersion;
+  @JsonKey(name: 'modLoader')
   final String modLoader;
+  @JsonKey(name: 'modLoaderVersion')
   final String modLoaderVersion;
+  @JsonKey(name: 'isInstalled')
+  final bool isInstalled;
+  @JsonKey(name: 'installedContent', defaultValue: [])
+  final List<InstalledContentModel> installedContent;
 
   InstanceModel({
     required this.id,
@@ -11,27 +24,14 @@ class InstanceModel {
     required this.minecraftVersion,
     required this.modLoader,
     required this.modLoaderVersion,
+    this.isInstalled = false,
+    this.installedContent = const [],
   });
 
-  factory InstanceModel.fromJson(Map<String, dynamic> json) {
-    return InstanceModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      minecraftVersion: json['minecraftVersion'] as String,
-      modLoader: json['modLoader'] as String,
-      modLoaderVersion: json['modLoaderVersion'] as String,
-    );
-  }
+  factory InstanceModel.fromJson(Map<String, dynamic> json) =>
+      _$InstanceModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'minecraftVersion': minecraftVersion,
-      'modLoader': modLoader,
-      'modLoaderVersion': modLoaderVersion,
-    };
-  }
+  Map<String, dynamic> toJson() => _$InstanceModelToJson(this);
 
   InstanceModel copyWith({
     String? id,
@@ -39,6 +39,8 @@ class InstanceModel {
     String? minecraftVersion,
     String? modLoader,
     String? modLoaderVersion,
+    bool? isInstalled,
+    List<InstalledContentModel>? installedContent,
   }) {
     return InstanceModel(
       id: id ?? this.id,
@@ -46,6 +48,8 @@ class InstanceModel {
       minecraftVersion: minecraftVersion ?? this.minecraftVersion,
       modLoader: modLoader ?? this.modLoader,
       modLoaderVersion: modLoaderVersion ?? this.modLoaderVersion,
+      isInstalled: isInstalled ?? this.isInstalled,
+      installedContent: installedContent ?? this.installedContent,
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
 import 'package:yelauncher/utilities/command.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:yelauncher/data/services/download_service.dart';
@@ -11,12 +12,30 @@ class InstanceCardViewModel extends ChangeNotifier {
   InstanceModel _instance;
   final MinecraftRepository _minecraftRepository;
   final InstanceRepository _instanceRepository;
-  final DownloadService _downloadService;
   final JavaRepository _javaRepository;
   late final Command0 installInstance;
   late final Command0 runInstance;
   late final Command0 stopInstance;
   late final Command0 openFolder;
+
+  String? _currentInstallStep;
+  int? _totalInstallBytes;
+  int? _completedInstallBytes;
+  MinecraftProcessModel? _activeProcess;
+
+  bool get isRunning => _activeProcess != null;
+
+  String? get currentInstallStep {
+    if (_currentInstallStep != null && _totalInstallBytes != null && _completedInstallBytes != null) {
+      final completedMB = (_completedInstallBytes! / (1024 * 1024)).toStringAsFixed(2);
+      final totalMB = (_totalInstallBytes! / (1024 * 1024)).toStringAsFixed(2);
+      return '$_currentInstallStep ($completedMB MB / $totalMB MB)';
+    }
+    return _currentInstallStep;
+  }
+
+  double? _javaDownloadProgress;
+  double? get javaDownloadProgress => _javaDownloadProgress;
 
   InstanceCardViewModel({
     required InstanceModel instance,
@@ -26,50 +45,90 @@ class InstanceCardViewModel extends ChangeNotifier {
     required JavaRepository javaRepository,
   }) : _minecraftRepository = minecraftRepository,
        _instanceRepository = instanceRepository,
-       _downloadService = downloadService,
        _javaRepository = javaRepository,
        _instance = instance {
     installInstance = Command0(_installInstance);
     runInstance = Command0(_runInstance);
     stopInstance = Command0(_stopInstance);
     openFolder = Command0(_openFolder);
-    _downloadService.addListener(notifyListeners);
     installInstance.addListener(notifyListeners);
   }
 
   @override
   void dispose() {
     installInstance.removeListener(notifyListeners);
-    _downloadService.removeListener(notifyListeners);
     super.dispose();
   }
 
   InstanceModel get instance => _instance;
 
-  double? get downloadProgress =>
-      _downloadService.getProgress(_instance.minecraftVersion);
+  double? get downloadProgress {
+    if (_totalInstallBytes != null && _totalInstallBytes! > 0 && _completedInstallBytes != null) {
+      return _completedInstallBytes! / _totalInstallBytes!;
+    }
+    return null;
+  }
 
-  bool get isDownloading =>
-      _downloadService.isDownloading(_instance.minecraftVersion);
-
-  bool get isRunning => _instanceRepository.isRunning(_instance);
+  bool get isDownloading => _currentInstallStep != null;
 
   Future<Result<void>> _installInstance() async {
-    final result = await _minecraftRepository.install(
-      _instance.minecraftVersion,
+    _currentInstallStep = 'Installation client & assets';
+    _totalInstallBytes = null;
+    _completedInstallBytes = null;
+    notifyListeners();
+
+    final installFuture = _minecraftRepository.install(
+      _instance,
+      onProgress: (completed, total) {
+        _completedInstallBytes = completed;
+        _totalInstallBytes = total;
+        notifyListeners();
+      },
     );
+
+    final result = await installFuture;
     switch (result) {
       case Success<void>():
-        final javaIsInstalled = await _javaRepository.isInstalled(_instance.);
-        if (javaIsInstalled case Success<bool>(value: false)) {
-          await _javaRepository.install(_instance.javaVersion);
+        final javaVersionResult = await _minecraftRepository.getJavaVersion(
+          _instance.minecraftVersion,
+        );
+        if (javaVersionResult case Success<String>(
+          value: final javaVersionStr,
+        )) {
+          final javaVersion = int.tryParse(javaVersionStr) ?? 17;
+          final javaIsInstalled = await _javaRepository.isInstalled(
+            javaVersion,
+          );
+
+          if (javaIsInstalled case Success<bool>(value: false)) {
+            _currentInstallStep = 'Downloading Java $javaVersion';
+            _javaDownloadProgress = 0.0;
+            notifyListeners();
+
+            await _javaRepository.install(
+              javaVersion,
+              onProgress: (progress) {
+                _javaDownloadProgress = progress;
+                notifyListeners();
+              },
+            );
+            _javaDownloadProgress = null;
+          }
         }
 
-        _downloadService.clearTrackedModels(_instance.minecraftVersion);
+        _currentInstallStep = null;
+        _totalInstallBytes = null;
+        _completedInstallBytes = null;
+        // _downloadService.clearTrackedModels(_instance.minecraftVersion);
         _instance = _instance.copyWith(isInstalled: true);
+        await _instanceRepository.saveInstance(_instance);
         notifyListeners();
         return const Result.success(null);
       case Failure<void>():
+        _currentInstallStep = null;
+        _totalInstallBytes = null;
+        _completedInstallBytes = null;
+        notifyListeners();
         return Result.failure(result.error);
     }
   }
@@ -77,21 +136,27 @@ class InstanceCardViewModel extends ChangeNotifier {
   Future<Result<void>> _runInstance() async {
     try {
       notifyListeners();
-      await _instanceRepository.run(_instance);
-      notifyListeners();
-      return const Result.success(null);
+      final result = await _minecraftRepository.run(_instance);
+      
+      switch (result) {
+        case Success<MinecraftProcessModel>(value: final process):
+          _activeProcess = process;
+          notifyListeners();
+          
+          process.exitCode.then((_) {
+            if (_activeProcess == process) {
+              _activeProcess = null;
+              notifyListeners();
+            }
+          });
+          
+          return const Result.success(null);
+        case Failure<MinecraftProcessModel>(error: final error):
+          notifyListeners();
+          return Result.failure(error);
+      }
     } on Exception catch (e) {
       notifyListeners();
-      return Result.failure(e);
-    }
-  }
-
-  Future<Result<void>> _stopInstance() async {
-    try {
-      _instanceRepository.stop(_instance);
-      notifyListeners();
-      return const Result.success(null);
-    } on Exception catch (e) {
       return Result.failure(e);
     }
   }
@@ -103,5 +168,14 @@ class InstanceCardViewModel extends ChangeNotifier {
     } on Exception catch (e) {
       return Result.failure(e);
     }
+  }
+
+  Future<Result<void>> _stopInstance() async {
+    if (_activeProcess != null) {
+      _activeProcess!.kill();
+      _activeProcess = null;
+      notifyListeners();
+    }
+    return const Result.success(null);
   }
 }
