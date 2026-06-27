@@ -1,17 +1,23 @@
-# yelauncher
+![](assets/logo.svg "YeLauncher Banner")
+# YeLauncher
 
-Ukrainian Minecraft launcher
+YeLauncher is a modern, cross-platform Minecraft launcher. Designed specifically with the Ukrainian community in mind, it allows players to seamlessly manage Minecraft instances, integrate custom mod loaders, and streamline their gaming experience.
 
-## Getting Started
+It is:
+* **cross-platform** - built with Flutter, providing native application support for Windows, macOS, and Linux.
+* **feature-rich** - offers comprehensive instance creation and UI management.
+* **mod-ready** - built-in support for installing and managing popular mod loaders like Forge and Fabric.
+* **integrated** - supports direct interaction with Modrinth APIs for seamless content downloading and updates.
+* **secure** - encrypted and local storage of Minecraft account
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Building
+YeLauncher uses Flutter and Dart to handle its project dependencies and cross-platform builds.
+```sh
+flutter build <windows/macos/linux>
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Contributing
+### Pull Requests
+If you make any changes or improvements to the launcher which you think would be beneficial to others, please consider making a pull request to merge your changes back into the upstream project.
