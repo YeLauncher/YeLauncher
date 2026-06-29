@@ -74,11 +74,14 @@ dev_dependencies:
   msix: ^3.17.0
 
 # Add this at the root level of pubspec.yaml (not inside dev_dependencies)
+
 msix_config:
   display_name: YeLauncher
+  identity_name: YeLauncher.YeLauncher
+  publisher: "CN=B122F2FB-8A71-45BC-AEE4-27A00ED343AD"
   publisher_display_name: YeLauncher
-  identity_name: com.yelauncher.launcher
   install_certificate: false # <-- This tells CI to skip the (y/N) prompt
+  store: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
