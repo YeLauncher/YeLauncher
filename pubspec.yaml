@@ -80,8 +80,10 @@ msix_config:
   identity_name: YeLauncher.YeLauncher
   publisher: "CN=B122F2FB-8A71-45BC-AEE4-27A00ED343AD"
   publisher_display_name: YeLauncher
+  languages: uk-UA
   install_certificate: false # <-- This tells CI to skip the (y/N) prompt
   store: true
+  logo_path: windows/runner/resources/app_icon.ico
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
