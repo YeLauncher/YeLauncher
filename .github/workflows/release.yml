@@ -115,7 +115,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # ADD THIS NATIVE REPLACEMENT:
       - name: Upload MSIX to Azure Blob Storage
         shell: bash
         run: |
@@ -124,6 +123,7 @@ jobs:
             --container-name releases \
             --name "${{ github.ref_name }}/yelauncher-windows.msix" \
             --file yelauncher-windows.msix \
+            --content-type "application/msix" \
             --auth-mode login
               
       - name: Upload Artifact
