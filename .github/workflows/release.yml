@@ -39,7 +39,7 @@ jobs:
         include:
           - os: windows-latest
             platform: windows
-            extension: exe # Changed from msix to exe
+            extension: exe
 
     steps:
       - name: Checkout Code
@@ -88,6 +88,11 @@ jobs:
         if: matrix.platform == 'windows'
         run: flutter build windows --release
 
+      # 4.5 PACKAGING: Create MSIX Launcher
+      - name: Create MSIX Package
+        if: matrix.platform == 'windows'
+        run: dart run msix:create
+
       # 5. PACKAGING: Compile Inno Setup Installer
       - name: Create Inno Setup Installer
         if: matrix.platform == 'windows'
@@ -97,17 +102,22 @@ jobs:
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 
       # 6. ARTIFACTS: Rename and Upload
-      - name: Rename Output File
+      - name: Rename Output Files
         shell: bash 
         run: |
-          # Assuming Inno Setup outputs to an 'Output' folder as defined in the .iss script
+          # Rename the Inno Setup installer
           cp Output/yelauncher-setup.exe yelauncher-windows-installer.exe
+          
+          # Find the generated MSIX file and copy it to the root directory
+          find . -name "*.msix" -type f -exec cp {} yelauncher-windows.msix \;
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: yelauncher-${{ matrix.platform }}
-          path: yelauncher-windows-installer.exe
+          path: |
+            yelauncher-windows-installer.exe
+            yelauncher-windows.msix
 
   release:
     needs: build
@@ -125,4 +135,5 @@ jobs:
         with:
           files: |
             yelauncher-windows-installer.exe
+            yelauncher-windows.msix
           generate_release_notes: true
