@@ -70,94 +70,116 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset("assets/logo.svg", height: 40),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Sign in to YeLauncher",
-                        style: AppText.defaultTheme.titleSmall.copyWith(
-                          color: AppColors.dark.onSurface,
-                        ),
-                      ),
-                      if (widget.viewModel.errorMessage != null) ...[
-                        const SizedBox(height: 16),
+                      if (widget.viewModel.loginMicrosoft.running) ...[
+                        const SizedBox(height: 32),
+                        const CircularProgressIndicator(),
+                        const SizedBox(height: 24),
                         Text(
-                          widget.viewModel.errorMessage!,
-                          style: AppText.defaultTheme.label.copyWith(
-                            color: AppColors.dark.error,
+                          "Waiting or go to browser to login by Microsoft",
+                          style: AppText.defaultTheme.title.copyWith(
+                            color: AppColors.dark.primary,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ],
-                      const SizedBox(height: 30),
-
-                      // Microsoft Login Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: Button.primary(
-                          "Login with Microsoft",
-                          onPressed: isAuthenticating
-                              ? null
-                              : _onMicrosoftLogin,
+                        const SizedBox(height: 32),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Button.surface(
+                            "Cancel",
+                            onPressed: () => widget.viewModel.cancelMicrosoftLogin(),
+                          ),
                         ),
-                      ),
-
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(color: AppColors.dark.outline),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: Text(
-                              "OR OFFLINE",
-                              style: AppText.defaultTheme.label.copyWith(
-                                color: AppColors.dark.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(color: AppColors.dark.outline),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Offline Login
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Nickname",
-                          style: AppText.defaultTheme.label.copyWith(
+                        const SizedBox(height: 16),
+                      ] else ...[
+                        SvgPicture.asset("assets/logo.svg", height: 40),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Sign in to YeLauncher",
+                          style: AppText.defaultTheme.titleSmall.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      ye.TextFormField(
-                        controller: _nickname,
-                        labelText: "Enter nickname",
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Nickname cannot be empty";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Button.primary(
-                          "Play Offline",
-                          onPressed: isAuthenticating ? null : _onOfflineLogin,
-                        ),
-                      ),
+                        if (widget.viewModel.errorMessage != null) ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            widget.viewModel.errorMessage!,
+                            style: AppText.defaultTheme.label.copyWith(
+                              color: AppColors.dark.error,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        const SizedBox(height: 30),
 
-                      if (isAuthenticating) ...[
+                        // Microsoft Login Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: Button.primary(
+                            "Login with Microsoft",
+                            onPressed: isAuthenticating
+                                ? null
+                                : _onMicrosoftLogin,
+                          ),
+                        ),
+
                         const SizedBox(height: 24),
-                        const CircularProgressIndicator(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Divider(color: AppColors.dark.outline),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0,
+                              ),
+                              child: Text(
+                                "OR OFFLINE",
+                                style: AppText.defaultTheme.label.copyWith(
+                                  color: AppColors.dark.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(color: AppColors.dark.outline),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Offline Login
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Nickname",
+                            style: AppText.defaultTheme.label.copyWith(
+                              color: AppColors.dark.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ye.TextFormField(
+                          controller: _nickname,
+                          labelText: "Enter nickname",
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Nickname cannot be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Button.primary(
+                            "Play Offline",
+                            onPressed: isAuthenticating ? null : _onOfflineLogin,
+                          ),
+                        ),
+
+                        if (widget.viewModel.loginOffline.running) ...[
+                          const SizedBox(height: 24),
+                          const CircularProgressIndicator(),
+                        ],
                       ],
                     ],
                   ),

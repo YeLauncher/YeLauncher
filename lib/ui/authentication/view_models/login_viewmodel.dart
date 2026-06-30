@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart';
 import 'package:yelauncher/utilities/command.dart';
+import 'package:yelauncher/utilities/launcher_exception.dart';
 import 'package:yelauncher/utilities/result.dart';
 
 class LoginViewModel extends ChangeNotifier {
@@ -51,7 +52,7 @@ class LoginViewModel extends ChangeNotifier {
     final result = await _minecraftRepository.authenticate();
     return switch (result) {
       Success<MinecraftProfileModel>(value: _) => const Result.success(null),
-      Failure<MinecraftProfileModel>(:final error) => Result.failure(error),
+      Failure<MinecraftProfileModel>(:final error) => Result.failure(LauncherException('Microsoft login failed')),
     };
   }
 
@@ -61,5 +62,9 @@ class LoginViewModel extends ChangeNotifier {
       Success<MinecraftProfileModel>(value: _) => const Result.success(null),
       Failure<MinecraftProfileModel>(:final error) => Result.failure(error),
     };
+  }
+
+  void cancelMicrosoftLogin() {
+    _minecraftRepository.cancelAuthentication();
   }
 }

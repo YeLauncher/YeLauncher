@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -36,22 +37,30 @@ void main() async {
   );
 }
 
-class YeLauncherApp extends StatelessWidget {
+class YeLauncherApp extends StatefulWidget {
   const YeLauncherApp({super.key});
 
   @override
+  State<YeLauncherApp> createState() => _YeLauncherAppState();
+}
+
+class _YeLauncherAppState extends State<YeLauncherApp> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the router once to prevent resetting to initialLocation on rebuilds
+    final minecraftRepository = context.read<MinecraftRepository>();
+    _router = getRouter(minecraftRepository);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<MinecraftRepository>(
-      builder: (context, minecraftRepository, _) {
-        return WidgetsApp.router(
-          title: "YeLauncher",
-          color: AppColors.dark.surface,
-          routerConfig: getRouter(minecraftRepository),
-          builder: (context, child) {
-            return child!;
-          },
-        );
-      },
+    return WidgetsApp.router(
+      title: "YeLauncher",
+      color: AppColors.dark.surface,
+      routerConfig: _router,
     );
   }
 }

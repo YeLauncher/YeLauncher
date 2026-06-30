@@ -27,6 +27,7 @@ import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart'
 import 'package:yelauncher/domain/models/minecraft/minecraft_run_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
+import 'package:yelauncher/utilities/launcher_exception.dart';
 import 'package:yelauncher/utilities/result.dart';
 
 class MinecraftRepositoryRemote implements MinecraftRepository {
@@ -708,14 +709,22 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     return assetDownloads;
   }
 
+  MicrosoftApiClient? _activeMsClient;
+
   @override
   Future<Result<MinecraftProfileModel>> authenticate() {
     return _authenticateWithMicrosoft();
   }
 
+  @override
+  void cancelAuthentication() {
+    _activeMsClient?.cancel();
+  }
+
   Future<Result<MinecraftProfileModel>> _authenticateWithMicrosoft() async {
     try {
-      final msClient = MicrosoftApiClient();
+      _activeMsClient = MicrosoftApiClient();
+      final msClient = _activeMsClient!;
 
       final accessResult = await msClient.getAccessToken();
       if (accessResult is Failure<String>) return Result.failure(accessResult.error);
@@ -736,7 +745,9 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
       final mcToken = (mcResult as Success<String>).value;
 
       final profileResult = await msClient.getProfile(mcToken);
-      if (profileResult is Failure<MinecraftProfileApiModel>) return Result.failure(profileResult.error);
+      if (profileResult is Failure<MinecraftProfileApiModel>) {
+        return Result.failure(Exception("Failed to fetch Minecraft profile: ${profileResult.error}"));
+      }
       final profileApi = (profileResult as Success<MinecraftProfileApiModel>).value;
 
       final profile = MinecraftProfileModel(
