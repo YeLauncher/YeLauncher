@@ -16,6 +16,7 @@ import 'package:yelauncher/ui/instances/view_models/instance_creation_viewmodel.
 import 'package:yelauncher/ui/instances/view_models/instance_screen_viewmodel.dart';
 import 'package:yelauncher/ui/instances/widgets/instance_creation_dialog.dart';
 import 'package:yelauncher/ui/instances/widgets/instance_card.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class InstancesScreen extends StatefulWidget {
   const InstancesScreen({super.key, required this.viewModel});
@@ -66,7 +67,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                           color: AppColors.dark.primary,
                         ),
                         Text(
-                          "Екземпляри",
+                          AppLocalizations.of(context)!.instancesTab,
                           style: AppText.defaultTheme.titleLarge.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
@@ -74,7 +75,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                       ],
                     ),
                     Text(
-                      "Налаштуйте свої екземпляри",
+                      AppLocalizations.of(context)!.instancesSubtitle,
                       style: AppText.defaultTheme.body.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
@@ -84,13 +85,13 @@ class _InstancesScreenState extends State<InstancesScreen> {
                 Row(
                   children: [
                     Button.primary(
-                      "Створити",
+                      AppLocalizations.of(context)!.createButton,
                       iconData: Symbols.add_rounded,
                       onPressed: () => _showInstanceCreationDialog(context),
                     ),
                     const SizedBox(width: 12),
                     Button.secondary(
-                      "Вийти",
+                      AppLocalizations.of(context)!.logoutButton,
                       iconData: Symbols.logout_rounded,
                       onPressed: () async {
                         final result = await _minecraftRepository.logout();
@@ -125,13 +126,13 @@ class _InstancesScreenState extends State<InstancesScreen> {
                             spacing: 4,
                             children: [
                               Text(
-                                "Екземплярів не знайдено",
+                                AppLocalizations.of(context)!.noInstancesTitle,
                                 style: AppText.defaultTheme.titleSmall.copyWith(
                                   color: AppColors.dark.onSurface,
                                 ),
                               ),
                               Text(
-                                "Спробуйте створити або змінити критерії фільтрування",
+                                AppLocalizations.of(context)!.noInstancesSubtitle,
                                 style: AppText.defaultTheme.bodySmall.copyWith(
                                   color: AppColors.dark.onSurfaceVariant,
                                 ),

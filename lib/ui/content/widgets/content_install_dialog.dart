@@ -14,6 +14,7 @@ import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/list_item.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class ContentInstallDialog extends StatefulWidget {
   final ContentDetailViewModel viewModel;
@@ -50,7 +51,7 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Text('Виберіть екземпляр', style: AppText.defaultTheme.title.copyWith(color: AppColors.dark.onSurface)),
+          Text(AppLocalizations.of(context)!.selectInstance, style: AppText.defaultTheme.title.copyWith(color: AppColors.dark.onSurface)),
           const SizedBox(height: 16),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -95,11 +96,11 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
             ],
           ),
           const SizedBox(height: 20),
-          Text("Виберіть екземпляр, до якого потрібно додати цей мод:", style: AppText.defaultTheme.bodySmall.copyWith(color: AppColors.dark.onSurface)),
+          Text(AppLocalizations.of(context)!.selectInstanceSubtitle, style: AppText.defaultTheme.bodySmall.copyWith(color: AppColors.dark.onSurface)),
           const SizedBox(height: 12),
           if (compatibleInstances.isEmpty)
             Expanded(
-              child: Center(child: Text('Немає сумісних екземплярів', style: AppText.defaultTheme.body.copyWith(color: AppColors.dark.onSurfaceVariant))),
+              child: Center(child: Text(AppLocalizations.of(context)!.noCompatibleInstances, style: AppText.defaultTheme.body.copyWith(color: AppColors.dark.onSurfaceVariant))),
             )
           else
             Expanded(
@@ -132,12 +133,12 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Button.secondary(
-                'Скасувати',
+                AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.of(context).pop(),
               ),
               const SizedBox(width: 8),
               Button.primary(
-                isInstalling ? 'Встановлення...' : 'Встановити',
+                isInstalling ? AppLocalizations.of(context)!.installingStatus : AppLocalizations.of(context)!.installButton,
                 onPressed: selectedInstance == null || isInstalling ? () {} : _install,
               ),
             ],
@@ -187,7 +188,7 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        errorMessage = 'Помилка: $e';
+        errorMessage = AppLocalizations.of(context)!.errorWithParam(e.toString());
       });
     } finally {
       if (mounted) {

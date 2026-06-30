@@ -8,6 +8,14 @@ import 'package:yelauncher/data/repositories/instances/instance_repository.dart'
 import 'package:yelauncher/data/services/update_service.dart';
 import 'package:yelauncher/domain/models/instance/installed_content_model.dart';
 
+enum SplashStatus {
+  checkingData,
+  checkingUpdates,
+  downloadingUpdate,
+  installingUpdate,
+  downloadError,
+}
+
 class SplashViewModel extends ChangeNotifier {
   final _log = Logger('SplashViewModel');
   final InstanceRepository _instanceRepository;
@@ -16,8 +24,8 @@ class SplashViewModel extends ChangeNotifier {
   bool _isChecking = true;
   bool get isChecking => _isChecking;
 
-  String _statusMessage = 'Перевірка цілісності даних...';
-  String get statusMessage => _statusMessage;
+  SplashStatus _status = SplashStatus.checkingData;
+  SplashStatus get status => _status;
 
   double? _downloadProgress;
   double? get downloadProgress => _downloadProgress;
@@ -31,12 +39,12 @@ class SplashViewModel extends ChangeNotifier {
   Future<void> initialize() async {
     _log.info('Starting update check...');
     try {
-      _statusMessage = 'Перевірка наявності оновлень...';
+      _status = SplashStatus.checkingUpdates;
       notifyListeners();
 
       final updateUrl = await _updateService.checkForUpdate();
       if (updateUrl != null) {
-        _statusMessage = 'Завантаження оновлення...';
+        _status = SplashStatus.downloadingUpdate;
         _downloadProgress = 0.0;
         notifyListeners();
 
@@ -46,19 +54,19 @@ class SplashViewModel extends ChangeNotifier {
         });
 
         if (file != null) {
-          _statusMessage = 'Встановлення оновлення...';
+          _status = SplashStatus.installingUpdate;
           notifyListeners();
           await _updateService.installUpdate(file);
           return; // The app will exit, but just in case
         } else {
-          _statusMessage = 'Помилка завантаження. Продовження...';
+          _status = SplashStatus.downloadError;
           _downloadProgress = null;
           notifyListeners();
           await Future.delayed(const Duration(seconds: 1));
         }
       }
 
-      _statusMessage = 'Перевірка цілісності даних...';
+      _status = SplashStatus.checkingData;
       notifyListeners();
 
       final appData = await getApplicationSupportDirectory();

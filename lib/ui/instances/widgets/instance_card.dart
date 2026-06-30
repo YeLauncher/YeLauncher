@@ -8,6 +8,7 @@ import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
 import 'package:yelauncher/ui/instances/widgets/instance_content_dialog.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class InstanceCard extends StatefulWidget {
   final InstanceCardViewModel viewModel;
@@ -75,7 +76,7 @@ class _InstanceCardState extends State<InstanceCard> {
                 children: [
                   if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running)
                     Tooltip(
-                      message: widget.viewModel.currentInstallStep ?? 'Installing...',
+                      message: widget.viewModel.currentInstallStep ?? AppLocalizations.of(context)!.installingTooltip,
                       preferBelow: false,
                       child: SizedBox(
                         width: 48,
@@ -92,14 +93,14 @@ class _InstanceCardState extends State<InstanceCard> {
                     )
                   else if (widget.viewModel.instance.isInstalled == false)
                     Button.primary(
-                      "Встановити",
+                      AppLocalizations.of(context)!.installButton,
                       iconData: Symbols.download_rounded,
                       onPressed: widget.viewModel.installInstance.execute,
                     )
                   else if (widget.viewModel.instance.isInstalled == true) ...[
                     if (widget.viewModel.isRunning)
                       Button.error(
-                        "Зупинити",
+                        AppLocalizations.of(context)!.stopButton,
                         iconData: Symbols.stop_rounded,
                         onPressed: widget.viewModel.stopInstance.execute,
                       )
@@ -114,7 +115,7 @@ class _InstanceCardState extends State<InstanceCard> {
                       )
                     else
                       Button.primary(
-                        "Грати",
+                        AppLocalizations.of(context)!.playButton,
                         iconData: Symbols.play_arrow_rounded,
                         onPressed: widget.viewModel.runInstance.execute,
                       ),

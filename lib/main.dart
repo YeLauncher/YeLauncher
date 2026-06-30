@@ -7,6 +7,9 @@ import 'package:yelauncher/config/dependencies.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/routing/router.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 
 void main() async {
   Logger.root.level = Level.FINE; // Set the logging level to capture all logs
@@ -57,10 +60,25 @@ class _YeLauncherAppState extends State<YeLauncherApp> {
 
   @override
   Widget build(BuildContext context) {
-    return WidgetsApp.router(
-      title: "YeLauncher",
-      color: AppColors.dark.surface,
-      routerConfig: _router,
+    return Consumer<SettingsRepository>(
+      builder: (context, settings, _) {
+        return WidgetsApp.router(
+          title: "YeLauncher",
+          color: AppColors.dark.surface,
+          routerConfig: _router,
+          locale: settings.currentLocale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'),
+            Locale('uk'),
+          ],
+        );
+      },
     );
   }
 }

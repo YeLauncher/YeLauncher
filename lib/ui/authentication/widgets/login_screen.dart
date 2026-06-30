@@ -7,6 +7,7 @@ import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/text_form_field.dart' as ye;
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   final LoginViewModel viewModel;
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const CircularProgressIndicator(),
                         const SizedBox(height: 24),
                         Text(
-                          "Waiting or go to browser to login by Microsoft",
+                          AppLocalizations.of(context)!.loginWaitingMicrosoft,
                           style: AppText.defaultTheme.title.copyWith(
                             color: AppColors.dark.primary,
                           ),
@@ -85,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: Button.surface(
-                            "Cancel",
+                            AppLocalizations.of(context)!.cancel,
                             onPressed: () => widget.viewModel.cancelMicrosoftLogin(),
                           ),
                         ),
@@ -94,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SvgPicture.asset("assets/logo.svg", height: 40),
                         const SizedBox(height: 8),
                         Text(
-                          "Sign in to YeLauncher",
+                          AppLocalizations.of(context)!.signInToYeLauncher,
                           style: AppText.defaultTheme.titleSmall.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
@@ -115,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: Button.primary(
-                            "Login with Microsoft",
+                            AppLocalizations.of(context)!.loginWithMicrosoft,
                             onPressed: isAuthenticating
                                 ? null
                                 : _onMicrosoftLogin,
@@ -133,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 horizontal: 8.0,
                               ),
                               child: Text(
-                                "OR OFFLINE",
+                                AppLocalizations.of(context)!.orOffline,
                                 style: AppText.defaultTheme.label.copyWith(
                                   color: AppColors.dark.onSurfaceVariant,
                                 ),
@@ -150,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "Nickname",
+                            AppLocalizations.of(context)!.nickname,
                             style: AppText.defaultTheme.label.copyWith(
                               color: AppColors.dark.onSurface,
                             ),
@@ -159,10 +160,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 8),
                         ye.TextFormField(
                           controller: _nickname,
-                          labelText: "Enter nickname",
+                          labelText: AppLocalizations.of(context)!.enterNickname,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return "Nickname cannot be empty";
+                              return AppLocalizations.of(context)!.nicknameEmptyError;
                             }
                             return null;
                           },
@@ -171,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: Button.primary(
-                            "Play Offline",
+                            AppLocalizations.of(context)!.playOffline,
                             onPressed: isAuthenticating ? null : _onOfflineLogin,
                           ),
                         ),
