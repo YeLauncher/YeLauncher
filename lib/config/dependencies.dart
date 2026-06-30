@@ -27,6 +27,7 @@ import 'package:yelauncher/data/services/instance_service.dart';
 import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
 import 'package:yelauncher/data/services/update_service.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 
 
 List<SingleChildWidget> get _sharedProviders {
@@ -36,6 +37,9 @@ List<SingleChildWidget> get _sharedProviders {
     Provider(create: (_) => UpdateService()),
     Provider(create: (_) => const FlutterSecureStorage()),
     Provider(create: (_) => SecureStorageService()),
+    ChangeNotifierProvider<SettingsRepository>(
+      create: (context) => SettingsRepositoryLocal(storageService: context.read())..init(),
+    ),
     Provider.value(
       value: MinecraftApiClient(
         baseUrl:

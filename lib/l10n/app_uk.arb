@@ -1,0 +1,89 @@
+{
+  "@@locale": "uk",
+  "settingsTabTitle": "Налаштування",
+  "languageLabel": "Мова",
+  "english": "English",
+  "ukrainian": "Українська",
+  "loginWaitingMicrosoft": "Зачекайте або перейдіть у браузер для входу через Microsoft",
+  "cancel": "Скасувати",
+  "signInToYeLauncher": "Увійдіть у YeLauncher",
+  "loginWithMicrosoft": "Увійти через Microsoft",
+  "orOffline": "АБО ОФЛАЙН",
+  "nickname": "Нікнейм",
+  "enterNickname": "Введіть нікнейм",
+  "nicknameEmptyError": "Нікнейм не може бути порожнім",
+  "playOffline": "Грати офлайн",
+  "splashCheckingData": "Перевірка цілісності даних...",
+  "splashCheckingUpdates": "Перевірка наявності оновлень...",
+  "splashDownloadingUpdate": "Завантаження оновлення...",
+  "splashInstallingUpdate": "Встановлення оновлення...",
+  "splashDownloadError": "Помилка завантаження. Продовження...",
+  "instancesTab": "Екземпляри",
+  "instancesSubtitle": "Налаштуйте свої екземпляри",
+  "createButton": "Створити",
+  "logoutButton": "Вийти",
+  "noInstancesTitle": "Екземплярів не знайдено",
+  "noInstancesSubtitle": "Спробуйте створити або змінити критерії фільтрування",
+  "createInstanceTitle": "Створити екземпляр",
+  "createInstanceSubtitle": "Налаштуйте свій екземпляр",
+  "stepName": "Назва",
+  "stepVersion": "Версія",
+  "stepModLoader": "Завантажувач",
+  "instanceNameLabel": "Назва екземпляру",
+  "enterNameHint": "Введіть назву",
+  "searchVersionHint": "Пошук версії",
+  "loading": "Завантаження...",
+  "nothingFound": "Нічого не знайдено",
+  "modLoaderLabel": "Завантажувач модів",
+  "forgeVersionLabel": "Forge версія",
+  "selectForgeVersion": "Виберіть одну з доступних версій Forge",
+  "fabricVersionLabel": "Fabric версія",
+  "selectFabricVersion": "Виберіть одну з доступних версій Fabric",
+  "nextButton": "Далі",
+  "selectedForgeVersion": "Обрана версія Forge: {version}",
+  "@selectedForgeVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installButton": "Встановити",
+  "stopButton": "Зупинити",
+  "playButton": "Грати",
+  "installingTooltip": "Встановлення...",
+  "contentTab": "Контент",
+  "searchHint": "Пошук...",
+  "tabMods": "Моди",
+  "tabResourcepacks": "Ресурспаки",
+  "tabDatapacks": "Датапаки",
+  "tabModpacks": "Модпаки",
+  "addButton": "Додати",
+  "byAuthor": "від {author}",
+  "@byAuthor": {
+    "placeholders": {
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "tabDescription": "Опис",
+  "tabGallery": "Галерея",
+  "tabVersions": "Версії",
+  "galleryEmpty": "Галерея порожня",
+  "versionsNotFound": "Версій не знайдено",
+  "selectInstance": "Виберіть екземпляр",
+  "selectInstanceSubtitle": "Виберіть екземпляр, до якого потрібно додати цей контент:",
+  "noCompatibleInstances": "Немає сумісних екземплярів",
+  "installingStatus": "Встановлення...",
+  "errorWithParam": "Помилка: {error}",
+  "@errorWithParam": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "installedContentTitle": "Встановлений контент",
+  "contentMissing": "Контент відсутній"
+}

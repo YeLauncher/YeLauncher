@@ -11,7 +11,9 @@ import 'package:yelauncher/ui/core/step.dart' as core_step;
 import 'package:yelauncher/ui/core/text_field.dart' as core_text_field;
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
+import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_creation_viewmodel.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class InstanceCreationDialog extends StatefulWidget {
   const InstanceCreationDialog({super.key, required this.viewModel});
@@ -96,13 +98,13 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                       spacing: 4,
                       children: [
                         Text(
-                          "Створити екземпляр",
+                          AppLocalizations.of(context)!.createInstanceTitle,
                           style: AppText.defaultTheme.title.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
                         ),
                         Text(
-                          "Налаштуйте свій екземпляр",
+                          AppLocalizations.of(context)!.createInstanceSubtitle,
                           style: AppText.defaultTheme.bodySmall.copyWith(
                             color: AppColors.dark.onSurfaceVariant,
                           ),
@@ -155,21 +157,21 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         core_step.Step.primary(
-          title: "Назва",
+          title: AppLocalizations.of(context)!.stepName,
           iconData: Symbols.edit_rounded,
           isCurrent: step == 0,
           isCompleted: step > 0,
         ),
         _spacer,
         core_step.Step.primary(
-          title: "Версія",
+          title: AppLocalizations.of(context)!.stepVersion,
           iconData: Symbols.app_badging_rounded,
           isCurrent: step == 1,
           isCompleted: step > 1,
         ),
         _spacer,
         core_step.Step.primary(
-          title: "Завантажувач",
+          title: AppLocalizations.of(context)!.stepModLoader,
           iconData: Symbols.extension_rounded,
           isCurrent: step == 2,
           isCompleted: step > 2,
@@ -205,7 +207,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               color: AppColors.dark.primary,
             ),
             Text(
-              "Назва екземпляру",
+              AppLocalizations.of(context)!.instanceNameLabel,
               style: AppText.defaultTheme.label.copyWith(
                 color: AppColors.dark.onSurface,
               ),
@@ -215,7 +217,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         const SizedBox(height: 16),
         core_text_field.TextField(
           controller: _nameController,
-          labelText: "Введіть назву",
+          labelText: AppLocalizations.of(context)!.enterNameHint,
           width: double.infinity,
         ),
       ],
@@ -235,7 +237,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               color: AppColors.dark.primary,
             ),
             Text(
-              "Версія",
+              AppLocalizations.of(context)!.stepVersion,
               style: AppText.defaultTheme.label.copyWith(
                 color: AppColors.dark.onSurface,
               ),
@@ -245,7 +247,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         const SizedBox(height: 12),
         core_text_field.TextField(
           controller: _searchController,
-          labelText: "Пошук версії",
+          labelText: AppLocalizations.of(context)!.searchVersionHint,
           width: double.infinity,
         ),
         const SizedBox(height: 8),
@@ -256,7 +258,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               if (widget.viewModel.loadVersions.running) {
                 return Center(
                   child: Text(
-                    "Завантаження...",
+                    AppLocalizations.of(context)!.loading,
                     style: AppText.defaultTheme.body.copyWith(
                       color: AppColors.dark.primary,
                     ),
@@ -269,7 +271,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               if (versions.isEmpty && widget.viewModel.searchQuery.isNotEmpty) {
                 return Center(
                   child: Text(
-                    "Нічого не знайдено",
+                    AppLocalizations.of(context)!.nothingFound,
                     style: AppText.defaultTheme.body.copyWith(
                       color: AppColors.dark.onSurfaceVariant,
                     ),
@@ -326,7 +328,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                 color: AppColors.dark.primary,
               ),
               Text(
-                "Завантажувач модів",
+                AppLocalizations.of(context)!.modLoaderLabel,
                 style: AppText.defaultTheme.label.copyWith(
                   color: AppColors.dark.onSurface,
                 ),
@@ -340,7 +342,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               if (widget.viewModel.loadModLoaders.running) {
                 return Center(
                   child: Text(
-                    "Завантаження...",
+                    AppLocalizations.of(context)!.loading,
                     style: AppText.defaultTheme.body.copyWith(
                       color: AppColors.dark.primary,
                     ),
@@ -390,7 +392,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               color: AppColors.dark.primary,
             ),
             Text(
-              "Forge версія",
+              AppLocalizations.of(context)!.forgeVersionLabel,
               style: AppText.defaultTheme.label.copyWith(
                 color: AppColors.dark.onSurface,
               ),
@@ -455,14 +457,14 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         const SizedBox(height: 12),
         if (!isCustom)
           Text(
-            "Selected Forge version: ${widget.viewModel.selectedForgeVersion ?? '-'}",
+            AppLocalizations.of(context)!.selectedForgeVersion(widget.viewModel.selectedForgeVersion ?? '-'),
             style: AppText.defaultTheme.bodySmall.copyWith(
               color: AppColors.dark.onSurfaceVariant,
             ),
           ),
         if (isCustom) ...[
           Text(
-            "Виберіть одну з доступних версій Forge",
+            AppLocalizations.of(context)!.selectForgeVersion,
             style: AppText.defaultTheme.bodySmall.copyWith(
               color: AppColors.dark.onSurfaceVariant,
             ),
@@ -556,7 +558,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               color: AppColors.dark.primary,
             ),
             Text(
-              "Fabric версія",
+              AppLocalizations.of(context)!.fabricVersionLabel,
               style: AppText.defaultTheme.label.copyWith(
                 color: AppColors.dark.onSurface,
               ),
@@ -565,7 +567,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         ),
         const SizedBox(height: 12),
         Text(
-          "Виберіть одну з доступних версій Fabric",
+          AppLocalizations.of(context)!.selectFabricVersion,
           style: AppText.defaultTheme.bodySmall.copyWith(
             color: AppColors.dark.onSurfaceVariant,
           ),
@@ -687,7 +689,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Button.surface(
-            "Скасувати",
+            AppLocalizations.of(context)!.cancel,
             onPressed: () {
               if (widget.viewModel.currentStep > 0) {
                 widget.viewModel.prevStep();
@@ -697,7 +699,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             },
           ),
           Button.primary(
-            widget.viewModel.currentStep == 2 ? "Створити" : "Далі",
+            widget.viewModel.currentStep == 2 ? AppLocalizations.of(context)!.createButton : AppLocalizations.of(context)!.nextButton,
             iconData: widget.viewModel.currentStep == 2
                 ? Symbols.check_rounded
                 : null,

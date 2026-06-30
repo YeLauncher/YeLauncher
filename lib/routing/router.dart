@@ -12,6 +12,8 @@ import 'package:yelauncher/ui/authentication/widgets/login_screen.dart';
 
 import 'package:yelauncher/ui/splash/view_models/splash_viewmodel.dart';
 import 'package:yelauncher/ui/splash/widgets/splash_screen.dart';
+import 'package:yelauncher/ui/settings/view_models/settings_viewmodel.dart';
+import 'package:yelauncher/ui/settings/widgets/settings_screen.dart';
 
 GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
   initialLocation: Routes.splash,
@@ -81,6 +83,19 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
                   contentRepository: context.read(),
                 );
                 return ContentScreen(viewModel: viewModel);
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.settings,
+              builder: (context, state) {
+                final viewModel = SettingsViewModel(
+                  settingsRepository: context.read(),
+                );
+                return SettingsScreen(viewModel: viewModel);
               },
             ),
           ],

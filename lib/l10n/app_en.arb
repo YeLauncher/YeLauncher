@@ -1,0 +1,89 @@
+{
+  "@@locale": "en",
+  "settingsTabTitle": "Settings",
+  "languageLabel": "Language",
+  "english": "English",
+  "ukrainian": "Ukrainian",
+  "loginWaitingMicrosoft": "Waiting or go to browser to login by Microsoft",
+  "cancel": "Cancel",
+  "signInToYeLauncher": "Sign in to YeLauncher",
+  "loginWithMicrosoft": "Login with Microsoft",
+  "orOffline": "OR OFFLINE",
+  "nickname": "Nickname",
+  "enterNickname": "Enter nickname",
+  "nicknameEmptyError": "Nickname cannot be empty",
+  "playOffline": "Play Offline",
+  "splashCheckingData": "Checking data integrity...",
+  "splashCheckingUpdates": "Checking for updates...",
+  "splashDownloadingUpdate": "Downloading update...",
+  "splashInstallingUpdate": "Installing update...",
+  "splashDownloadError": "Download error. Continuing...",
+  "instancesTab": "Instances",
+  "instancesSubtitle": "Configure your instances",
+  "createButton": "Create",
+  "logoutButton": "Logout",
+  "noInstancesTitle": "No instances found",
+  "noInstancesSubtitle": "Try creating or changing filter criteria",
+  "createInstanceTitle": "Create Instance",
+  "createInstanceSubtitle": "Configure your instance",
+  "stepName": "Name",
+  "stepVersion": "Version",
+  "stepModLoader": "Mod Loader",
+  "instanceNameLabel": "Instance Name",
+  "enterNameHint": "Enter name",
+  "searchVersionHint": "Search version",
+  "loading": "Loading...",
+  "nothingFound": "Nothing found",
+  "modLoaderLabel": "Mod Loader",
+  "forgeVersionLabel": "Forge version",
+  "selectForgeVersion": "Select one of the available Forge versions",
+  "fabricVersionLabel": "Fabric version",
+  "selectFabricVersion": "Select one of the available Fabric versions",
+  "nextButton": "Next",
+  "selectedForgeVersion": "Selected Forge version: {version}",
+  "@selectedForgeVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installButton": "Install",
+  "stopButton": "Stop",
+  "playButton": "Play",
+  "installingTooltip": "Installing...",
+  "contentTab": "Content",
+  "searchHint": "Search...",
+  "tabMods": "Mods",
+  "tabResourcepacks": "Resourcepacks",
+  "tabDatapacks": "Datapacks",
+  "tabModpacks": "Modpacks",
+  "addButton": "Add",
+  "byAuthor": "by {author}",
+  "@byAuthor": {
+    "placeholders": {
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "tabDescription": "Description",
+  "tabGallery": "Gallery",
+  "tabVersions": "Versions",
+  "galleryEmpty": "Gallery is empty",
+  "versionsNotFound": "Versions not found",
+  "selectInstance": "Select Instance",
+  "selectInstanceSubtitle": "Select the instance to which you want to add this content:",
+  "noCompatibleInstances": "No compatible instances found",
+  "installingStatus": "Installing...",
+  "errorWithParam": "Error: {error}",
+  "@errorWithParam": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "installedContentTitle": "Installed Content",
+  "contentMissing": "No content installed"
+}
