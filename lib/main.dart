@@ -10,15 +10,18 @@ import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  await dotenv.load(fileName: ".env");
   Logger.root.level = Level.FINE; // Set the logging level to capture all logs
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}',
     );
   });
-  WidgetsFlutterBinding.ensureInitialized();
+  SentryWidgetsFlutterBinding.ensureInitialized();
 
   await windowManager.ensureInitialized();
 
@@ -35,8 +38,16 @@ void main() async {
     await windowManager.show();
     await windowManager.focus();
   });
-  runApp(
-    MultiProvider(providers: providersRemote, child: const YeLauncherApp()),
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = dotenv.env['SENTRY_DSN'];
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(
+      SentryWidget(
+        child: MultiProvider(providers: providersRemote, child: const YeLauncherApp()),
+      )
+    ),
   );
 }
 
