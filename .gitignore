@@ -48,3 +48,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+sentry.properties
+.env
+
+# Flutter paths
+linux/flutter/
+windows/flutter/
+macos/Flutter/GeneratedPluginRegistrant.swift
