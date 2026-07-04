@@ -82,7 +82,9 @@ jobs:
 
       - name: Run Code Generation
         run: dart run build_runner build --delete-conflicting-outputs
-
+      - name: Create .env file
+        run: |
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
       # 4. BUILD: Standard Windows Executable
       - name: Build Windows App
         if: matrix.platform == 'windows'
