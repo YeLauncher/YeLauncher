@@ -82,9 +82,15 @@ jobs:
 
       - name: Run Code Generation
         run: dart run build_runner build --delete-conflicting-outputs
+        
       - name: Create .env file
         run: |
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+          
+      # 3.5. TEST: Run Dart/Flutter Tests
+      - name: Run Tests
+        run: flutter test
+
       # 4. BUILD: Standard Windows Executable
       - name: Build Windows App
         if: matrix.platform == 'windows'
@@ -112,6 +118,7 @@ jobs:
           
           # Find the generated MSIX file and copy it to the root directory
           find . -name "*.msix" -type f -exec cp {} yelauncher-windows.msix \;
+          
       - name: Login to Azure
         uses: azure/login@v2
         with:
