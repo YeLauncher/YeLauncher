@@ -29,10 +29,7 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
       return Routes.instances;
     }
 
-    // If user is not authenticated and trying to access instances or content, redirect to login
-    if (!isAuthenticated && state.fullPath != Routes.login) {
-      return Routes.login;
-    }
+
 
     return null;
   },
@@ -94,6 +91,7 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
               builder: (context, state) {
                 final viewModel = SettingsViewModel(
                   settingsRepository: context.read(),
+                  minecraftRepository: context.read(),
                 );
                 return SettingsScreen(viewModel: viewModel);
               },

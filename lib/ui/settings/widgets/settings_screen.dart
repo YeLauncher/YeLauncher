@@ -3,6 +3,8 @@ import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/settings/view_models/settings_viewmodel.dart';
+import 'package:go_router/go_router.dart';
+import 'package:yelauncher/routing/routes.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -61,6 +63,27 @@ class SettingsScreen extends StatelessWidget {
                     ),
                 ],
               ),
+              const SizedBox(height: 32),
+              Text(
+                l10n.accountLabel,
+                style: AppText.defaultTheme.titleSmall.copyWith(
+                  color: AppColors.dark.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (viewModel.isAuthenticated)
+                Button.error(
+                  l10n.logoutButton,
+                  onPressed: () => viewModel.logout(),
+                )
+              else
+                Button.primary(
+                  l10n.loginWithMicrosoft,
+                  onPressed: () async {
+                    await context.push(Routes.login);
+                    viewModel.refreshAuth();
+                  },
+                ),
             ],
           ),
         );

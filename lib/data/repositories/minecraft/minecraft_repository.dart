@@ -9,7 +9,6 @@ abstract class MinecraftRepository {
   Future<Result<MinecraftProfileModel>> getProfile();
   Future<Result<MinecraftProfileModel>> authenticate();
   void cancelAuthentication();
-  Future<Result<MinecraftProfileModel>> authenticateOffline(String username);
   Future<Result<List<MinecraftVersionModel>>> getVersions();
   Future<Result<void>> install(
     InstanceModel instance, {

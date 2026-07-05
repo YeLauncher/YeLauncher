@@ -27,7 +27,6 @@ import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart'
 import 'package:yelauncher/domain/models/minecraft/minecraft_run_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
-import 'package:yelauncher/utilities/launcher_exception.dart';
 import 'package:yelauncher/utilities/result.dart';
 
 class MinecraftRepositoryRemote implements MinecraftRepository {
@@ -91,6 +90,9 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     void Function(int, int?)? onProgress,
   }) async {
     try {
+      if (!await isAuthenticated()) {
+        return Result.failure(Exception('You must be authenticated with a Microsoft account to download or play Minecraft.'));
+      }
       _log.info(
         'Starting install for instance ${instance.id} '
         '(${instance.minecraftVersion}, loader=${instance.modLoader}:${instance.modLoaderVersion})',
@@ -310,6 +312,9 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   @override
   Future<Result<MinecraftProcessModel>> run(InstanceModel instance) async {
     try {
+      if (!await isAuthenticated()) {
+        return Result.failure(Exception('You must be authenticated with a Microsoft account to download or play Minecraft.'));
+      }
       _log.info(
         'Starting run for instance ${instance.id} '
         '(${instance.minecraftVersion}, loader=${instance.modLoader}:${instance.modLoaderVersion})',
@@ -744,9 +749,16 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
       if (mcResult is Failure<String>) return Result.failure(mcResult.error);
       final mcToken = (mcResult as Success<String>).value;
 
+      final ownershipResult = await msClient.checkOwnership(mcToken);
+      if (ownershipResult is Failure<bool>) return Result.failure(ownershipResult.error);
+      final hasAccount = (ownershipResult as Success<bool>).value;
+      if (!hasAccount) {
+        return Result.failure(Exception('You must have a Minecraft account because of the Minecraft EULA.'));
+      }
+
       final profileResult = await msClient.getProfile(mcToken);
       if (profileResult is Failure<MinecraftProfileApiModel>) {
-        return Result.failure(Exception("Failed to fetch Minecraft profile: ${profileResult.error}"));
+        return Result.failure(profileResult.error);
       }
       final profileApi = (profileResult as Success<MinecraftProfileApiModel>).value;
 
@@ -767,38 +779,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     }
   }
 
-  @override
-  Future<Result<MinecraftProfileModel>> authenticateOffline(String username) {
-    try {
-      // Generate offline UUID using MD5(name-based UUID v3) similar to Java's
-      final name = 'OfflinePlayer:$username';
-      final bytes = crypto.md5.convert(utf8.encode(name)).bytes;
 
-      // Set version to 3 (name-based MD5) and variant to RFC 4122
-      final modified = List<int>.from(bytes);
-      modified[6] = (modified[6] & 0x0f) | (3 << 4);
-      modified[8] = (modified[8] & 0x3f) | 0x80;
-
-      String toHex(List<int> b) => b.map((e) => e.toRadixString(16).padLeft(2, '0')).join();
-      final hex = toHex(modified);
-      final uuid = '${hex.substring(0,8)}-${hex.substring(8,12)}-${hex.substring(12,16)}-${hex.substring(16,20)}-${hex.substring(20)}';
-
-      final profile = MinecraftProfileModel(
-        nickname: username,
-        uuid: uuid,
-        accessToken: 'offline',
-        userType: 'offline',
-      );
-
-      // Save profile to secure storage
-      _secureStorage.saveProfile(profile);
-
-      return Future.value(Result.success(profile));
-    } on Exception catch (e) {
-      _log.severe('authenticateOffline error: $e');
-      return Future.value(Result.failure(Exception('authenticateOffline failed: $e')));
-    }
-  }
 
   @override
   Future<Result<MinecraftProfileModel>> getProfile() async {

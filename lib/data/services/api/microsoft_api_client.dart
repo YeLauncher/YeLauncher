@@ -219,6 +219,33 @@ class MicrosoftApiClient {
     }
   }
 
+  Future<Result<bool>> checkOwnership(String minecraftAccessToken) async {
+    try {
+      final uri = Uri.parse('https://api.minecraftservices.com/entitlements/mcstore');
+      _log.fine('Checking Minecraft ownership at $uri');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $minecraftAccessToken',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode != 200) {
+        _log.warning('Failed to fetch entitlements: ${response.statusCode} ${response.body}');
+        return Result.failure(Exception('Failed to fetch Minecraft entitlements: ${response.statusCode}'));
+      }
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final items = data['items'] as List<dynamic>? ?? [];
+      final hasGame = items.any((item) => item['name'] == 'game_minecraft' || item['name'] == 'product_minecraft');
+      return Result.success(hasGame);
+    } on Exception catch (e) {
+      _log.severe('checkOwnership error: $e');
+      return Result.failure(Exception('checkOwnership failed: $e'));
+    }
+  }
+
   Future<Result<MinecraftProfileApiModel>> getProfile(String minecraftAccessToken) async {
     try {
       final uri = Uri.parse('https://api.minecraftservices.com/minecraft/profile');
@@ -232,6 +259,10 @@ class MicrosoftApiClient {
       );
 
       if (response.statusCode != 200) {
+        if (response.statusCode == 404) {
+          _log.warning('Minecraft profile not found (404). User likely does not own the game or has not accepted EULA.');
+          return Result.failure(Exception('You must have a Minecraft account because of the Minecraft EULA.'));
+        }
         _log.warning('Failed to fetch Minecraft profile: ${response.statusCode} ${response.body}');
         return Result.failure(Exception('Failed to fetch Minecraft profile: ${response.statusCode}'));
       }

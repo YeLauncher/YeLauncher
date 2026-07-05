@@ -59,6 +59,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_dotenv: ^6.0.1
+  desktop_webview_window: ^0.3.0
 
 dev_dependencies:
   sentry_dart_plugin: ^3.4.0

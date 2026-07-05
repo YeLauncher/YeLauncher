@@ -2,6 +2,7 @@
   "@@locale": "en",
   "settingsTabTitle": "Settings",
   "languageLabel": "Language",
+  "accountLabel": "Account",
   "english": "English",
   "ukrainian": "Ukrainian",
   "loginWaitingMicrosoft": "Waiting or go to browser to login by Microsoft",

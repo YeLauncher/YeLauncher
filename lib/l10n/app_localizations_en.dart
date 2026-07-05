@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageLabel => 'Language';
 
   @override
+  String get accountLabel => 'Account';
+
+  @override
   String get english => 'English';
 
   @override

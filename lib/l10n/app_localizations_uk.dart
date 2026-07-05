@@ -15,6 +15,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get languageLabel => 'Мова';
 
   @override
+  String get accountLabel => 'Обліковий запис';
+
+  @override
   String get english => 'English';
 
   @override

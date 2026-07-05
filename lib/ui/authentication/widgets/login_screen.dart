@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:yelauncher/routing/routes.dart';
 import 'package:yelauncher/ui/authentication/view_models/login_viewmodel.dart';
 import 'package:yelauncher/ui/core/button.dart';
-import 'package:yelauncher/ui/core/text_form_field.dart' as ye;
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
@@ -19,26 +18,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nickname = TextEditingController();
-
   @override
   void dispose() {
-    _nickname.dispose();
     super.dispose();
   }
 
   void _onMicrosoftLogin() async {
     await widget.viewModel.loginMicrosoft.execute();
     if (mounted) {
-      context.go(Routes.instances);
-    }
-  }
-
-  void _onOfflineLogin() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      await widget.viewModel.loginOffline.execute(_nickname.text.trim());
-      if (mounted && widget.viewModel.loginOffline.complete) {
+      if (context.canPop()) {
+        context.pop();
+      } else {
         context.go(Routes.instances);
       }
     }
@@ -51,9 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, _) {
         final isAuthenticating = widget.viewModel.isAuthenticating;
 
-        return Form(
-          key: _formKey,
-          child: Container(
+        return Container(
             constraints: const BoxConstraints.expand(),
             color: AppColors.dark.surface,
             child: Center(
@@ -122,73 +110,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : _onMicrosoftLogin,
                           ),
                         ),
-
-                        const SizedBox(height: 24),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(color: AppColors.dark.outline),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context)!.orOffline,
-                                style: AppText.defaultTheme.label.copyWith(
-                                  color: AppColors.dark.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Divider(color: AppColors.dark.outline),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Offline Login
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            AppLocalizations.of(context)!.nickname,
-                            style: AppText.defaultTheme.label.copyWith(
-                              color: AppColors.dark.onSurface,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ye.TextFormField(
-                          controller: _nickname,
-                          labelText: AppLocalizations.of(context)!.enterNickname,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return AppLocalizations.of(context)!.nicknameEmptyError;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: Button.primary(
-                            AppLocalizations.of(context)!.playOffline,
-                            onPressed: isAuthenticating ? null : _onOfflineLogin,
-                          ),
-                        ),
-
-                        if (widget.viewModel.loginOffline.running) ...[
-                          const SizedBox(height: 24),
-                          const CircularProgressIndicator(),
-                        ],
                       ],
                     ],
                   ),
                 ),
               ),
             ),
-          ),
-        );
+          );
       },
     );
   }

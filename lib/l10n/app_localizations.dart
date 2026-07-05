@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get languageLabel;
 
+  /// No description provided for @accountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountLabel;
+
   /// No description provided for @english.
   ///
   /// In en, this message translates to:
