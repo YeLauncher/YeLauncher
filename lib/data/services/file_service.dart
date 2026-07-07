@@ -5,15 +5,20 @@ import 'dart:isolate';
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:logging/logging.dart';
 
 class FileService {
+  final _log = Logger('FileService');
+
   Future<void> extractNatives(
     String absoluteJarPath,
     String absoluteOutputDir,
   ) async {
+    _log.info('Extracting natives from $absoluteJarPath to $absoluteOutputDir');
     await Isolate.run(() async {
       final jarFile = File(absoluteJarPath);
       if (!await jarFile.exists()) {
+        _log.severe('Native JAR not found: $absoluteJarPath');
         throw Exception('Native JAR not found: $absoluteJarPath');
       }
 
@@ -70,6 +75,7 @@ class FileService {
     final fullPath = await getAbsolutePath([relativePath]);
     final dir = Directory(fullPath);
     if (!await dir.exists()) {
+      _log.info('Creating directory: $fullPath');
       await dir.create(recursive: true);
     }
   }

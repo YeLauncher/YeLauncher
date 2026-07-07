@@ -10,6 +10,7 @@ import 'package:yelauncher/ui/core/themes/text.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class InstanceContentDialog extends StatefulWidget {
   final InstanceModel instance;
@@ -46,7 +47,7 @@ class _InstanceContentDialogState extends State<InstanceContentDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Встановлений контент',
+                AppLocalizations.of(context)!.installedContentTitle,
                 style: AppText.defaultTheme.titleLarge.copyWith(
                   color: AppColors.dark.onSurface,
                 ),
@@ -65,7 +66,7 @@ class _InstanceContentDialogState extends State<InstanceContentDialog> {
             Expanded(
               child: Center(
                 child: Text(
-                  'Контент відсутній',
+                  AppLocalizations.of(context)!.contentMissing,
                   style: AppText.defaultTheme.body.copyWith(
                     color: AppColors.dark.onSurfaceVariant,
                   ),

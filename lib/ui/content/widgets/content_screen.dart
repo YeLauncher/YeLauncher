@@ -17,6 +17,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:yelauncher/domain/models/content/content_item.dart';
 import 'package:yelauncher/ui/core/icon_button.dart';
 import 'package:yelauncher/ui/content/widgets/content_install_dialog.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 typedef DisplayItem = ({
   String title,
@@ -56,8 +57,12 @@ class _ContentScreenState extends State<ContentScreen> {
     'datapack',
     'modpack',
   ];
-  final List<String> _tabLabels = ['Моди', 'Ресурспаки', 'Датапаки', 'Модпаки'];
   int _selectedTabIndex = 0;
+
+  List<String> _getTabLabels(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [l10n.tabMods, l10n.tabResourcepacks, l10n.tabDatapacks, l10n.tabModpacks];
+  }
 
   @override
   void initState() {
@@ -155,7 +160,7 @@ class _ContentScreenState extends State<ContentScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Контент",
+              AppLocalizations.of(context)!.contentTab,
               style: AppText.defaultTheme.titleLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
@@ -163,13 +168,13 @@ class _ContentScreenState extends State<ContentScreen> {
             const SizedBox(height: 16),
             core_text_field.TextField(
               controller: _searchController,
-              labelText: 'Пошук...',
+              labelText: AppLocalizations.of(context)!.searchHint,
               width: double.infinity,
             ),
             const SizedBox(height: 16),
             Row(
               spacing: 8,
-              children: List.generate(_tabLabels.length, (index) {
+              children: List.generate(_getTabLabels(context).length, (index) {
                 final isSelected = index == _selectedTabIndex;
                 return GestureDetector(
                   onTap: () => _onTabSelected(index),
@@ -185,7 +190,7 @@ class _ContentScreenState extends State<ContentScreen> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
-                      _tabLabels[index],
+                      _getTabLabels(context)[index],
                       style: AppText.defaultTheme.label.copyWith(
                         color: isSelected
                             ? AppColors.dark.onPrimaryContainer
@@ -218,7 +223,7 @@ class _ContentScreenState extends State<ContentScreen> {
                   if (!isLoading && viewModel.items.isEmpty) {
                     return Center(
                       child: Text(
-                        "Нічого не знайдено",
+                        AppLocalizations.of(context)!.nothingFound,
                         style: AppText.defaultTheme.body.copyWith(
                           color: AppColors.dark.onSurfaceVariant,
                         ),
@@ -273,7 +278,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                               in columnItems[colIndex]) ...[
                                             Card(
                                               title: item.title,
-                                              subtitle: item.authorName != null ? 'by ${item.authorName}' : null,
+                                              subtitle: item.authorName != null ? AppLocalizations.of(context)!.byAuthor(item.authorName!) : null,
                                               description: item.description,
                                               imageUrl: item.iconUrl,
                                               maxWidth: 500,
@@ -294,7 +299,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                                         },
                                                 ),
                                                 Button.primary(
-                                                  'Add',
+                                                  AppLocalizations.of(context)!.addButton,
                                                   onPressed:
                                                       item.originalItem == null
                                                       ? () {}

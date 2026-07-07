@@ -4,9 +4,13 @@ import 'package:yelauncher/config/assets.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/data/services/api/models/fabric_version_api_model.dart';
 import 'package:yelauncher/data/services/api/models/forge_version_api_model.dart';
+import 'package:logging/logging.dart';
 
 class LocalDataService {
+  final _log = Logger('LocalDataService');
+
   Future<List<MinecraftVersionModel>> getVersions() async {
+    _log.info('Loading local Minecraft versions...');
     final json = (await _loadStringAsset(Assets.versionManifest));
     return json.map((json) => MinecraftVersionModel.fromJson(json)).toList();
   }
@@ -20,6 +24,7 @@ class LocalDataService {
   Future<List<FabricVersionApiModel>> getFabricVersions(
     String minecraftVersion,
   ) async {
+    _log.info('Loading local Fabric versions for $minecraftVersion...');
     if (minecraftVersion != '1.18.2') return [];
     final localData = await rootBundle.loadString(Assets.fabric1182);
     final jsonList = jsonDecode(localData) as List<dynamic>;
@@ -34,6 +39,7 @@ class LocalDataService {
   Future<List<ForgeVersionApiModel>> getForgeVersions(
     String minecraftVersion,
   ) async {
+    _log.info('Loading local Forge versions for $minecraftVersion...');
     final metadata = await rootBundle.loadString(Assets.forgeMavenMetadata);
     final matches = RegExp(r'<version>([^<]+)</version>').allMatches(metadata);
     return matches
@@ -54,6 +60,7 @@ class LocalDataService {
   }
 
   Future<Map<String, String>> _loadForgePromotions() async {
+    _log.info('Loading local Forge promotions...');
     final localData = await rootBundle.loadString(Assets.forgePromotionsSlim);
     final decoded = jsonDecode(localData) as Map<String, dynamic>;
     final promos = decoded['promos'] as Map<String, dynamic>;

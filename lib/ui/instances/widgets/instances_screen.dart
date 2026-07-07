@@ -5,10 +5,7 @@ import 'package:yelauncher/data/repositories/instances/instance_repository.dart'
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
-import 'package:go_router/go_router.dart';
-import 'package:yelauncher/routing/routes.dart';
 import 'package:yelauncher/ui/core/button.dart';
-import 'package:yelauncher/utilities/result.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
@@ -16,6 +13,7 @@ import 'package:yelauncher/ui/instances/view_models/instance_creation_viewmodel.
 import 'package:yelauncher/ui/instances/view_models/instance_screen_viewmodel.dart';
 import 'package:yelauncher/ui/instances/widgets/instance_creation_dialog.dart';
 import 'package:yelauncher/ui/instances/widgets/instance_card.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class InstancesScreen extends StatefulWidget {
   const InstancesScreen({super.key, required this.viewModel});
@@ -25,13 +23,10 @@ class InstancesScreen extends StatefulWidget {
 }
 
 class _InstancesScreenState extends State<InstancesScreen> {
-  late final MinecraftRepository _minecraftRepository;
   @override
   void initState() {
     super.initState();
     widget.viewModel.loadInstances.execute();
-    // Cache repository reference to avoid using BuildContext across async gaps
-    _minecraftRepository = context.read<MinecraftRepository>();
   }
 
   @override
@@ -66,7 +61,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                           color: AppColors.dark.primary,
                         ),
                         Text(
-                          "Екземпляри",
+                          AppLocalizations.of(context)!.instancesTab,
                           style: AppText.defaultTheme.titleLarge.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
@@ -74,7 +69,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                       ],
                     ),
                     Text(
-                      "Налаштуйте свої екземпляри",
+                      AppLocalizations.of(context)!.instancesSubtitle,
                       style: AppText.defaultTheme.body.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
@@ -84,21 +79,9 @@ class _InstancesScreenState extends State<InstancesScreen> {
                 Row(
                   children: [
                     Button.primary(
-                      "Створити",
+                      AppLocalizations.of(context)!.createButton,
                       iconData: Symbols.add_rounded,
                       onPressed: () => _showInstanceCreationDialog(context),
-                    ),
-                    const SizedBox(width: 12),
-                    Button.secondary(
-                      "Вийти",
-                      iconData: Symbols.logout_rounded,
-                      onPressed: () async {
-                        final result = await _minecraftRepository.logout();
-                        if (!context.mounted) return;
-                        if (result is Success<void>) {
-                          context.go(Routes.login);
-                        }
-                      },
                     ),
                   ],
                 ),
@@ -125,13 +108,13 @@ class _InstancesScreenState extends State<InstancesScreen> {
                             spacing: 4,
                             children: [
                               Text(
-                                "Екземплярів не знайдено",
+                                AppLocalizations.of(context)!.noInstancesTitle,
                                 style: AppText.defaultTheme.titleSmall.copyWith(
                                   color: AppColors.dark.onSurface,
                                 ),
                               ),
                               Text(
-                                "Спробуйте створити або змінити критерії фільтрування",
+                                AppLocalizations.of(context)!.noInstancesSubtitle,
                                 style: AppText.defaultTheme.bodySmall.copyWith(
                                   color: AppColors.dark.onSurfaceVariant,
                                 ),

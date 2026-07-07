@@ -9,8 +9,10 @@ import 'package:yelauncher/data/services/api/strategies/version_requirements_str
 import 'package:yelauncher/data/services/api/strategies/version_4_requirements_strategy.dart';
 import 'package:yelauncher/data/services/api/models/asset_index_file_api_model.dart';
 import 'package:yelauncher/utilities/result.dart';
+import 'package:logging/logging.dart';
 
 class MinecraftApiClient {
+  final _log = Logger('MinecraftApiClient');
   final HttpClient Function() _httpClientFactory;
   final String _baseUrl;
   final List<VersionRequirementsStrategy> _strategies = [
@@ -41,7 +43,8 @@ class MinecraftApiClient {
       );
       _cachedManifest = manifest;
       return Result.success(manifest);
-    } on Exception catch (e) {
+    } on Exception catch (e, stack) {
+      _log.severe('Failed to get Minecraft manifest', e, stack);
       return Result.failure(e);
     }
   }
@@ -54,7 +57,8 @@ class MinecraftApiClient {
           return Result.success(
             result.value.versions.firstWhere((version) => version.id == id),
           );
-        } on StateError {
+        } on StateError catch(e, stack) {
+          _log.severe('Minecraft version not found: $id', e, stack);
           return Result.failure(Exception('Version not found: $id'));
         }
       case Failure<VersionManifestApiModel>():
@@ -80,7 +84,8 @@ class MinecraftApiClient {
         ),
       );
       return strategy.parseVersionPrerequisites(json);
-    } on Exception catch (e) {
+    } on Exception catch (e, stack) {
+      _log.severe('Failed to get Minecraft version requirements for ${version.id}', e, stack);
       return Result.failure(e);
     }
   }
@@ -96,7 +101,8 @@ class MinecraftApiClient {
           jsonDecode(body) as Map<String, dynamic>,
         ),
       );
-    } on Exception catch (e) {
+    } on Exception catch (e, stack) {
+      _log.severe('Failed to get asset index from $url', e, stack);
       return Result.failure(e);
     }
   }

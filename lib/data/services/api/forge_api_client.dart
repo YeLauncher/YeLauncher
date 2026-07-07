@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:yelauncher/config/assets.dart';
 import 'package:yelauncher/data/services/api/models/forge_version_api_model.dart';
+import 'package:logging/logging.dart';
 
 class ForgeApiClient {
+  final _log = Logger('ForgeApiClient');
   final HttpClient Function() _httpClientFactory;
   final String _metadataUrl;
   final String _promotionsUrl;
@@ -29,13 +31,19 @@ class ForgeApiClient {
   Future<List<ForgeVersionApiModel>> getVersions(
     String minecraftVersion,
   ) async {
-    final body = await _getString(_metadataUrl);
-    final matches = RegExp(r'<version>([^<]+)</version>').allMatches(body);
-    return matches
-        .map((match) => match.group(1)!)
-        .where((version) => version.startsWith('$minecraftVersion-'))
-        .map((version) => ForgeVersionApiModel(version: version.split('-').sublist(1).join('-')))
-        .toList();
+    _log.info('Fetching Forge versions for $minecraftVersion');
+    try {
+      final body = await _getString(_metadataUrl);
+      final matches = RegExp(r'<version>([^<]+)</version>').allMatches(body);
+      return matches
+          .map((match) => match.group(1)!)
+          .where((version) => version.startsWith('$minecraftVersion-'))
+          .map((version) => ForgeVersionApiModel(version: version.split('-').sublist(1).join('-')))
+          .toList();
+    } catch (e, stack) {
+      _log.severe('Failed to fetch Forge versions for $minecraftVersion', e, stack);
+      rethrow;
+    }
   }
 
   Future<String?> getLatestVersion(String minecraftVersion) async {
@@ -60,7 +68,8 @@ class ForgeApiClient {
           return v.version;
         }
       }
-    } catch (_) {
+    } catch (e, stack) {
+      _log.warning('Failed to resolve real Forge version for $promoVersion: $e', e, stack);
       // Fallback if metadata fails
     }
     return promoVersion;
@@ -84,7 +93,8 @@ class ForgeApiClient {
       final request = await client.getUrl(Uri.parse(url));
       final response = await request.close();
       return await response.transform(utf8.decoder).join();
-    } catch (_) {
+    } catch (e, stack) {
+      _log.warning('Failed to fetch $_metadataUrl online, falling back to local asset: $e', e, stack);
       return _loadFallback(url);
     }
   }

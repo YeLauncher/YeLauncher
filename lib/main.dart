@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -6,15 +7,21 @@ import 'package:yelauncher/config/dependencies.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/routing/router.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  await dotenv.load(fileName: ".env");
   Logger.root.level = Level.FINE; // Set the logging level to capture all logs
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}',
     );
   });
-  WidgetsFlutterBinding.ensureInitialized();
+  SentryWidgetsFlutterBinding.ensureInitialized();
 
   await windowManager.ensureInitialized();
 
@@ -31,25 +38,56 @@ void main() async {
     await windowManager.show();
     await windowManager.focus();
   });
-  runApp(
-    MultiProvider(providers: providersRemote, child: const YeLauncherApp()),
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = dotenv.env['SENTRY_DSN'];
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(
+      SentryWidget(
+        child: MultiProvider(providers: providersRemote, child: const YeLauncherApp()),
+      )
+    ),
   );
 }
 
-class YeLauncherApp extends StatelessWidget {
+class YeLauncherApp extends StatefulWidget {
   const YeLauncherApp({super.key});
 
   @override
+  State<YeLauncherApp> createState() => _YeLauncherAppState();
+}
+
+class _YeLauncherAppState extends State<YeLauncherApp> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the router once to prevent resetting to initialLocation on rebuilds
+    final minecraftRepository = context.read<MinecraftRepository>();
+    _router = getRouter(minecraftRepository);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<MinecraftRepository>(
-      builder: (context, minecraftRepository, _) {
+    return Consumer<SettingsRepository>(
+      builder: (context, settings, _) {
         return WidgetsApp.router(
           title: "YeLauncher",
           color: AppColors.dark.surface,
-          routerConfig: getRouter(minecraftRepository),
-          builder: (context, child) {
-            return child!;
-          },
+          routerConfig: _router,
+          locale: settings.currentLocale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'),
+            Locale('uk'),
+          ],
         );
       },
     );

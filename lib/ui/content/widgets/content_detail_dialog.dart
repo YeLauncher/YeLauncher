@@ -10,6 +10,7 @@ import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
 import 'package:yelauncher/ui/core/icon_button.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class ContentDetailDialog extends StatefulWidget {
   final ContentDetailViewModel viewModel;
@@ -21,8 +22,12 @@ class ContentDetailDialog extends StatefulWidget {
 }
 
 class _ContentDetailDialogState extends State<ContentDetailDialog> {
-  final List<String> _tabLabels = ['Опис', 'Галерея', 'Версії'];
   int _selectedTabIndex = 0;
+
+  List<String> _getTabLabels(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [l10n.tabDescription, l10n.tabGallery, l10n.tabVersions];
+  }
 
   @override
   void initState() {
@@ -88,7 +93,7 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
             const SizedBox(height: 16),
             Row(
               spacing: 8,
-              children: List.generate(_tabLabels.length, (index) {
+              children: List.generate(_getTabLabels(context).length, (index) {
                 final isSelected = index == _selectedTabIndex;
                 return GestureDetector(
                   onTap: () => _onTabSelected(index),
@@ -104,7 +109,7 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
-                      _tabLabels[index],
+                      _getTabLabels(context)[index],
                       style: AppText.defaultTheme.label.copyWith(
                         color: isSelected
                             ? AppColors.dark.onPrimaryContainer
@@ -194,7 +199,7 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
     if (item == null || item.gallery == null || item.gallery!.isEmpty) {
       return Center(
         child: Text(
-          'Галерея порожня',
+          AppLocalizations.of(context)!.galleryEmpty,
           style: TextStyle(color: AppColors.dark.onSurface),
         ),
       );
@@ -221,7 +226,7 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
     if (vm.versions.isEmpty) {
       return Center(
         child: Text(
-          'Версій не знайдено',
+          AppLocalizations.of(context)!.versionsNotFound,
           style: TextStyle(color: AppColors.dark.onSurface),
         ),
       );

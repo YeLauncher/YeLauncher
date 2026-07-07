@@ -33,6 +33,16 @@ class MainLayout extends StatelessWidget {
                   isSelected: navigationShell.currentIndex == 1,
                   onPressed: () => navigationShell.goBranch(1),
                 ),
+                NavigationButton.primary(
+                  iconData: Symbols.person_rounded,
+                  isSelected: navigationShell.currentIndex == 2,
+                  onPressed: () => navigationShell.goBranch(2),
+                ),
+                NavigationButton.primary(
+                  iconData: Symbols.settings_rounded,
+                  isSelected: navigationShell.currentIndex == 3,
+                  onPressed: () => navigationShell.goBranch(3),
+                ),
               ],
             ),
           ),

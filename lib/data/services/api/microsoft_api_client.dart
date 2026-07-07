@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:yelauncher/data/services/api/models/minecraft_profile_api_model.dart';
+import 'package:yelauncher/routing/router.dart';
+import 'package:yelauncher/l10n/app_localizations.dart';
 
 class MicrosoftApiClient {
   final String authorizationEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
@@ -14,6 +17,13 @@ class MicrosoftApiClient {
   final String clientId = "77b1105a-a596-4ca3-b463-e05ac047667a";
   final Logger _log = Logger('MicrosoftApiClient');
 
+  HttpServer? _currentServer;
+
+  void cancel() {
+    _currentServer?.close(force: true);
+    _currentServer = null;
+  }
+
   Future<Result<String>> getAccessToken() async {
     final authenticationUrl = Uri.parse(authorizationEndpoint).replace(queryParameters: {
       'client_id': clientId,
@@ -21,23 +31,52 @@ class MicrosoftApiClient {
       'redirect_uri': redirectUrl,
       'scope': 'XboxLive.signin offline_access',
     });
-    final resultUrl = await FlutterWebAuth2.authenticate(
-      url: authenticationUrl.normalizePath().toString(),
-      callbackUrlScheme: 'http', // The scheme it listens for on Windows/Linux
-      // NOTE: If using macOS with a custom scheme, change this to 'com.example.myapp'
-    );
 
-    // 3. Extract the authorization code from the callback URL
-    final code = Uri.parse(resultUrl).queryParameters['code'];
-
-    if (code != null) {
-      // 4. Exchange the code for an Access Token
-      var token = await _exchangeCodeForToken(code);
-      if (token != null) {
-        return Result.success(token);
-      }
+    HttpServer server;
+    try {
+      server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
+      _currentServer = server;
+    } on SocketException catch (e) {
+      _log.severe('Failed to bind to port 8080: $e');
+      return Result.failure(Exception('Port 8080 is already in use by another application. Please free port 8080 to login with Microsoft.'));
     }
-    return Result.failure(Exception("The authentication process was cancelled or failed."));
+
+    try {
+      if (!await launchUrl(authenticationUrl)) {
+        await server.close();
+        return Result.failure(Exception('Could not launch browser for authentication.'));
+      }
+
+      final request = await server.first;
+      final code = request.uri.queryParameters['code'];
+      
+      final context = rootNavigatorKey.currentContext;
+      final successMessage = context != null && context.mounted 
+          ? AppLocalizations.of(context)?.authSuccessMessage ?? 'You can close this window and go to the launcher' 
+          : 'You can close this window and go to the launcher';
+
+      request.response
+        ..statusCode = 200
+        ..headers.set('Content-Type', 'text/html; charset=utf-8')
+        ..write('<html lang="uk-ua"><head><style>body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #0f0f0f; color: #e6e6e6; margin: 0; text-align: center; } h2 { font-weight: normal; }</style></head><body><h2>$successMessage</h2></body></html>');
+      await request.response.close();
+      await server.close();
+      _currentServer = null;
+
+      if (code != null) {
+        var token = await _exchangeCodeForToken(code);
+        if (token != null) {
+          return Result.success(token);
+        }
+      }
+      return Result.failure(Exception("The authentication process was cancelled or failed."));
+    } on StateError {
+      // server.first throws StateError if the stream (server) is closed before an event arrives
+      return Result.failure(Exception("Authentication was cancelled."));
+    } catch (e) {
+      await server.close();
+      return Result.failure(Exception("Authentication failed: $e"));
+    }
   }
 
   Future<Result<(String xblToken, String userHash)>> exchangeXblToken(String accessToken) async {
@@ -187,6 +226,33 @@ class MicrosoftApiClient {
     }
   }
 
+  Future<Result<bool>> checkOwnership(String minecraftAccessToken) async {
+    try {
+      final uri = Uri.parse('https://api.minecraftservices.com/entitlements/mcstore');
+      _log.fine('Checking Minecraft ownership at $uri');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $minecraftAccessToken',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode != 200) {
+        _log.warning('Failed to fetch entitlements: ${response.statusCode} ${response.body}');
+        return Result.failure(Exception('Failed to fetch Minecraft entitlements: ${response.statusCode}'));
+      }
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      final items = data['items'] as List<dynamic>? ?? [];
+      final hasGame = items.any((item) => item['name'] == 'game_minecraft' || item['name'] == 'product_minecraft');
+      return Result.success(hasGame);
+    } on Exception catch (e) {
+      _log.severe('checkOwnership error: $e');
+      return Result.failure(Exception('checkOwnership failed: $e'));
+    }
+  }
+
   Future<Result<MinecraftProfileApiModel>> getProfile(String minecraftAccessToken) async {
     try {
       final uri = Uri.parse('https://api.minecraftservices.com/minecraft/profile');
@@ -200,6 +266,10 @@ class MicrosoftApiClient {
       );
 
       if (response.statusCode != 200) {
+        if (response.statusCode == 404) {
+          _log.warning('Minecraft profile not found (404). User likely does not own the game or has not accepted EULA.');
+          return Result.failure(Exception('You must have a Minecraft account because of the Minecraft EULA.'));
+        }
         _log.warning('Failed to fetch Minecraft profile: ${response.statusCode} ${response.body}');
         return Result.failure(Exception('Failed to fetch Minecraft profile: ${response.statusCode}'));
       }
@@ -214,15 +284,17 @@ class MicrosoftApiClient {
   }
 
   Future<String?> _exchangeCodeForToken(String code) async {
+    final bodyStr = [
+      'grant_type=authorization_code',
+      'client_id=$clientId',
+      'redirect_uri=${Uri.encodeComponent(redirectUrl)}',
+      'code=${Uri.encodeComponent(code)}',
+    ].join('&');
+
     final response = await http.post(
       Uri.parse(tokenEndpoint),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: {
-        'grant_type': 'authorization_code',
-        'client_id': clientId,
-        'redirect_uri': redirectUrl,
-        'code': code,
-      },
+      body: bodyStr,
     );
 
     if (response.statusCode == 200) {
