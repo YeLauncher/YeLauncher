@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageLabel => 'Language';
 
   @override
+  String get accountLabel => 'Account';
+
+  @override
   String get english => 'English';
 
   @override
@@ -211,4 +214,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contentMissing => 'No content installed';
+
+  @override
+  String get profilesTabTitle => 'Profiles';
+
+  @override
+  String get manageAccountsSubtitle => 'Manage your Minecraft accounts';
+
+  @override
+  String get noAccountsTitle => 'No Accounts';
+
+  @override
+  String get noAccountsSubtitle => 'Add an account to play Minecraft';
+
+  @override
+  String get activeBadge => 'Active';
+
+  @override
+  String get addAccountButton => 'Add Account';
+
+  @override
+  String get selectButton => 'Select';
+
+  @override
+  String get minecraftAccountNotExists => 'Minecraft account does not exist';
+
+  @override
+  String get authSuccessMessage =>
+      'You can close this window and go to the launcher';
+
+  @override
+  String get authenticationRequiredTitle => 'Authentication Required';
+
+  @override
+  String get authenticationRequiredDescription =>
+      'You must add a Minecraft account in the Profiles tab to perform this action.';
+
+  @override
+  String get goToProfilesButton => 'Go to Profiles';
+
+  @override
+  String get closeButton => 'Close';
 }

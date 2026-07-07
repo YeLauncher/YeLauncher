@@ -2,6 +2,7 @@
   "@@locale": "en",
   "settingsTabTitle": "Settings",
   "languageLabel": "Language",
+  "accountLabel": "Account",
   "english": "English",
   "ukrainian": "Ukrainian",
   "loginWaitingMicrosoft": "Waiting or go to browser to login by Microsoft",
@@ -85,5 +86,18 @@
     }
   },
   "installedContentTitle": "Installed Content",
-  "contentMissing": "No content installed"
+  "contentMissing": "No content installed",
+  "profilesTabTitle": "Profiles",
+  "manageAccountsSubtitle": "Manage your Minecraft accounts",
+  "noAccountsTitle": "No Accounts",
+  "noAccountsSubtitle": "Add an account to play Minecraft",
+  "activeBadge": "Active",
+  "addAccountButton": "Add Account",
+  "selectButton": "Select",
+  "minecraftAccountNotExists": "Minecraft account does not exist",
+  "authSuccessMessage": "You can close this window and go to the launcher",
+  "authenticationRequiredTitle": "Authentication Required",
+  "authenticationRequiredDescription": "You must add a Minecraft account in the Profiles tab to perform this action.",
+  "goToProfilesButton": "Go to Profiles",
+  "closeButton": "Close"
 }

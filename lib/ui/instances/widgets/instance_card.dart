@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show Tooltip;
+import 'package:flutter/material.dart' show Tooltip, showDialog, AlertDialog;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
@@ -9,6 +9,8 @@ import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
 import 'package:yelauncher/ui/instances/widgets/instance_content_dialog.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
+import 'package:yelauncher/utilities/result.dart' as yelauncher_result;
+import 'package:go_router/go_router.dart' as go_router;
 
 class InstanceCard extends StatefulWidget {
   final InstanceCardViewModel viewModel;
@@ -20,6 +22,45 @@ class InstanceCard extends StatefulWidget {
 }
 
 class _InstanceCardState extends State<InstanceCard> {
+  void _handleCommandResult(dynamic result) {
+    if (result is yelauncher_result.Failure) {
+      final errorStr = result.error.toString();
+      if (errorStr.contains('authenticated')) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.dark.surfaceContainerHigh,
+            title: Text(
+              AppLocalizations.of(context)!.authenticationRequiredTitle,
+              style: AppText.defaultTheme.titleSmall.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+            ),
+            content: Text(
+              AppLocalizations.of(context)!.authenticationRequiredDescription,
+              style: AppText.defaultTheme.body.copyWith(
+                color: AppColors.dark.onSurfaceVariant,
+              ),
+            ),
+            actions: [
+              Button.primary(
+                AppLocalizations.of(context)!.goToProfilesButton,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  go_router.GoRouter.of(context).go('/profiles');
+                },
+              ),
+              Button.surface(
+                AppLocalizations.of(context)!.closeButton,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -95,7 +136,10 @@ class _InstanceCardState extends State<InstanceCard> {
                     Button.primary(
                       AppLocalizations.of(context)!.installButton,
                       iconData: Symbols.download_rounded,
-                      onPressed: widget.viewModel.installInstance.execute,
+                      onPressed: () async {
+                        await widget.viewModel.installInstance.execute();
+                        _handleCommandResult(widget.viewModel.installInstance.result);
+                      },
                     )
                   else if (widget.viewModel.instance.isInstalled == true) ...[
                     if (widget.viewModel.isRunning)
@@ -117,7 +161,10 @@ class _InstanceCardState extends State<InstanceCard> {
                       Button.primary(
                         AppLocalizations.of(context)!.playButton,
                         iconData: Symbols.play_arrow_rounded,
-                        onPressed: widget.viewModel.runInstance.execute,
+                        onPressed: () async {
+                          await widget.viewModel.runInstance.execute();
+                          _handleCommandResult(widget.viewModel.runInstance.result);
+                        },
                       ),
                     IconButton.surface(
                       iconData: Symbols.folder_open_rounded,

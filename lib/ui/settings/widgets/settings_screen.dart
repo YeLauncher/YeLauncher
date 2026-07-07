@@ -61,6 +61,20 @@ class SettingsScreen extends StatelessWidget {
                     ),
                 ],
               ),
+              const SizedBox(height: 32),
+              if (viewModel.isAuthenticated) ...[
+                Text(
+                  l10n.accountLabel,
+                  style: AppText.defaultTheme.titleSmall.copyWith(
+                    color: AppColors.dark.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Button.error(
+                  l10n.logoutButton,
+                  onPressed: () => viewModel.logout(),
+                ),
+              ],
             ],
           ),
         );

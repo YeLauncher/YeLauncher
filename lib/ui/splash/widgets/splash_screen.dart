@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart' hide CircularProgressIndicator;
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
+
 import 'package:yelauncher/routing/routes.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
@@ -32,16 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     ]);
     if (!mounted) return;
 
-    final minecraftRepo = context.read<MinecraftRepository>();
-    final isAuthenticated = await minecraftRepo.isAuthenticated();
-
-    if (!mounted) return;
-
-    if (isAuthenticated) {
-      context.go(Routes.instances);
-    } else {
-      context.go(Routes.login);
-    }
+    context.go(Routes.instances);
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yelauncher/data/repositories/java/java_repository_remote.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository_remote.dart';
@@ -15,6 +16,7 @@ import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
 import 'package:yelauncher/data/services/secure_storage_service.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:logging/logging.dart';
 
@@ -31,14 +33,65 @@ class MockPathProviderPlatform extends PathProviderPlatform {
   }
 }
 
+class FakeSecureStorageService extends SecureStorageService {
+  List<MinecraftProfileModel> _profiles = [];
+  String? _selectedId;
+
+  @override
+  Future<List<MinecraftProfileModel>> getProfiles() async {
+    return _profiles;
+  }
+
+  @override
+  Future<bool> saveProfiles(List<MinecraftProfileModel> profiles) async {
+    _profiles = profiles;
+    return true;
+  }
+
+  @override
+  Future<String?> getSelectedProfileId() async {
+    return _selectedId;
+  }
+
+  @override
+  Future<bool> saveSelectedProfileId(String uuid) async {
+    _selectedId = uuid;
+    return true;
+  }
+
+  @override
+  Future<MinecraftProfileModel?> getSelectedProfile() async {
+    if (_selectedId == null) return null;
+    try {
+      return _profiles.firstWhere((p) => p.uuid == _selectedId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> clearProfiles() async {
+    _profiles = [];
+    _selectedId = null;
+    return true;
+  }
+
+  @override
+  Future<bool> hasProfile() async {
+    return _profiles.isNotEmpty;
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = null;
   PathProviderPlatform.instance = MockPathProviderPlatform();
 
   late MinecraftRepositoryRemote minecraftRepository;
+  late FakeSecureStorageService fakeSecureStorage;
 
   setUp(() {
+    FlutterSecureStorage.setMockInitialValues({});
     final apiClient = MinecraftApiClient(
       baseUrl:
           'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json',
@@ -46,7 +99,7 @@ void main() {
     final downloadService = DownloadService();
     final fileService = FileService();
     final javaRepository = JavaRepositoryRemote();
-    final secureStorage = SecureStorageService();
+    fakeSecureStorage = FakeSecureStorageService();
 
     final forgeRepository = ForgeRepositoryRemote(
       apiClient: ForgeApiClient(),
@@ -66,7 +119,7 @@ void main() {
       downloadService: downloadService,
       fileService: fileService,
       javaRepository: javaRepository,
-      secureStorage: secureStorage,
+      secureStorage: fakeSecureStorage,
       forgeRepository: forgeRepository,
       fabricRepository: fabricRepository,
     );
@@ -115,33 +168,48 @@ void main() {
       debugPrint('Java $javaVersion is already installed.');
     }
 
-    debugPrint('Installing Minecraft $version instance...');
-    int lastMcProgress = -1;
-    final installResult = await minecraftRepository.install(
-      instance,
-      onProgress: (down, total) {
-        if (total != null && total > 0) {
-          final p = ((down / total) * 10).toInt(); // 0 to 10
-          if (p > lastMcProgress) {
-            debugPrint(
-              'Minecraft $version install progress: ${p * 10}% ($down/$total bytes)',
-            );
-            lastMcProgress = p;
-          }
-        } else {
-          final mb = down ~/ (1024 * 1024);
-          if (mb > lastMcProgress) {
-            debugPrint('Minecraft $version install progress: $mb MB downloaded');
-            lastMcProgress = mb;
-          }
-        }
-      },
-    );
-    expect(installResult, isA<Success>());
-    debugPrint('Minecraft $version installed successfully.');
+    debugPrint('Checking if Minecraft $version is installed...');
+    final isMcInstalledResult = await minecraftRepository.isInstalled(instance);
+    final isMcInstalled = isMcInstalledResult is Success<bool> && isMcInstalledResult.value;
 
-    debugPrint('Authenticating offline as E2ETester...');
-    await minecraftRepository.authenticateOffline('E2ETester');
+    debugPrint('Mocking authentication as E2ETester...');
+    final profile = MinecraftProfileModel(
+      nickname: 'E2ETester',
+      uuid: '00000000-0000-0000-0000-000000000000',
+      accessToken: 'dummy-token',
+      userType: 'mojang',
+    );
+    await fakeSecureStorage.saveProfiles([profile]);
+    await fakeSecureStorage.saveSelectedProfileId(profile.uuid);
+
+    if (!isMcInstalled) {
+      debugPrint('Installing Minecraft $version instance...');
+      int lastMcProgress = -1;
+      final installResult = await minecraftRepository.install(
+        instance,
+        onProgress: (down, total) {
+          if (total != null && total > 0) {
+            final p = ((down / total) * 10).toInt(); // 0 to 10
+            if (p > lastMcProgress) {
+              debugPrint(
+                'Minecraft $version install progress: ${p * 10}% ($down/$total bytes)',
+              );
+              lastMcProgress = p;
+            }
+          } else {
+            final mb = down ~/ (1024 * 1024);
+            if (mb > lastMcProgress) {
+              debugPrint('Minecraft $version install progress: $mb MB downloaded');
+              lastMcProgress = mb;
+            }
+          }
+        },
+      );
+      expect(installResult, isA<Success>());
+      debugPrint('Minecraft $version installed successfully.');
+    } else {
+      debugPrint('Minecraft $version is already installed.');
+    }
 
     debugPrint('Running Minecraft $version instance...');
     final runResult = await minecraftRepository.run(instance);

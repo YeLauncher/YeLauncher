@@ -9,9 +9,9 @@ final class ColorUtilities {
     final double targetL = lightness.clamp(0.0, 1.0);
 
     // 1. Normalize RGB channels to 0.0 - 1.0 range
-    double rNorm = color.red / 255.0;
-    double gNorm = color.green / 255.0;
-    double bNorm = color.blue / 255.0;
+    double rNorm = color.r;
+    double gNorm = color.g;
+    double bNorm = color.b;
 
     double maxVal = max(rNorm, max(gNorm, bNorm));
     double minVal = min(rNorm, min(gNorm, bNorm));
@@ -63,7 +63,7 @@ final class ColorUtilities {
     int gFinal = (gNew * 255).round();
     int bFinal = (bNew * 255).round();
 
-    int newHex = (color.alpha << 24) | (rFinal << 16) | (gFinal << 8) | bFinal;
+    int newHex = ((color.a * 255.0).round().clamp(0, 255) << 24) | (rFinal << 16) | (gFinal << 8) | bFinal;
     return Color(newHex);
   }
 

@@ -471,7 +471,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
       }
 
       final installerBytes = await installerFile.readAsBytes();
-      final Map<String, List<int>?> extractedFiles = await Isolate.run(() {
+      final Map<String, dynamic> extractedData = await Isolate.run(() {
         final archive = ZipDecoder().decodeBytes(installerBytes);
         List<int>? getFile(String name) {
           for (final f in archive) {
@@ -479,13 +479,33 @@ class ForgeRepositoryRemote implements ForgeRepository {
           }
           return null;
         }
+        
+        final mavenFiles = <String, List<int>>{};
+        for (final f in archive) {
+          if (f.isFile && f.name.startsWith('maven/')) {
+            mavenFiles[f.name.substring(6)] = f.content as List<int>;
+          }
+        }
+        
         return {
           'install_profile.json': getFile('install_profile.json'),
           'version.json': getFile('version.json'),
+          'maven_files': mavenFiles,
         };
       });
 
-      final installProfileBytes = extractedFiles['install_profile.json'];
+      final librariesDir = await _fileService.getAbsolutePath(['libraries']);
+      final mavenFiles = extractedData['maven_files'] as Map<String, List<int>>;
+      for (final entry in mavenFiles.entries) {
+        final targetPath = p.join(librariesDir, entry.key.replaceAll('/', Platform.pathSeparator));
+        final file = File(targetPath);
+        if (!await file.exists()) {
+          await file.parent.create(recursive: true);
+          await file.writeAsBytes(entry.value);
+        }
+      }
+
+      final installProfileBytes = extractedData['install_profile.json'] as List<int>?;
       if (installProfileBytes == null) {
         _log.warning('install_profile.json not found inside Forge installer $installerPath');
         return Result.failure(
@@ -495,7 +515,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
       final installProfile = jsonDecode(utf8.decode(installProfileBytes)) as Map<String, dynamic>;
 
       Map<String, dynamic>? versionJson;
-      final versionJsonBytes = extractedFiles['version.json'];
+      final versionJsonBytes = extractedData['version.json'] as List<int>?;
       if (versionJsonBytes != null) {
         versionJson = jsonDecode(utf8.decode(versionJsonBytes)) as Map<String, dynamic>;
       } else if (installProfile.containsKey('versionInfo')) {
@@ -568,17 +588,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
       final data = metadata.installProfile['data'] as Map<String, dynamic>? ?? {};
 
       // Upfront extract the entire installer to tempDir to avoid synchronous main-thread unzipping later
-      await Isolate.run(() {
-        final bytes = File(installerPath).readAsBytesSync();
-        final archive = ZipDecoder().decodeBytes(bytes);
-        for (final file in archive) {
-          if (file.isFile) {
-            final outFile = File(p.join(tempDir.path, file.name));
-            outFile.parent.createSync(recursive: true);
-            outFile.writeAsBytesSync(file.content as List<int>);
-          }
-        }
-      });
+      await Isolate.run(() => _unzipInstallerArchive(installerPath, tempDir.path));
 
       final librariesDir = await _fileService.getAbsolutePath(['libraries']);
       final vanillaJarPath = await _fileService.getClientJarPath(minecraftVersion);
@@ -799,7 +809,11 @@ class ForgeRepositoryRemote implements ForgeRepository {
             if (baseUrl != null) {
               url = baseUrl.endsWith('/') ? '$baseUrl$path' : '$baseUrl/$path';
             } else {
-              url = 'https://libraries.minecraft.net/$path';
+              if (name != null && name.startsWith('net.minecraftforge')) {
+                url = 'https://maven.minecraftforge.net/$path';
+              } else {
+                url = 'https://libraries.minecraft.net/$path';
+              }
             }
           }
 
@@ -938,3 +952,16 @@ class ForgeLibraryEntry {
     required this.size,
   });
 }
+
+void _unzipInstallerArchive(String installerPath, String tempDirPath) {
+  final bytes = File(installerPath).readAsBytesSync();
+  final archive = ZipDecoder().decodeBytes(bytes);
+  for (final file in archive) {
+    if (file.isFile) {
+      final outFile = File(p.join(tempDirPath, file.name));
+      outFile.parent.createSync(recursive: true);
+      outFile.writeAsBytesSync(file.content as List<int>);
+    }
+  }
+}
+
