@@ -493,6 +493,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No content installed'**
   String get contentMissing;
+
+  /// No description provided for @profilesTabTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profiles'**
+  String get profilesTabTitle;
+
+  /// No description provided for @manageAccountsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your Minecraft accounts'**
+  String get manageAccountsSubtitle;
+
+  /// No description provided for @noAccountsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Accounts'**
+  String get noAccountsTitle;
+
+  /// No description provided for @noAccountsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an account to play Minecraft'**
+  String get noAccountsSubtitle;
+
+  /// No description provided for @activeBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get activeBadge;
+
+  /// No description provided for @addAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Account'**
+  String get addAccountButton;
+
+  /// No description provided for @selectButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get selectButton;
+
+  /// No description provided for @minecraftAccountNotExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Minecraft account does not exist'**
+  String get minecraftAccountNotExists;
+
+  /// No description provided for @authSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You can close this window and go to the launcher'**
+  String get authSuccessMessage;
+
+  /// No description provided for @authenticationRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication Required'**
+  String get authenticationRequiredTitle;
+
+  /// No description provided for @authenticationRequiredDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You must add a Minecraft account in the Profiles tab to perform this action.'**
+  String get authenticationRequiredDescription;
+
+  /// No description provided for @goToProfilesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profiles'**
+  String get goToProfilesButton;
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeButton;
 }
 
 class _AppLocalizationsDelegate

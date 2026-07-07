@@ -2,8 +2,6 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart' as crypto;
-
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
@@ -415,10 +413,10 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               '${instance.minecraftVersion}',
             );
 
-            final profileResult = await getProfile();
+            final profileResult = await getSelectedProfile();
             final profile = switch (profileResult) {
-              Success<MinecraftProfileModel>(value: final cachedProfile) => cachedProfile,
-              Failure<MinecraftProfileModel>() => _fallbackProfile(),
+              Success<MinecraftProfileModel?>(value: final cachedProfile) => cachedProfile ?? _fallbackProfile(),
+              Failure<MinecraftProfileModel?>() => _fallbackProfile(),
             };
 
             _log.info(
@@ -769,8 +767,16 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
         userType: 'mojang',
       );
 
-      // Save profile to secure storage
-      await _secureStorage.saveProfile(profile);
+      // Add to list and select it
+      final profiles = await _secureStorage.getProfiles();
+      final index = profiles.indexWhere((p) => p.uuid == profile.uuid);
+      if (index >= 0) {
+        profiles[index] = profile;
+      } else {
+        profiles.add(profile);
+      }
+      await _secureStorage.saveProfiles(profiles);
+      await _secureStorage.saveSelectedProfileId(profile.uuid);
 
       return Result.success(profile);
     } on Exception catch (e) {
@@ -782,17 +788,58 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
 
 
   @override
-  Future<Result<MinecraftProfileModel>> getProfile() async {
+  Future<Result<List<MinecraftProfileModel>>> getProfiles() async {
     try {
-      final profile = await _secureStorage.getProfile();
-      if (profile != null) {
-        _log.info('Successfully retrieved cached profile: ${profile.nickname}');
-        return Result.success(profile);
+      final profiles = await _secureStorage.getProfiles();
+      return Result.success(profiles);
+    } catch (e) {
+      _log.severe('getProfiles error: $e');
+      return Result.failure(Exception('getProfiles failed: $e'));
+    }
+  }
+
+  @override
+  Future<Result<MinecraftProfileModel?>> getSelectedProfile() async {
+    try {
+      final profile = await _secureStorage.getSelectedProfile();
+      return Result.success(profile);
+    } catch (e) {
+      _log.severe('getSelectedProfile error: $e');
+      return Result.failure(Exception('getSelectedProfile failed: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> selectProfile(String uuid) async {
+    try {
+      await _secureStorage.saveSelectedProfileId(uuid);
+      return const Result.success(null);
+    } catch (e) {
+      return Result.failure(Exception('selectProfile failed: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> removeProfile(String uuid) async {
+    try {
+      final profiles = await _secureStorage.getProfiles();
+      profiles.removeWhere((p) => p.uuid == uuid);
+      await _secureStorage.saveProfiles(profiles);
+      
+      final selectedId = await _secureStorage.getSelectedProfileId();
+      if (selectedId == uuid) {
+        if (profiles.isNotEmpty) {
+          await _secureStorage.saveSelectedProfileId(profiles.first.uuid);
+        } else {
+          // No profiles left, clear the selected id
+          // There isn't a direct method to clear just the selected ID but saveSelectedProfileId('') could work,
+          // or we can add a method to clear it. Let's just clear all if empty.
+          await _secureStorage.clearProfiles();
+        }
       }
-      return Result.failure(Exception('No cached profile found'));
-    } on Exception catch (e) {
-      _log.severe('getProfile error: $e');
-      return Result.failure(Exception('getProfile failed: $e'));
+      return const Result.success(null);
+    } catch (e) {
+      return Result.failure(Exception('removeProfile failed: $e'));
     }
   }
 
@@ -809,11 +856,12 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   @override
   Future<Result<void>> logout() async {
     try {
-      final ok = await _secureStorage.clearProfile();
-      if (!ok) {
-        return Result.failure(Exception('Failed to clear stored profile'));
+      final profileResult = await getSelectedProfile();
+      if (profileResult case Success<MinecraftProfileModel?>(value: final profile)) {
+        if (profile != null) {
+          return await removeProfile(profile.uuid);
+        }
       }
-      _log.info('User logged out, profile cleared');
       return const Result.success(null);
     } on Exception catch (e) {
       _log.severe('logout error: $e');

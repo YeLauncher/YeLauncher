@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
@@ -7,32 +8,18 @@ import 'package:yelauncher/ui/content/widgets/content_screen.dart';
 import 'package:yelauncher/ui/core/main_layout.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_screen_viewmodel.dart';
 import 'package:yelauncher/ui/instances/widgets/instances_screen.dart';
-import 'package:yelauncher/ui/authentication/view_models/login_viewmodel.dart';
-import 'package:yelauncher/ui/authentication/widgets/login_screen.dart';
-
-import 'package:yelauncher/ui/splash/view_models/splash_viewmodel.dart';
-import 'package:yelauncher/ui/splash/widgets/splash_screen.dart';
 import 'package:yelauncher/ui/settings/view_models/settings_viewmodel.dart';
 import 'package:yelauncher/ui/settings/widgets/settings_screen.dart';
+import 'package:yelauncher/ui/profiles/view_models/profiles_viewmodel.dart';
+import 'package:yelauncher/ui/profiles/widgets/profiles_screen.dart';
+import 'package:yelauncher/ui/splash/view_models/splash_viewmodel.dart';
+import 'package:yelauncher/ui/splash/widgets/splash_screen.dart';
+
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
+  navigatorKey: rootNavigatorKey,
   initialLocation: Routes.splash,
-  redirect: (context, state) async {
-    if (state.fullPath == Routes.splash) {
-      return null;
-    }
-
-    final isAuthenticated = await minecraftRepository.isAuthenticated();
-
-    // If user is authenticated and trying to access login, redirect to instances
-    if (isAuthenticated && state.fullPath == Routes.login) {
-      return Routes.instances;
-    }
-
-
-
-    return null;
-  },
   routes: [
     GoRoute(
       path: Routes.splash,
@@ -44,15 +31,7 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
         return SplashScreen(viewModel: viewModel);
       },
     ),
-    GoRoute(
-      path: Routes.login,
-      builder: (context, state) {
-        final viewModel = LoginViewModel(
-          minecraftRepository: context.read<MinecraftRepository>(),
-        );
-        return LoginScreen(viewModel: viewModel);
-      },
-    ),
+    // Login route removed
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return MainLayout(navigationShell: navigationShell);
@@ -80,6 +59,19 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
                   contentRepository: context.read(),
                 );
                 return ContentScreen(viewModel: viewModel);
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.profiles,
+              builder: (context, state) {
+                final viewModel = ProfilesViewModel(
+                  minecraftRepository: context.read(),
+                );
+                return ProfilesScreen(viewModel: viewModel);
               },
             ),
           ],

@@ -10,7 +10,7 @@ class LoadingIndicator extends StatefulWidget {
   final Color? trackColor;
   final double strokeWidth;
 
-  LoadingIndicator({
+  const LoadingIndicator({
     super.key,
     required this.color,
     this.trackColor,

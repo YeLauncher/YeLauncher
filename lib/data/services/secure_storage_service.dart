@@ -8,7 +8,9 @@ final _logger = Logger('SecureStorageService');
 
 class SecureStorageService {
   static const _instance = FlutterSecureStorage();
-  static const _profileKey = 'minecraft_profile';
+  static const _profilesKey = 'minecraft_profiles';
+  static const _selectedProfileKey = 'selected_minecraft_profile';
+  static const _legacyProfileKey = 'minecraft_profile';
 
   /// Saves a value securely with the given [key].
   ///
@@ -88,72 +90,105 @@ class SecureStorageService {
     }
   }
 
-  /// Saves a [MinecraftProfileModel] securely using JSON serialization.
-  ///
-  /// The profile is converted to JSON and stored under a fixed profile key.
-  /// If a profile already exists, it will be overwritten.
-  /// Returns `true` if the save operation was successful.
-  Future<bool> saveProfile(MinecraftProfileModel profile) async {
+  /// Saves a list of [MinecraftProfileModel]s securely using JSON serialization.
+  Future<bool> saveProfiles(List<MinecraftProfileModel> profiles) async {
     try {
-      final json = jsonEncode(profile.toJson());
-      await _instance.write(key: _profileKey, value: json);
-      _logger.info('Successfully saved profile for: ${profile.nickname}');
+      final json = jsonEncode(profiles.map((p) => p.toJson()).toList());
+      await _instance.write(key: _profilesKey, value: json);
+      _logger.info('Successfully saved ${profiles.length} profiles');
       return true;
     } catch (e) {
-      _logger.warning('Failed to save profile', e);
+      _logger.warning('Failed to save profiles', e);
       return false;
     }
   }
 
-  /// Retrieves a securely stored [MinecraftProfileModel] from JSON.
-  ///
-  /// Returns the deserialized profile if found, or `null` if:
-  /// - The profile key does not exist
-  /// - The stored JSON is invalid or cannot be deserialized
-  /// - An error occurs during retrieval
-  Future<MinecraftProfileModel?> getProfile() async {
+  /// Retrieves securely stored [MinecraftProfileModel]s from JSON.
+  Future<List<MinecraftProfileModel>> getProfiles() async {
     try {
-      final json = await _instance.read(key: _profileKey);
-      if (json == null) {
-        _logger.fine('No profile found in secure storage');
-        return null;
+      final json = await _instance.read(key: _profilesKey);
+      if (json != null) {
+        final List<dynamic> decoded = jsonDecode(json);
+        return decoded.map((e) => MinecraftProfileModel.fromJson(e)).toList();
       }
 
-      final decoded = jsonDecode(json) as Map<String, dynamic>;
-      final profile = MinecraftProfileModel.fromJson(decoded);
-      _logger.info('Successfully retrieved profile for: ${profile.nickname}');
-      return profile;
+      // Migration from legacy single profile
+      final legacyJson = await _instance.read(key: _legacyProfileKey);
+      if (legacyJson != null) {
+        final decoded = jsonDecode(legacyJson) as Map<String, dynamic>;
+        final profile = MinecraftProfileModel.fromJson(decoded);
+        _logger.info('Migrating legacy profile: ${profile.nickname}');
+        await saveProfiles([profile]);
+        await saveSelectedProfileId(profile.uuid);
+        await _instance.delete(key: _legacyProfileKey);
+        return [profile];
+      }
+
+      return [];
     } catch (e) {
-      _logger.warning('Failed to retrieve or deserialize profile', e);
+      _logger.warning('Failed to retrieve or deserialize profiles', e);
+      return [];
+    }
+  }
+
+  /// Saves the selected profile UUID.
+  Future<bool> saveSelectedProfileId(String uuid) async {
+    try {
+      await _instance.write(key: _selectedProfileKey, value: uuid);
+      _logger.info('Successfully saved selected profile ID: $uuid');
+      return true;
+    } catch (e) {
+      _logger.warning('Failed to save selected profile ID', e);
+      return false;
+    }
+  }
+
+  /// Retrieves the selected profile UUID.
+  Future<String?> getSelectedProfileId() async {
+    try {
+      return await _instance.read(key: _selectedProfileKey);
+    } catch (e) {
+      _logger.warning('Failed to retrieve selected profile ID', e);
       return null;
     }
   }
 
-  /// Checks if a profile exists in secure storage.
-  ///
-  /// Returns `true` if a profile is stored, `false` otherwise.
-  Future<bool> hasProfile() async {
-    try {
-      final value = await _instance.read(key: _profileKey);
-      return value != null;
-    } catch (e) {
-      _logger.warning('Failed to check if profile exists', e);
-      return false;
+  /// Retrieves the currently selected [MinecraftProfileModel].
+  Future<MinecraftProfileModel?> getSelectedProfile() async {
+    final profiles = await getProfiles();
+    final selectedId = await getSelectedProfileId();
+    if (profiles.isNotEmpty) {
+      if (selectedId != null) {
+        try {
+          return profiles.firstWhere((p) => p.uuid == selectedId);
+        } catch (_) {
+          return profiles.first; // Fallback to first if selected ID is invalid
+        }
+      }
+      return profiles.first;
     }
+    return null;
   }
 
-  /// Clears the stored profile from secure storage.
-  ///
-  /// Returns `true` if the remove operation was successful.
-  Future<bool> clearProfile() async {
+  /// Checks if any profile exists in secure storage.
+  Future<bool> hasProfile() async {
+    final profiles = await getProfiles();
+    return profiles.isNotEmpty;
+  }
+
+  /// Clears all stored profiles and the selected profile ID.
+  Future<bool> clearProfiles() async {
     try {
-      await _instance.delete(key: _profileKey);
-      _logger.info('Successfully cleared profile from secure storage');
+      await _instance.delete(key: _profilesKey);
+      await _instance.delete(key: _selectedProfileKey);
+      await _instance.delete(key: _legacyProfileKey);
+      _logger.info('Successfully cleared profiles from secure storage');
       return true;
     } catch (e) {
-      _logger.warning('Failed to clear profile', e);
+      _logger.warning('Failed to clear profiles', e);
       return false;
     }
   }
 }
+
 

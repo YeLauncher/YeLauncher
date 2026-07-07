@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yelauncher/data/services/secure_storage_service.dart';
 import 'package:logging/logging.dart';

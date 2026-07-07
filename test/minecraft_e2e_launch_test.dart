@@ -34,22 +34,51 @@ class MockPathProviderPlatform extends PathProviderPlatform {
 }
 
 class FakeSecureStorageService extends SecureStorageService {
-  MinecraftProfileModel? _profile;
+  List<MinecraftProfileModel> _profiles = [];
+  String? _selectedId;
 
   @override
-  Future<bool> saveProfile(MinecraftProfileModel profile) async {
-    _profile = profile;
+  Future<List<MinecraftProfileModel>> getProfiles() async {
+    return _profiles;
+  }
+
+  @override
+  Future<bool> saveProfiles(List<MinecraftProfileModel> profiles) async {
+    _profiles = profiles;
     return true;
   }
 
   @override
-  Future<MinecraftProfileModel?> getProfile() async {
-    return _profile;
+  Future<String?> getSelectedProfileId() async {
+    return _selectedId;
+  }
+
+  @override
+  Future<bool> saveSelectedProfileId(String uuid) async {
+    _selectedId = uuid;
+    return true;
+  }
+
+  @override
+  Future<MinecraftProfileModel?> getSelectedProfile() async {
+    if (_selectedId == null) return null;
+    try {
+      return _profiles.firstWhere((p) => p.uuid == _selectedId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> clearProfiles() async {
+    _profiles = [];
+    _selectedId = null;
+    return true;
   }
 
   @override
   Future<bool> hasProfile() async {
-    return _profile != null;
+    return _profiles.isNotEmpty;
   }
 }
 
@@ -144,12 +173,14 @@ void main() {
     final isMcInstalled = isMcInstalledResult is Success<bool> && isMcInstalledResult.value;
 
     debugPrint('Mocking authentication as E2ETester...');
-    await fakeSecureStorage.saveProfile(MinecraftProfileModel(
+    final profile = MinecraftProfileModel(
       nickname: 'E2ETester',
       uuid: '00000000-0000-0000-0000-000000000000',
       accessToken: 'dummy-token',
       userType: 'mojang',
-    ));
+    );
+    await fakeSecureStorage.saveProfiles([profile]);
+    await fakeSecureStorage.saveSelectedProfileId(profile.uuid);
 
     if (!isMcInstalled) {
       debugPrint('Installing Minecraft $version instance...');

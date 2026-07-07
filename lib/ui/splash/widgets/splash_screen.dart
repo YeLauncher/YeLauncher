@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' hide CircularProgressIndicator;
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import 'package:yelauncher/routing/routes.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';

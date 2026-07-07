@@ -11,7 +11,6 @@ import 'package:yelauncher/ui/core/step.dart' as core_step;
 import 'package:yelauncher/ui/core/text_field.dart' as core_text_field;
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
-import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_creation_viewmodel.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 

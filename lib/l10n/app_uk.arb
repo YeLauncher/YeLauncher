@@ -86,5 +86,18 @@
     }
   },
   "installedContentTitle": "Встановлений контент",
-  "contentMissing": "Контент відсутній"
+  "contentMissing": "Контент відсутній",
+  "profilesTabTitle": "Профілі",
+  "manageAccountsSubtitle": "Керуйте своїми акаунтами Minecraft",
+  "noAccountsTitle": "Немає акаунтів",
+  "noAccountsSubtitle": "Додайте акаунт для гри в Minecraft",
+  "activeBadge": "Активний",
+  "addAccountButton": "Додати акаунт",
+  "selectButton": "Вибрати",
+  "minecraftAccountNotExists": "Акаунта Minecraft не існує",
+  "authSuccessMessage": "Ви можете закрити це вікно і перейти до лаунчера",
+  "authenticationRequiredTitle": "Потрібна авторизація",
+  "authenticationRequiredDescription": "Ви повинні додати акаунт Minecraft на вкладці Профілі, щоб виконати цю дію.",
+  "goToProfilesButton": "Перейти до профілів",
+  "closeButton": "Закрити"
 }

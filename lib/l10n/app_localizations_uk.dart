@@ -214,4 +214,45 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get contentMissing => 'Контент відсутній';
+
+  @override
+  String get profilesTabTitle => 'Профілі';
+
+  @override
+  String get manageAccountsSubtitle => 'Керуйте своїми акаунтами Minecraft';
+
+  @override
+  String get noAccountsTitle => 'Немає акаунтів';
+
+  @override
+  String get noAccountsSubtitle => 'Додайте акаунт для гри в Minecraft';
+
+  @override
+  String get activeBadge => 'Активний';
+
+  @override
+  String get addAccountButton => 'Додати акаунт';
+
+  @override
+  String get selectButton => 'Вибрати';
+
+  @override
+  String get minecraftAccountNotExists => 'Акаунта Minecraft не існує';
+
+  @override
+  String get authSuccessMessage =>
+      'Ви можете закрити це вікно і перейти до лаунчера';
+
+  @override
+  String get authenticationRequiredTitle => 'Потрібна авторизація';
+
+  @override
+  String get authenticationRequiredDescription =>
+      'Ви повинні додати акаунт Minecraft на вкладці Профілі, щоб виконати цю дію.';
+
+  @override
+  String get goToProfilesButton => 'Перейти до профілів';
+
+  @override
+  String get closeButton => 'Закрити';
 }

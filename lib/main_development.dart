@@ -13,14 +13,14 @@ void main() async {
   Logger.root.level = Level.ALL; // Set the logging level to capture all logs
 
   final secureStorage = SecureStorageService();
-  await secureStorage.saveProfile(
-    MinecraftProfileModel(
-      nickname: 'TestAccount',
-      uuid: '00000000-0000-0000-0000-000000000000',
-      accessToken: 'dummy-token',
-      userType: 'mojang',
-    ),
+  final profile = MinecraftProfileModel(
+    nickname: 'TestAccount',
+    uuid: '00000000-0000-0000-0000-000000000000',
+    accessToken: 'dummy-token',
+    userType: 'mojang',
   );
+  await secureStorage.saveProfiles([profile]);
+  await secureStorage.saveSelectedProfileId(profile.uuid);
 
   runApp(
     MultiProvider(providers: providersLocal, child: const YeLauncherApp()),
