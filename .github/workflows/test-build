@@ -1,0 +1,140 @@
+name: Build and Test Release
+
+on:
+  push:
+    branches:
+      - dev  # Triggers automatically when you push fixes to develop
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    outputs:
+      base_version: ${{ steps.version_step.outputs.BASE_VERSION }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+            extension: exe
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 1. SETUP: Extract and inject Beta versioning based on CI Run Number
+      - name: Set Beta Version in Pubspec
+        id: version_step
+        shell: bash
+        run: |
+          # Reads the base version (e.g., 3.5.2)
+          BASE_VERSION=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | cut -d '+' -f 1 | tr -d '\r')
+          NEW_VERSION="${BASE_VERSION}-beta.${{ github.run_number }}+${{ github.run_number }}"
+          
+          sed -i "s/^version: .*/version: ${NEW_VERSION}/" pubspec.yaml
+          echo "Injected Testing Version: $NEW_VERSION"
+          
+          # Saves the base version as a job output for the release job
+          echo "BASE_VERSION=$BASE_VERSION" >> $GITHUB_OUTPUT
+
+      # 2. CACHE: Flutter SDK
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.1' 
+          cache: true
+
+      # 3. CACHE: Pub Dependencies
+      - name: Cache Pub Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~\\AppData\\Local\\Pub\\Cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # 4. CACHE: Build Runner Outputs
+      - name: Cache Build Runner
+        uses: actions/cache@v4
+        with:
+          path: .dart_tool/build
+          key: ${{ runner.os }}-build-runner-${{ hashFiles('**/pubspec.lock') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-runner-${{ hashFiles('**/pubspec.lock') }}-
+
+      - name: Run Code Generation
+        run: dart run build_runner build --delete-conflicting-outputs
+        
+      - name: Create .env file
+        run: |
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+          
+      # 5. TEST: Run Unit/Widget Tests
+      - name: Run Tests
+        run: flutter test
+
+      # 6. BUILD: Compile Executable
+      - name: Build Windows App
+        if: matrix.platform == 'windows'
+        run: flutter build windows --release
+
+      # 7. PACKAGING: Create MSIX Package
+      - name: Create MSIX Package
+        if: matrix.platform == 'windows'
+        run: dart run msix:create
+
+      # 8. PACKAGING: Compile Inno Setup Installer
+      - name: Create Inno Setup Installer
+        if: matrix.platform == 'windows'
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
+      # 9. ARTIFACTS: Prepare and Local Upload
+      - name: Rename Output Files
+        shell: bash 
+        run: |
+          cp Output/yelauncher-setup.exe yelauncher-windows-installer.exe
+          find . -name "*.msix" -type f -exec cp {} yelauncher-windows.msix \;
+              
+      - name: Upload Artifact to Action Run
+        uses: actions/upload-artifact@v4
+        with:
+          name: yelauncher-beta-${{ github.run_number }}
+          path: |
+            yelauncher-windows-installer.exe
+            yelauncher-windows.msix
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Create GitHub Beta Pre-Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # Targets exact format: beta-3.5.2+543
+          tag_name: "beta-${{ needs.build.outputs.base_version }}+${{ github.run_number }}"
+          name: "Beta Build v${{ needs.build.outputs.base_version }} (#${{ github.run_number }})"
+          body: |
+            ### 🧪 Automated Test Build
+            * **Branch:** `${{ github.ref_name }}`
+            * **Commit SHA:** `${{ github.sha }}`
+            * **Build Number:** `${{ github.run_number }}`
+            
+            Download the installer or MSIX package below to test the latest fixes.
+          prerelease: true # Marks it explicitly as a Pre-release (yellow badge on GitHub)
+          files: |
+            yelauncher-windows-installer.exe
+            yelauncher-windows.msix
