@@ -68,6 +68,9 @@ jobs:
       - name: Create .env file
         run: |
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+      - name: Create sentry.properties file
+        run: |
+          echo "auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}" >> sentry.properties
           
       # 5. TEST: Run Dart/Flutter Tests
       - name: Run Tests
