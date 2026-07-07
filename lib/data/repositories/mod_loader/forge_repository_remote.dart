@@ -471,28 +471,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
       }
 
       final installerBytes = await installerFile.readAsBytes();
-      final Map<String, dynamic> extractedData = await Isolate.run(() {
-        final archive = ZipDecoder().decodeBytes(installerBytes);
-        List<int>? getFile(String name) {
-          for (final f in archive) {
-            if (f.isFile && f.name.endsWith(name)) return f.content as List<int>;
-          }
-          return null;
-        }
-        
-        final mavenFiles = <String, List<int>>{};
-        for (final f in archive) {
-          if (f.isFile && f.name.startsWith('maven/')) {
-            mavenFiles[f.name.substring(6)] = f.content as List<int>;
-          }
-        }
-        
-        return {
-          'install_profile.json': getFile('install_profile.json'),
-          'version.json': getFile('version.json'),
-          'maven_files': mavenFiles,
-        };
-      });
+      final Map<String, dynamic> extractedData = await Isolate.run(_createDecodeClosure(installerBytes));
 
       final librariesDir = await _fileService.getAbsolutePath(['libraries']);
       final mavenFiles = extractedData['maven_files'] as Map<String, List<int>>;
@@ -588,7 +567,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
       final data = metadata.installProfile['data'] as Map<String, dynamic>? ?? {};
 
       // Upfront extract the entire installer to tempDir to avoid synchronous main-thread unzipping later
-      await Isolate.run(() => _unzipInstallerArchive(installerPath, tempDir.path));
+      await Isolate.run(_createUnzipClosure(installerPath, tempDir.path));
 
       final librariesDir = await _fileService.getAbsolutePath(['libraries']);
       final vanillaJarPath = await _fileService.getClientJarPath(minecraftVersion);
@@ -745,44 +724,12 @@ class ForgeRepositoryRemote implements ForgeRepository {
   }
 
   Future<void> _extractFromInstaller(String installerPath, String relativePath, String targetPath) async {
-    await Isolate.run(() {
-      final bytes = File(installerPath).readAsBytesSync();
-      final archive = ZipDecoder().decodeBytes(bytes);
-      final file = archive.findFile(relativePath);
-      if (file != null) {
-        File(targetPath)
-          ..createSync(recursive: true)
-          ..writeAsBytesSync(file.content as List<int>);
-      } else {
-        throw Exception('File $relativePath not found in installer $installerPath');
-      }
-    });
+    await Isolate.run(_createExtractClosure(installerPath, relativePath, targetPath));
   }
 
   Future<String?> _getMainClassFromJar(String jarPath) async {
     try {
-      return await Isolate.run(() {
-        final bytes = File(jarPath).readAsBytesSync();
-        final archive = ZipDecoder().decodeBytes(bytes);
-        
-        ArchiveFile? mf;
-        for (final file in archive) {
-          if (file.name.toUpperCase() == 'META-INF/MANIFEST.MF') {
-            mf = file;
-            break;
-          }
-        }
-
-        if (mf != null) {
-          final content = utf8.decode(mf.content as List<int>, allowMalformed: true);
-          for (final line in content.split('\n')) {
-            if (line.trimLeft().toLowerCase().startsWith('main-class:')) {
-              return line.trimLeft().substring('main-class:'.length).trim();
-            }
-          }
-        }
-        return null;
-      });
+      return await Isolate.run(_createGetMainClassClosure(jarPath));
     } catch (e) {
       _log.severe('Error reading main class from $jarPath: $e');
     }
@@ -963,5 +910,74 @@ void _unzipInstallerArchive(String installerPath, String tempDirPath) {
       outFile.writeAsBytesSync(file.content as List<int>);
     }
   }
+}
+
+Map<String, dynamic> Function() _createDecodeClosure(List<int> installerBytes) {
+  return () {
+    final archive = ZipDecoder().decodeBytes(installerBytes);
+    List<int>? getFile(String name) {
+      for (final f in archive) {
+        if (f.isFile && f.name.endsWith(name)) return f.content as List<int>;
+      }
+      return null;
+    }
+    
+    final mavenFiles = <String, List<int>>{};
+    for (final f in archive) {
+      if (f.isFile && f.name.startsWith('maven/')) {
+        mavenFiles[f.name.substring(6)] = f.content as List<int>;
+      }
+    }
+    
+    return {
+      'install_profile.json': getFile('install_profile.json'),
+      'version.json': getFile('version.json'),
+      'maven_files': mavenFiles,
+    };
+  };
+}
+
+void Function() _createUnzipClosure(String installerPath, String tempDirPath) {
+  return () => _unzipInstallerArchive(installerPath, tempDirPath);
+}
+
+void Function() _createExtractClosure(String installerPath, String relativePath, String targetPath) {
+  return () {
+    final bytes = File(installerPath).readAsBytesSync();
+    final archive = ZipDecoder().decodeBytes(bytes);
+    final file = archive.findFile(relativePath);
+    if (file != null) {
+      File(targetPath)
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(file.content as List<int>);
+    } else {
+      throw Exception('File $relativePath not found in installer $installerPath');
+    }
+  };
+}
+
+String? Function() _createGetMainClassClosure(String jarPath) {
+  return () {
+    final bytes = File(jarPath).readAsBytesSync();
+    final archive = ZipDecoder().decodeBytes(bytes);
+    
+    ArchiveFile? mf;
+    for (final file in archive) {
+      if (file.name.toUpperCase() == 'META-INF/MANIFEST.MF') {
+        mf = file;
+        break;
+      }
+    }
+
+    if (mf != null) {
+      final content = utf8.decode(mf.content as List<int>, allowMalformed: true);
+      for (final line in content.split('\n')) {
+        if (line.trimLeft().toLowerCase().startsWith('main-class:')) {
+          return line.trimLeft().substring('main-class:'.length).trim();
+        }
+      }
+    }
+    return null;
+  };
 }
 
