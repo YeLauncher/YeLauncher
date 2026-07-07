@@ -2,38 +2,14 @@ name: Build and Release
 
 on:
   push:
-    tags:
-      - 'v*' # Triggers ONLY when a tag starting with 'v' is pushed (e.g., v1.0.0)
+    branches:
+      - main # Triggers whenever code is pushed or merged into main
 
 jobs:
-  check-version:
-    name: Verify Pubspec Version
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Extract and Compare Version
-        run: |
-          # Extract version from pubspec.yaml (e.g., "1.0.0+1" -> "1.0.0")
-          PUBSPEC_VERSION=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | cut -d '+' -f 1 | tr -d '\r')
-          
-          # Extract version from the GitHub tag (e.g., "v1.0.0" -> "1.0.0")
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          
-          echo "Tag Version: $TAG_VERSION"
-          echo "Pubspec Version: $PUBSPEC_VERSION"
-          
-          # Fail the job if they do not match
-          if [ "$TAG_VERSION" != "$PUBSPEC_VERSION" ]; then
-            echo "::error::Tag version ($TAG_VERSION) does not match pubspec.yaml version ($PUBSPEC_VERSION)."
-            exit 1
-          fi
-          echo "Versions match! Proceeding to build."
-
   build:
-    needs: check-version # Only runs if the version check passes
     runs-on: ${{ matrix.os }}
+    outputs:
+      app_version: ${{ steps.get_version.outputs.VERSION }}
     strategy:
       matrix:
         include:
@@ -45,18 +21,27 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. CACHE: Flutter SDK
+      # 1. VERSIONING: Extract version directly from pubspec.yaml
+      - name: Extract App Version
+        id: get_version
+        shell: bash
+        run: |
+          # Extracts the clean version tag (e.g., "1.2.3") from the pubspec file
+          VERSION=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | cut -d '+' -f 1 | tr -d '\r')
+          echo "Detected version: v$VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      # 2. CACHE: Flutter SDK
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.1' 
-          cache: true # Enables native SDK caching for flutter-action
+          cache: true
 
-      # 2. CACHE: Pub Dependencies
+      # 3. CACHE: Pub Dependencies
       - name: Cache Pub Dependencies
         uses: actions/cache@v4
         with:
-          # Covers Linux/Mac and Windows cache locations
           path: |
             ~/.pub-cache
             ~\AppData\Local\Pub\Cache
@@ -68,17 +53,14 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      # 3. CACHE: Build Runner Outputs (Incremental Code Generation)
+      # 4. CACHE: Build Runner Outputs
       - name: Cache Build Runner
         uses: actions/cache@v4
         with:
           path: .dart_tool/build
-          # Links the cache to the lockfile but uses sha for unique saves, 
-          # falling back to previous commits for incremental builds via restore-keys
           key: ${{ runner.os }}-build-runner-${{ hashFiles('**/pubspec.lock') }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-build-runner-${{ hashFiles('**/pubspec.lock') }}-
-            ${{ runner.os }}-build-runner-
 
       - name: Run Code Generation
         run: dart run build_runner build --delete-conflicting-outputs
@@ -87,53 +69,33 @@ jobs:
         run: |
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
           
-      # 3.5. TEST: Run Dart/Flutter Tests
+      # 5. TEST: Run Dart/Flutter Tests
       - name: Run Tests
         run: flutter test
 
-      # 4. BUILD: Standard Windows Executable
+      # 6. BUILD: Standard Windows Executable
       - name: Build Windows App
         if: matrix.platform == 'windows'
         run: flutter build windows --release
 
-      # 4.5 PACKAGING: Create MSIX Launcher
+      # 7. PACKAGING: Create MSIX Package
       - name: Create MSIX Package
         if: matrix.platform == 'windows'
         run: dart run msix:create
 
-      # 5. PACKAGING: Compile Inno Setup Installer
+      # 8. PACKAGING: Compile Inno Setup Installer
       - name: Create Inno Setup Installer
         if: matrix.platform == 'windows'
         shell: cmd
-        # This calls the pre-installed Inno Setup compiler on the GitHub runner
         run: |
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 
-      # 6. ARTIFACTS: Rename and Upload
+      # 9. ARTIFACTS: Rename and Upload to Actions Run
       - name: Rename Output Files
         shell: bash 
         run: |
-          # Rename the Inno Setup installer
           cp Output/yelauncher-setup.exe yelauncher-windows-installer.exe
-          
-          # Find the generated MSIX file and copy it to the root directory
           find . -name "*.msix" -type f -exec cp {} yelauncher-windows.msix \;
-          
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Upload MSIX to Azure Blob Storage
-        shell: bash
-        run: |
-          az storage blob upload \
-            --account-name yelauncherstorage \
-            --container-name releases \
-            --name "${{ github.ref_name }}/yelauncher-windows.msix" \
-            --file yelauncher-windows.msix \
-            --content-type "application/msix" \
-            --auth-mode login
               
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -154,9 +116,12 @@ jobs:
         with:
           merge-multiple: true
 
-      - name: Create Release
+      - name: Create Production Release
         uses: softprops/action-gh-release@v2
         with:
+          # Automatically names the Git tag and release title using the version from the build job
+          tag_name: "v${{ needs.build.outputs.app_version }}"
+          name: "Release v${{ needs.build.outputs.app_version }}"
           files: |
             yelauncher-windows-installer.exe
             yelauncher-windows.msix
