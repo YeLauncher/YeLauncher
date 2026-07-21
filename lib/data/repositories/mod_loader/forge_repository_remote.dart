@@ -189,10 +189,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
   }
 
   @override
-  Future<Result<void>> processInstallation(
-    String id,
-    String minecraftVersion,
-  ) async {
+  Future<Result<void>> processInstallation(String id, String minecraftVersion, {String? javaExecutablePath}) async {
     try {
       _log.info('Processing Forge installation for $id and Minecraft $minecraftVersion');
       final target = _parseInstallTarget(id, minecraftVersion);
@@ -206,6 +203,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
       return _installForge(
         minecraftVersion: target.minecraftVersion,
         forgeVersion: target.forgeVersion,
+        javaExecutablePath: javaExecutablePath,
       );
     } on Exception catch (e) {
       return Result.failure(e);
@@ -216,6 +214,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
     required String minecraftVersion,
     required String forgeVersion,
     void Function(int, int?)? onProgress,
+    String? javaExecutablePath,
   }) async {
     final forgeId = _forgeId(minecraftVersion, forgeVersion);
     final tempDir = await Directory.systemTemp.createTemp('yelauncher-forge-');
@@ -284,6 +283,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
         forgeId: forgeId,
         installerPath: installerPath,
         tempDir: tempDir,
+        javaExecutablePath: javaExecutablePath,
       );
       if (patchResult is Failure<void>) {
         _log.warning('Forge client patch failed for $forgeId: ${patchResult.error}');
@@ -534,6 +534,7 @@ class ForgeRepositoryRemote implements ForgeRepository {
     required String forgeId,
     required String installerPath,
     required Directory tempDir,
+    String? javaExecutablePath,
   }) async {
     try {
       final metadata = _metadataCache[forgeId];
@@ -657,8 +658,8 @@ class ForgeRepositoryRemote implements ForgeRepository {
 
         final cpString = [jarPath, ...cpPaths].join(Platform.isWindows ? ';' : ':');
 
-        _log.fine('Running Forge processor: $jarCoord');
-        final javaResult = await Process.run('java', [
+        _log.fine('Running Forge processor: $jarCoord with java path: ${javaExecutablePath ?? 'java'}');
+        final javaResult = await Process.run(javaExecutablePath ?? 'java', [
           '-cp',
           cpString,
           mainClass,

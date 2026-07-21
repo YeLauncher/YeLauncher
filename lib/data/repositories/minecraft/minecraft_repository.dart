@@ -16,6 +16,7 @@ abstract class MinecraftRepository {
   Future<Result<void>> install(
     InstanceModel instance, {
     void Function(int, int?)? onProgress,
+    void Function(String)? onStepChanged,
   });
   Future<Result<bool>> isInstalled(InstanceModel instance);
   Future<Result<String>> getJavaVersion(String id);

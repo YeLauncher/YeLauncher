@@ -11,6 +11,8 @@ import 'package:yelauncher/ui/instances/widgets/instance_content_dialog.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/utilities/result.dart' as yelauncher_result;
 import 'package:go_router/go_router.dart' as go_router;
+import 'package:provider/provider.dart';
+import 'package:yelauncher/ui/instances/view_models/instance_screen_viewmodel.dart';
 
 class InstanceCard extends StatefulWidget {
   final InstanceCardViewModel viewModel;
@@ -50,6 +52,31 @@ class _InstanceCardState extends State<InstanceCard> {
                   go_router.GoRouter.of(context).go('/profiles');
                 },
               ),
+              Button.surface(
+                AppLocalizations.of(context)!.closeButton,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.dark.surfaceContainerHigh,
+            title: Text(
+              'Error',
+              style: AppText.defaultTheme.titleSmall.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+            ),
+            content: Text(
+              AppLocalizations.of(context)!.errorWithParam(errorStr),
+              style: AppText.defaultTheme.body.copyWith(
+                color: AppColors.dark.onSurfaceVariant,
+              ),
+            ),
+            actions: [
               Button.surface(
                 AppLocalizations.of(context)!.closeButton,
                 onPressed: () => Navigator.of(context).pop(),
@@ -139,6 +166,9 @@ class _InstanceCardState extends State<InstanceCard> {
                       onPressed: () async {
                         await widget.viewModel.installInstance.execute();
                         _handleCommandResult(widget.viewModel.installInstance.result);
+                        if (widget.viewModel.installInstance.result is yelauncher_result.Success && mounted) {
+                          context.read<InstanceScreenViewModel>().loadInstances.execute();
+                        }
                       },
                     )
                   else if (widget.viewModel.instance.isInstalled == true) ...[

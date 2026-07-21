@@ -11,8 +11,6 @@ import 'package:yelauncher/data/repositories/java/java_repository_remote.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository_remote.dart';
 import 'package:yelauncher/data/repositories/mod_loader/forge_repository.dart';
-import 'package:yelauncher/data/repositories/mod_loader/fabric_repository_local.dart';
-import 'package:yelauncher/data/repositories/mod_loader/forge_repository_local.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
 import 'package:yelauncher/data/services/local/local_data_service.dart';
 import 'package:yelauncher/data/services/api/fabric_api_client.dart';
@@ -73,16 +71,21 @@ List<SingleChildWidget> get providersLocal {
               )
               as InstanceRepository,
     ),
-    Provider(
-      create: (context) =>
-          FabricRepositoryLocal(localDataService: context.read()),
-    ),
-    Provider(
-      create: (context) =>
-          ForgeRepositoryLocal(localDataService: context.read()),
+    Provider.value(value: FabricApiClient()),
+    Provider.value(value: ForgeApiClient()),
+    Provider<FabricRepositoryRemote>(
+      create: (context) => FabricRepositoryRemote(
+        apiClient: context.read(),
+        downloadService: context.read(),
+        fileService: context.read(),
+      ),
     ),
     Provider<ForgeRepository>(
-      create: (context) => context.read<ForgeRepositoryLocal>(),
+      create: (context) => ForgeRepositoryRemote(
+        apiClient: context.read(),
+        downloadService: context.read(),
+        fileService: context.read(),
+      ),
     ),
     Provider<MinecraftRepository>(
       create: (context) => MinecraftRepositoryRemote(
@@ -93,12 +96,12 @@ List<SingleChildWidget> get providersLocal {
         javaRepository: context.read(),
         secureStorage: context.read(),
         forgeRepository: context.read(),
-        fabricRepository: context.read<FabricRepositoryLocal>(),
+        fabricRepository: context.read<FabricRepositoryRemote>(),
       ),
     ),
     Provider<List<ModLoaderRepository>>(
       create: (context) => [
-        context.read<FabricRepositoryLocal>(),
+        context.read<FabricRepositoryRemote>(),
         context.read<ForgeRepository>(),
       ],
     ),
