@@ -36,31 +36,68 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
   String? errorMessage;
 
   @override
+  void initState() {
+    super.initState();
+    _loadFreshInstances();
+  }
+
+  Future<void> _loadFreshInstances() async {
+    final repo = context.read<InstanceRepository>();
+    final allInstances = await repo.getInstances();
+    if (mounted) {
+      setState(() {
+        widget.viewModel.instances = allInstances;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final compatibleInstances = widget.viewModel.getCompatibleInstances(widget.version);
+    
+    bool isAlreadyInstalled = false;
+    if (selectedInstance != null) {
+      isAlreadyInstalled = selectedInstance!.installedContent.any(
+        (content) => content.projectId == widget.viewModel.item.id
+      );
+    }
 
-    return Container(
-      height: 400,
-      width: 600,
-      decoration: BoxDecoration(
-        color: AppColors.dark.surfaceContainer,
-        borderRadius: BorderRadius.circular(24),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 600,
+        maxHeight: 600,
       ),
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(AppLocalizations.of(context)!.selectInstance, style: AppText.defaultTheme.title.copyWith(color: AppColors.dark.onSurface)),
-          const SizedBox(height: 16),
-          Row(
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.dark.surfaceContainer,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              CachedNetworkImage(
-                imageUrl: widget.viewModel.item.iconUrl ?? "",
-                width: 64,
-                height: 64,
-                fit: BoxFit.cover,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(AppLocalizations.of(context)!.selectInstance, style: AppText.defaultTheme.title.copyWith(color: AppColors.dark.onSurface)),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Icon(Symbols.close_rounded, color: AppColors.dark.onSurfaceVariant),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.viewModel.item.iconUrl ?? "",
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
                 progressIndicatorBuilder:
                     (context, url, downloadProgress) => Skeletonizer(
                   enabled: true,
@@ -75,12 +112,13 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
                     color: AppColors.dark.surfaceContainerHighest,
                   ),
                 ),
-                errorWidget: (context, url, error) => Icon(
-                  Symbols.broken_image_rounded,
-                  size: 48,
-                  color: AppColors.dark.surfaceContainerHighest,
+                    errorWidget: (context, url, error) => Icon(
+                      Symbols.broken_image_rounded,
+                      size: 48,
+                      color: AppColors.dark.surfaceContainerHighest,
+                    ),
+                  ),
                 ),
-              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -99,12 +137,14 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
           Text(AppLocalizations.of(context)!.selectInstanceSubtitle, style: AppText.defaultTheme.bodySmall.copyWith(color: AppColors.dark.onSurface)),
           const SizedBox(height: 12),
           if (compatibleInstances.isEmpty)
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32),
               child: Center(child: Text(AppLocalizations.of(context)!.noCompatibleInstances, style: AppText.defaultTheme.body.copyWith(color: AppColors.dark.onSurfaceVariant))),
             )
           else
-            Expanded(
+            Flexible(
               child: ListView.separated(
+                shrinkWrap: true,
                 itemCount: compatibleInstances.length,
                 separatorBuilder: (context, index) => const SizedBox(height: 8),
                 itemBuilder: (context, index) {
@@ -138,12 +178,17 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
               ),
               const SizedBox(width: 8),
               Button.primary(
-                isInstalling ? AppLocalizations.of(context)!.installingStatus : AppLocalizations.of(context)!.installButton,
-                onPressed: selectedInstance == null || isInstalling ? () {} : _install,
+                isInstalling 
+                    ? AppLocalizations.of(context)!.installingStatus 
+                    : isAlreadyInstalled 
+                        ? AppLocalizations.of(context)!.alreadyInstalled 
+                        : AppLocalizations.of(context)!.installButton,
+                onPressed: selectedInstance == null || isInstalling || isAlreadyInstalled ? null : _install,
               ),
             ],
           ),
         ],
+      ),
       ),
     );
   }
@@ -173,13 +218,18 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
       final content = InstalledContentModel(
         projectId: widget.viewModel.item.id,
         versionId: widget.version.id,
-        filename: fileName,
+        filename: Uri.decodeFull(fileName),
         title: widget.viewModel.item.title,
         type: type,
+        author: widget.viewModel.item.author ?? 'Unknown Author',
+        version: widget.version.versionNumber,
       );
 
-      final newInstalledContent = List<InstalledContentModel>.from(selectedInstance!.installedContent)..add(content);
-      final updatedInstance = selectedInstance!.copyWith(installedContent: newInstalledContent);
+      final allInstances = await instanceRepo.getInstances();
+      final currentInstance = allInstances.firstWhere((i) => i.id == selectedInstance!.id);
+
+      final newInstalledContent = List<InstalledContentModel>.from(currentInstance.installedContent)..add(content);
+      final updatedInstance = currentInstance.copyWith(installedContent: newInstalledContent);
 
       await instanceRepo.saveInstance(updatedInstance);
 

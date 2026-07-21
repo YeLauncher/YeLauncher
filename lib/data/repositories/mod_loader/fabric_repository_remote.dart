@@ -145,10 +145,7 @@ class FabricRepositoryRemote implements ModLoaderRepository {
   }
 
   @override
-  Future<Result<void>> processInstallation(
-    String id,
-    String minecraftVersion,
-  ) async {
+  Future<Result<void>> processInstallation(String id, String minecraftVersion, {String? javaExecutablePath}) async {
     try {
       _log.info('Processing Fabric installation for $id and Minecraft $minecraftVersion');
       final target = _parseInstallTarget(id, minecraftVersion);

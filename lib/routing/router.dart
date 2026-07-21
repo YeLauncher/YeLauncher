@@ -20,6 +20,7 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: Routes.splash,
+  observers: [HeroController()],
   routes: [
     GoRoute(
       path: Routes.splash,

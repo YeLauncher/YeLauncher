@@ -16,6 +16,6 @@ abstract class ModLoaderRepository {
     void Function(int, int?)? onProgress,
   });
   Future<Result<bool>> isInstalled(String id);
-  Future<Result<void>> processInstallation(String id, String minecraftVersion);
+  Future<Result<void>> processInstallation(String id, String minecraftVersion, {String? javaExecutablePath});
   Future<Result<List<String>>> getLibrariesPath(String id);
 }

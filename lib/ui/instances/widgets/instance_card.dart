@@ -1,27 +1,39 @@
+import 'dart:ui';
+
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show Tooltip, showDialog, AlertDialog;
+import 'package:flutter/material.dart' show Tooltip, showDialog, AlertDialog, SystemMouseCursors;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/ui/core/button.dart';
+import 'package:yelauncher/ui/core/chip.dart' as ye_chip;
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
-import 'package:yelauncher/ui/core/icon_button.dart';
+import 'package:yelauncher/ui/core/icon_button.dart' as ye_icon_button;
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
-import 'package:yelauncher/ui/instances/widgets/instance_content_dialog.dart';
+
 import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/utilities/result.dart' as yelauncher_result;
 import 'package:go_router/go_router.dart' as go_router;
+import 'package:provider/provider.dart';
+import 'package:yelauncher/ui/instances/view_models/instance_screen_viewmodel.dart';
 
 class InstanceCard extends StatefulWidget {
   final InstanceCardViewModel viewModel;
+  final bool isBigCard;
 
-  const InstanceCard({super.key, required this.viewModel});
+  const InstanceCard({
+    super.key, 
+    required this.viewModel,
+    this.isBigCard = false,
+  });
 
   @override
   State<InstanceCard> createState() => _InstanceCardState();
 }
 
 class _InstanceCardState extends State<InstanceCard> {
+  bool _isHovered = false;
+
   void _handleCommandResult(dynamic result) {
     if (result is yelauncher_result.Failure) {
       final errorStr = result.error.toString();
@@ -57,139 +69,303 @@ class _InstanceCardState extends State<InstanceCard> {
             ],
           ),
         );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.dark.surfaceContainerHigh,
+            title: Text(
+              'Error',
+              style: AppText.defaultTheme.titleSmall.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+            ),
+            content: Text(
+              AppLocalizations.of(context)!.errorWithParam(errorStr),
+              style: AppText.defaultTheme.body.copyWith(
+                color: AppColors.dark.onSurfaceVariant,
+              ),
+            ),
+            actions: [
+              Button.surface(
+                AppLocalizations.of(context)!.closeButton,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
       }
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: widget.viewModel,
-      builder: (context, child) {
-        return Container(
-          padding: const EdgeInsets.all(16),
+  Widget _buildIcon({required double size, required double iconSize}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: AppColors.dark.primaryContainer,
+        borderRadius: BorderRadius.circular(size * 0.25),
+      ),
+      child: Icon(
+        Symbols.inventory_2_rounded,
+        color: AppColors.dark.primary,
+        size: iconSize,
+      ),
+    );
+  }
+
+  Widget _buildModLoaderChip() {
+    return ye_chip.Chip.surface(
+      widget.viewModel.instance.modLoader,
+      iconData: widget.viewModel.instance.modLoader.toLowerCase() == 'fabric'
+          ? Symbols.texture_rounded
+          : Symbols.settings_applications_rounded,
+    );
+  }
+
+  List<Widget> _buildButtons(BuildContext context) {
+    return [
+      if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running)
+        Tooltip(
+          message: widget.viewModel.currentInstallStep ??
+              AppLocalizations.of(context)!.installingTooltip,
+          preferBelow: false,
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator.primary(
+                value: widget.viewModel.javaDownloadProgress ??
+                    widget.viewModel.downloadProgress,
+              ),
+            ),
+          ),
+        )
+      else if (widget.viewModel.instance.isInstalled == false)
+        Button.primary(
+          key: ValueKey('instance_install_button_${widget.viewModel.instance.id}'),
+          AppLocalizations.of(context)!.installButton,
+          iconData: Symbols.download_rounded,
+          onPressed: () async {
+            await widget.viewModel.installInstance.execute();
+            if (!context.mounted) return;
+            _handleCommandResult(widget.viewModel.installInstance.result);
+            if (widget.viewModel.installInstance.result is yelauncher_result.Success) {
+              context.read<InstanceScreenViewModel>().loadInstances.execute();
+            }
+          },
+        )
+      else if (widget.viewModel.instance.isInstalled == true) ...[
+        if (widget.viewModel.isRunning)
+          Button.error(
+            AppLocalizations.of(context)!.stopButton,
+            iconData: Symbols.power_settings_new_rounded,
+            onPressed: widget.viewModel.stopInstance.execute,
+          )
+        else if (widget.viewModel.runInstance.running)
+          SizedBox(
+            width: 48,
+            height: 48,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator.primary(),
+            ),
+          )
+        else
+          Button.primary(
+            key: ValueKey('instance_play_button_${widget.viewModel.instance.id}'),
+            AppLocalizations.of(context)!.playButton,
+            iconData: Symbols.sports_esports_rounded,
+            onPressed: () async {
+              await widget.viewModel.runInstance.execute();
+              if (!context.mounted) return;
+              _handleCommandResult(widget.viewModel.runInstance.result);
+            },
+          ),
+        ye_icon_button.IconButton.surface(
+          iconData: Symbols.snippet_folder_rounded,
+          onPressed: widget.viewModel.openFolder.execute,
+        ),
+        ye_icon_button.IconButton.surface(
+          iconData: Symbols.settings_rounded,
+          onPressed: () {
+            context.read<InstanceScreenViewModel>().openDrawer(widget.viewModel.instance);
+          },
+        ),
+      ],
+    ];
+  }
+
+  Widget _buildBigCard(BuildContext context) {
+    final bool showButtons =
+        _isHovered ||
+        widget.viewModel.isRunning ||
+        widget.viewModel.isDownloading ||
+        widget.viewModel.installInstance.running ||
+        widget.viewModel.runInstance.running;
+
+    return AnimatedScale(
+      scale: _isHovered ? 1.01 : 1.0,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOutQuart,
+      child: Container(
+        padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
             color: AppColors.dark.surfaceContainer,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: _isHovered
+                  ? AppColors.dark.primary.withValues(alpha: 0.3)
+                  : const Color(0x00000000),
+              width: 1,
+            ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                spacing: 16,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: AppColors.dark.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
+              _buildIcon(size: 80, iconSize: 40),
+              const SizedBox(width: 24),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildModLoaderChip(),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.viewModel.instance.name,
+                      style: AppText.defaultTheme.titleLarge.copyWith(
+                        color: AppColors.dark.onSurface,
+                      ),
                     ),
-                    child: Icon(
-                      Symbols.inventory_2_rounded,
-                      color: AppColors.dark.primary,
+                    const SizedBox(height: 4),
+                    Text(
+                      "${widget.viewModel.instance.minecraftVersion} • ${widget.viewModel.instance.modLoaderVersion}",
+                      style: AppText.defaultTheme.body.copyWith(
+                        color: AppColors.dark.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                  Column(
+                  ],
+                ),
+              ),
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 250),
+                opacity: showButtons ? 1.0 : 0.0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 12,
+                  children: _buildButtons(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+  }
+
+  Widget _buildGridCard(BuildContext context) {
+    final bool showButtons =
+        _isHovered ||
+        widget.viewModel.isRunning ||
+        widget.viewModel.isDownloading ||
+        widget.viewModel.installInstance.running ||
+        widget.viewModel.runInstance.running;
+
+    return AnimatedScale(
+      scale: _isHovered ? 1.02 : 1.0,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOutQuart,
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.dark.surfaceContainer,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: _isHovered
+                  ? AppColors.dark.primary.withValues(alpha: 0.3)
+                  : const Color(0x00000000),
+              width: 1,
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 4,
                     children: [
+                      _buildModLoaderChip(),
+                      const Spacer(),
+                      Center(child: _buildIcon(size: 72, iconSize: 36)),
+                      const Spacer(),
                       Text(
                         widget.viewModel.instance.name,
                         style: AppText.defaultTheme.titleSmall.copyWith(
                           color: AppColors.dark.onSurface,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 4),
                       Text(
-                        "${widget.viewModel.instance.minecraftVersion} • ${widget.viewModel.instance.modLoader} ${widget.viewModel.instance.modLoaderVersion}",
+                        widget.viewModel.instance.minecraftVersion,
                         style: AppText.defaultTheme.bodySmall.copyWith(
                           color: AppColors.dark.onSurfaceVariant,
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 8,
-                children: [
-                  if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running)
-                    Tooltip(
-                      message: widget.viewModel.currentInstallStep ?? AppLocalizations.of(context)!.installingTooltip,
-                      preferBelow: false,
-                      child: SizedBox(
-                        width: 48,
-                        height: 48,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator.primary(
-                            value:
-                                widget.viewModel.javaDownloadProgress ??
-                                widget.viewModel.downloadProgress,
+                ),
+                if (showButtons)
+                  Positioned.fill(
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 200),
+                      opacity: showButtons ? 1.0 : 0.0,
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                        child: Container(
+                          color: AppColors.dark.surfaceContainerHigh.withValues(
+                            alpha: 0.6,
+                          ),
+                          child: Center(
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: _buildButtons(context),
+                            ),
                           ),
                         ),
                       ),
-                    )
-                  else if (widget.viewModel.instance.isInstalled == false)
-                    Button.primary(
-                      AppLocalizations.of(context)!.installButton,
-                      iconData: Symbols.download_rounded,
-                      onPressed: () async {
-                        await widget.viewModel.installInstance.execute();
-                        _handleCommandResult(widget.viewModel.installInstance.result);
-                      },
-                    )
-                  else if (widget.viewModel.instance.isInstalled == true) ...[
-                    if (widget.viewModel.isRunning)
-                      Button.error(
-                        AppLocalizations.of(context)!.stopButton,
-                        iconData: Symbols.stop_rounded,
-                        onPressed: widget.viewModel.stopInstance.execute,
-                      )
-                    else if (widget.viewModel.runInstance.running)
-                      SizedBox(
-                        width: 48,
-                        height: 48,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator.primary(),
-                        ),
-                      )
-                    else
-                      Button.primary(
-                        AppLocalizations.of(context)!.playButton,
-                        iconData: Symbols.play_arrow_rounded,
-                        onPressed: () async {
-                          await widget.viewModel.runInstance.execute();
-                          _handleCommandResult(widget.viewModel.runInstance.result);
-                        },
-                      ),
-                    IconButton.surface(
-                      iconData: Symbols.folder_open_rounded,
-                      onPressed: widget.viewModel.openFolder.execute,
                     ),
-                    IconButton.surface(
-                      iconData: Symbols.extension_rounded,
-                      onPressed: () {
-                        showGeneralDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          barrierLabel: "Dismiss",
-                          pageBuilder: (context, anim1, anim2) => Center(
-                            child: InstanceContentDialog(instance: widget.viewModel.instance),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ],
-              ),
-            ],
+                  ),
+              ],
+            ),
           ),
-        );
-      },
+        ),
+      );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: ListenableBuilder(
+        listenable: widget.viewModel,
+        builder: (context, child) {
+          if (widget.isBigCard) {
+            return _buildBigCard(context);
+          } else {
+            return _buildGridCard(context);
+          }
+        },
+      ),
     );
   }
 }

@@ -571,6 +571,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get closeButton;
+
+  /// No description provided for @alreadyInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Already Installed'**
+  String get alreadyInstalled;
+
+  /// No description provided for @settingsGeneralTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get settingsGeneralTitle;
+
+  /// No description provided for @settingsInstanceNameDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The display name for this Minecraft instance.'**
+  String get settingsInstanceNameDesc;
+
+  /// No description provided for @settingsMinecraftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Minecraft Settings'**
+  String get settingsMinecraftTitle;
+
+  /// No description provided for @settingsWindowResolution.
+  ///
+  /// In en, this message translates to:
+  /// **'Window Resolution'**
+  String get settingsWindowResolution;
+
+  /// No description provided for @settingsWindowResolutionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a custom resolution for the game window. Leave blank for default.'**
+  String get settingsWindowResolutionDesc;
+
+  /// No description provided for @settingsWidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Width'**
+  String get settingsWidth;
+
+  /// No description provided for @settingsHeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get settingsHeight;
+
+  /// No description provided for @settingsJavaEnvironment.
+  ///
+  /// In en, this message translates to:
+  /// **'Java Environment'**
+  String get settingsJavaEnvironment;
+
+  /// No description provided for @settingsMaxMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Memory'**
+  String get settingsMaxMemory;
+
+  /// No description provided for @settingsMaxMemoryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The maximum amount of RAM (in megabytes) the game can use.'**
+  String get settingsMaxMemoryDesc;
+
+  /// No description provided for @settingsMB.
+  ///
+  /// In en, this message translates to:
+  /// **'MB'**
+  String get settingsMB;
+
+  /// No description provided for @settingsCustomJavaPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Java Path'**
+  String get settingsCustomJavaPath;
+
+  /// No description provided for @settingsCustomJavaPathDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide an absolute path to a specific javaw.exe executable. Leave blank to use the launcher default.'**
+  String get settingsCustomJavaPathDesc;
+
+  /// No description provided for @settingsJvmArgs.
+  ///
+  /// In en, this message translates to:
+  /// **'JVM Arguments'**
+  String get settingsJvmArgs;
+
+  /// No description provided for @settingsJvmArgsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Java arguments passed at startup. Proceed with caution.'**
+  String get settingsJvmArgsDesc;
+
+  /// No description provided for @saveChangesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChangesButton;
+
+  /// No description provided for @launcherManaged.
+  ///
+  /// In en, this message translates to:
+  /// **'Launcher'**
+  String get launcherManaged;
+
+  /// No description provided for @manualInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get manualInstalled;
+
+  /// No description provided for @missingFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing File'**
+  String get missingFile;
 }
 
 class _AppLocalizationsDelegate

@@ -86,6 +86,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   Future<Result<void>> install(
     InstanceModel instance, {
     void Function(int, int?)? onProgress,
+    void Function(String)? onStepChanged,
   }) async {
     try {
       if (!await isAuthenticated()) {
@@ -177,35 +178,49 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
                 return downloadsResult;
               }
 
-              if (instance.modLoader == 'forge') {
-                final forgeId = _forgeId(instance);
-                _log.info('Installing Forge metadata and libraries for $forgeId');
-                final forgeResult = await _forgeRepository.processInstallation(
-                  forgeId,
-                  instance.minecraftVersion,
-                );
-                if (forgeResult is Failure<void>) {
-                  _log.warning(
-                    'Forge installation failed for $forgeId: ${forgeResult.error}',
+                if (instance.modLoader == 'forge') {
+                  final forgeId = _forgeId(instance);
+                  _log.info('Installing Forge metadata and libraries for $forgeId');
+                  onStepChanged?.call('Processing Forge installation...');
+                  
+                  String? javaExecutablePath;
+                  final javaVersionResult = await getJavaVersion(instance.minecraftVersion);
+                  if (javaVersionResult is Success<String>) {
+                     final javaVersion = int.tryParse(javaVersionResult.value) ?? 17;
+                     final execResult = await _javaRepository.getJavaExecutablePath(javaVersion);
+                     if (execResult is Success<String>) {
+                        javaExecutablePath = execResult.value;
+                     }
+                  }
+
+                  final forgeResult = await _forgeRepository.processInstallation(
+                    forgeId,
+                    instance.minecraftVersion,
+                    javaExecutablePath: javaExecutablePath,
                   );
-                  return forgeResult;
-                }
-                _log.info('Forge installation completed for $forgeId');
-              } else if (instance.modLoader == 'fabric') {
-                final fabricId = _fabricId(instance);
-                _log.info('Installing Fabric metadata and libraries for $fabricId');
-                final fabricResult = await _fabricRepository.processInstallation(
-                  fabricId,
-                  instance.minecraftVersion,
-                );
-                if (fabricResult is Failure<void>) {
-                  _log.warning(
-                    'Fabric installation failed for $fabricId: ${fabricResult.error}',
+                  if (forgeResult is Failure<void>) {
+                    _log.warning(
+                      'Forge installation failed for $forgeId: ${forgeResult.error}',
+                    );
+                    return forgeResult;
+                  }
+                  _log.info('Forge installation completed for $forgeId');
+                } else if (instance.modLoader == 'fabric') {
+                  final fabricId = _fabricId(instance);
+                  _log.info('Installing Fabric metadata and libraries for $fabricId');
+                  onStepChanged?.call('Processing Fabric installation...');
+                  final fabricResult = await _fabricRepository.processInstallation(
+                    fabricId,
+                    instance.minecraftVersion,
                   );
-                  return fabricResult;
+                  if (fabricResult is Failure<void>) {
+                    _log.warning(
+                      'Fabric installation failed for $fabricId: ${fabricResult.error}',
+                    );
+                    return fabricResult;
+                  }
+                  _log.info('Fabric installation completed for $fabricId');
                 }
-                _log.info('Fabric installation completed for $fabricId');
-              }
             case Failure<AssetIndexFileApiModel>():
               _log.warning(
                 'Failed to download asset index metadata for '
@@ -423,6 +438,20 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               'Using profile ${profile.nickname} for ${instance.minecraftVersion}',
             );
 
+            if (instance.javaMemory != null) {
+              jvmArguments.add('-Xmx${instance.javaMemory}m');
+            }
+            if (instance.jvmArguments != null && instance.jvmArguments!.isNotEmpty) {
+              jvmArguments.addAll(instance.jvmArguments!.split(' '));
+            }
+
+            if (instance.windowWidth != null) {
+              gameArguments.addAll(['--width', '${instance.windowWidth}']);
+            }
+            if (instance.windowHeight != null) {
+              gameArguments.addAll(['--height', '${instance.windowHeight}']);
+            }
+
             var model = MinecraftRunModel(
               libraryDirectory: await _fileService.getLibraryDirectory(),
               libraryPaths: libraryPaths,
@@ -434,9 +463,9 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               gameDirectory: await _fileService.getGameDirectory(instance.id),
               nativesDirectory: await _fileService.getNativesDirectory(instance.id),
               clientJarPath: clientJarPath,
-              javaExecutablePath: await _getJavaExecutablePathAbs(
-                int.tryParse(requirements.javaVersion) ?? 17,
-              ),
+              javaExecutablePath: instance.customJavaPath?.isNotEmpty == true
+                  ? instance.customJavaPath!
+                  : await _getJavaExecutablePathAbs(int.tryParse(requirements.javaVersion) ?? 17),
               assetIndex: requirements.assetIndex.id,
               minecraftVersion: minecraftVersion,
               profile: profile,

@@ -144,7 +144,7 @@ class _TextFieldState extends State<TextField>
     } else if (_focusNode.hasFocus) {
       return AppColors.dark.primary;
     } else {
-      return AppColors.transparent;
+      return AppColors.dark.outlineVariant.withValues(alpha: 0.5);
     }
   }
 }

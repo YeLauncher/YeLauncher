@@ -255,4 +255,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closeButton => 'Close';
+
+  @override
+  String get alreadyInstalled => 'Already Installed';
+
+  @override
+  String get settingsGeneralTitle => 'General';
+
+  @override
+  String get settingsInstanceNameDesc =>
+      'The display name for this Minecraft instance.';
+
+  @override
+  String get settingsMinecraftTitle => 'Minecraft Settings';
+
+  @override
+  String get settingsWindowResolution => 'Window Resolution';
+
+  @override
+  String get settingsWindowResolutionDesc =>
+      'Set a custom resolution for the game window. Leave blank for default.';
+
+  @override
+  String get settingsWidth => 'Width';
+
+  @override
+  String get settingsHeight => 'Height';
+
+  @override
+  String get settingsJavaEnvironment => 'Java Environment';
+
+  @override
+  String get settingsMaxMemory => 'Maximum Memory';
+
+  @override
+  String get settingsMaxMemoryDesc =>
+      'The maximum amount of RAM (in megabytes) the game can use.';
+
+  @override
+  String get settingsMB => 'MB';
+
+  @override
+  String get settingsCustomJavaPath => 'Custom Java Path';
+
+  @override
+  String get settingsCustomJavaPathDesc =>
+      'Provide an absolute path to a specific javaw.exe executable. Leave blank to use the launcher default.';
+
+  @override
+  String get settingsJvmArgs => 'JVM Arguments';
+
+  @override
+  String get settingsJvmArgsDesc =>
+      'Advanced Java arguments passed at startup. Proceed with caution.';
+
+  @override
+  String get saveChangesButton => 'Save Changes';
+
+  @override
+  String get launcherManaged => 'Launcher';
+
+  @override
+  String get manualInstalled => 'Manual';
+
+  @override
+  String get missingFile => 'Missing File';
 }

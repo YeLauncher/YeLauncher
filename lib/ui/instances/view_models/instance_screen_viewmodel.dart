@@ -14,13 +14,34 @@ class InstanceScreenViewModel extends ChangeNotifier {
   InstanceScreenViewModel({required InstanceRepository instanceRepository})
     : _instanceRepository = instanceRepository {
     loadInstances = Command0(_loadInstances);
+    loadInstances.execute();
   }
 
   Future<Result<void>> _loadInstances() async {
     instances = await _instanceRepository.getInstances();
+    if (selectedInstanceForDrawer != null) {
+      selectedInstanceForDrawer = instances
+          .where((i) => i.id == selectedInstanceForDrawer!.id)
+          .firstOrNull;
+    }
     notifyListeners();
     return const Result.success(null);
   }
 
   Future<void> installOrRunInstance(InstanceModel instance) async {}
+
+  InstanceModel? selectedInstanceForDrawer;
+
+  Future<void> openDrawer(InstanceModel instance) async {
+    await _loadInstances();
+    selectedInstanceForDrawer = instances
+        .where((i) => i.id == instance.id)
+        .firstOrNull ?? instance;
+    notifyListeners();
+  }
+
+  void closeDrawer() {
+    selectedInstanceForDrawer = null;
+    notifyListeners();
+  }
 }
