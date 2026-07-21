@@ -24,11 +24,13 @@ class MainLayout extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 NavigationButton.primary(
+                  key: const ValueKey('nav_instances'),
                   iconData: Symbols.sports_esports_rounded,
                   isSelected: navigationShell.currentIndex == 0,
                   onPressed: () => navigationShell.goBranch(0),
                 ),
                 NavigationButton.primary(
+                  key: const ValueKey('nav_content'),
                   iconData: Symbols.extension_rounded,
                   isSelected: navigationShell.currentIndex == 1,
                   onPressed: () => navigationShell.goBranch(1),

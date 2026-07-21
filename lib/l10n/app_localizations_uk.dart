@@ -255,4 +255,69 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get closeButton => 'Закрити';
+
+  @override
+  String get alreadyInstalled => 'Вже встановлено';
+
+  @override
+  String get settingsGeneralTitle => 'Загальні';
+
+  @override
+  String get settingsInstanceNameDesc =>
+      'Відображувана назва для цього екземпляра Minecraft.';
+
+  @override
+  String get settingsMinecraftTitle => 'Налаштування Minecraft';
+
+  @override
+  String get settingsWindowResolution => 'Роздільна здатність вікна';
+
+  @override
+  String get settingsWindowResolutionDesc =>
+      'Встановіть власну роздільну здатність для вікна гри. Залиште пустим для стандартної.';
+
+  @override
+  String get settingsWidth => 'Ширина';
+
+  @override
+  String get settingsHeight => 'Висота';
+
+  @override
+  String get settingsJavaEnvironment => 'Середовище Java';
+
+  @override
+  String get settingsMaxMemory => 'Максимальна пам\'ять';
+
+  @override
+  String get settingsMaxMemoryDesc =>
+      'Максимальний обсяг оперативної пам\'яті (у мегабайтах), який може використовувати гра.';
+
+  @override
+  String get settingsMB => 'МБ';
+
+  @override
+  String get settingsCustomJavaPath => 'Власний шлях до Java';
+
+  @override
+  String get settingsCustomJavaPathDesc =>
+      'Вкажіть абсолютний шлях до конкретного виконуваного файлу javaw.exe. Залиште пустим, щоб використовувати стандартний лаунчера.';
+
+  @override
+  String get settingsJvmArgs => 'Аргументи JVM';
+
+  @override
+  String get settingsJvmArgsDesc =>
+      'Розширені аргументи Java, що передаються при запуску. Будьте обережні.';
+
+  @override
+  String get saveChangesButton => 'Зберегти зміни';
+
+  @override
+  String get launcherManaged => 'Лаунчер';
+
+  @override
+  String get manualInstalled => 'Вручну';
+
+  @override
+  String get missingFile => 'Відсутній файл';
 }

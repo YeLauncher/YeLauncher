@@ -145,6 +145,8 @@ class InstanceCardViewModel extends ChangeNotifier {
       switch (result) {
         case Success<MinecraftProcessModel>(value: final process):
           _activeProcess = process;
+          _instance = _instance.copyWith(lastPlayed: DateTime.now());
+          await _instanceRepository.saveInstance(_instance);
           notifyListeners();
           
           process.exitCode.then((_) {

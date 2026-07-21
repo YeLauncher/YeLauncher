@@ -11,6 +11,7 @@ class ListItem extends StatelessWidget {
     super.key,
     required this.title,
     this.trailingIcon,
+    this.trailingWidget,
     this.isSelected = false,
     this.onTap,
     required this.selectedColor,
@@ -22,6 +23,7 @@ class ListItem extends StatelessWidget {
   final String? subtitle;
   final Chip? chip;
   final IconData? trailingIcon;
+  final Widget? trailingWidget;
   final Color selectedColor;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -31,6 +33,7 @@ class ListItem extends StatelessWidget {
     required this.title,
     this.chip,
     this.trailingIcon,
+    this.trailingWidget,
     required this.isSelected,
     this.onTap,
     super.key,
@@ -41,6 +44,7 @@ class ListItem extends StatelessWidget {
     required this.title,
     this.chip,
     this.trailingIcon,
+    this.trailingWidget,
     required this.isSelected,
     this.onTap,
     super.key,
@@ -65,30 +69,34 @@ class ListItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4,
-              children: [
-                Text(
-                  title,
-                  style: AppText.defaultTheme.labelLarge.copyWith(
-                    color: AppColors.dark.onSurface,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 4,
+                children: [
+                  Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.defaultTheme.labelLarge.copyWith(
+                      color: AppColors.dark.onSurface,
+                    ),
                   ),
-                ),
-                if (subtitle != null) Text(
-                  subtitle!,
-                  style: AppText.defaultTheme.caption.copyWith(
-                    color: AppColors.dark.onSurfaceVariant,
+                  if (subtitle != null) Text(
+                    subtitle!,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.defaultTheme.caption.copyWith(
+                      color: AppColors.dark.onSurfaceVariant,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(width: 16),
             ?chip,
-            const Spacer(),
             if (trailingIcon != null && isSelected)
               Icon(trailingIcon, size: 24, color: selectedColor, weight: 600),
+            ?trailingWidget,
           ],
         ),
       ),

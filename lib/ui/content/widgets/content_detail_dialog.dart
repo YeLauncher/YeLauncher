@@ -248,16 +248,36 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      version.name,
-                      style: AppText.defaultTheme.title.copyWith(
-                        color: AppColors.dark.onSurface,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            version.name,
+                            style: AppText.defaultTheme.title.copyWith(
+                              color: AppColors.dark.onSurface,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (version.versionNumber != version.name)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              version.versionNumber,
+                              style: AppText.defaultTheme.label.copyWith(
+                                color: AppColors.dark.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
-                      runSpacing: 4,
+                      runSpacing: 8,
                       children: [
                         ...version.gameVersions.map(
                           (gv) => Container(
@@ -267,13 +287,24 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.dark.primaryContainer,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Text(
-                              gv,
-                              style: AppText.defaultTheme.label.copyWith(
-                                color: AppColors.dark.onPrimaryContainer,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Symbols.gamepad_rounded,
+                                  size: 14,
+                                  color: AppColors.dark.onPrimaryContainer,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  gv,
+                                  style: AppText.defaultTheme.label.copyWith(
+                                    color: AppColors.dark.onPrimaryContainer,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -284,14 +315,26 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.dark.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.dark.surfaceContainerHigh,
+                              border: Border.all(color: AppColors.dark.outlineVariant),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Text(
-                              loader,
-                              style: AppText.defaultTheme.label.copyWith(
-                                color: AppColors.dark.onSurface,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Symbols.extension_rounded,
+                                  size: 14,
+                                  color: AppColors.dark.onSurfaceVariant,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  loader,
+                                  style: AppText.defaultTheme.label.copyWith(
+                                    color: AppColors.dark.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -316,7 +359,54 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
 
   void _showInstallDialog(BuildContext context, ContentVersion version) {
     if (widget.viewModel.item.projectType == 'modpack') {
-      // Modpacks installing not implemented yet
+      showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel: "Dismiss",
+        pageBuilder: (context, anim1, anim2) => Center(
+          child: Container(
+            width: 400,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.dark.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Not Supported',
+                  style: AppText.defaultTheme.titleLarge.copyWith(color: AppColors.dark.onSurface),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Modpack installation is not yet supported.',
+                  style: AppText.defaultTheme.body.copyWith(color: AppColors.dark.onSurfaceVariant),
+                ),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.dark.primaryContainer,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'OK',
+                        style: AppText.defaultTheme.label.copyWith(color: AppColors.dark.onPrimaryContainer),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
       return;
     } else {
       showGeneralDialog(

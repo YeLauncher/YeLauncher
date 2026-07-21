@@ -167,6 +167,7 @@ class _ContentScreenState extends State<ContentScreen> {
             ),
             const SizedBox(height: 16),
             core_text_field.TextField(
+              key: const ValueKey('content_search_input'),
               controller: _searchController,
               labelText: AppLocalizations.of(context)!.searchHint,
               width: double.infinity,

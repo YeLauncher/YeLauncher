@@ -17,6 +17,19 @@ class InstanceModel {
   final bool isInstalled;
   @JsonKey(name: 'installedContent', defaultValue: [])
   final List<InstalledContentModel> installedContent;
+  @JsonKey(name: 'lastPlayed')
+  final DateTime? lastPlayed;
+
+  @JsonKey(name: 'javaMemory')
+  final int? javaMemory;
+  @JsonKey(name: 'windowWidth')
+  final int? windowWidth;
+  @JsonKey(name: 'windowHeight')
+  final int? windowHeight;
+  @JsonKey(name: 'customJavaPath')
+  final String? customJavaPath;
+  @JsonKey(name: 'jvmArguments')
+  final String? jvmArguments;
 
   InstanceModel({
     required this.id,
@@ -26,6 +39,12 @@ class InstanceModel {
     required this.modLoaderVersion,
     this.isInstalled = false,
     this.installedContent = const [],
+    this.lastPlayed,
+    this.javaMemory,
+    this.windowWidth,
+    this.windowHeight,
+    this.customJavaPath,
+    this.jvmArguments,
   });
 
   factory InstanceModel.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +60,12 @@ class InstanceModel {
     String? modLoaderVersion,
     bool? isInstalled,
     List<InstalledContentModel>? installedContent,
+    DateTime? lastPlayed,
+    int? javaMemory,
+    int? windowWidth,
+    int? windowHeight,
+    String? customJavaPath,
+    String? jvmArguments,
   }) {
     return InstanceModel(
       id: id ?? this.id,
@@ -50,6 +75,12 @@ class InstanceModel {
       modLoaderVersion: modLoaderVersion ?? this.modLoaderVersion,
       isInstalled: isInstalled ?? this.isInstalled,
       installedContent: installedContent ?? this.installedContent,
+      lastPlayed: lastPlayed ?? this.lastPlayed,
+      javaMemory: javaMemory ?? this.javaMemory,
+      windowWidth: windowWidth ?? this.windowWidth,
+      windowHeight: windowHeight ?? this.windowHeight,
+      customJavaPath: customJavaPath ?? this.customJavaPath,
+      jvmArguments: jvmArguments ?? this.jvmArguments,
     );
   }
 }

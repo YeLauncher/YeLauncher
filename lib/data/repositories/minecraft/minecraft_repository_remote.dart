@@ -438,6 +438,20 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               'Using profile ${profile.nickname} for ${instance.minecraftVersion}',
             );
 
+            if (instance.javaMemory != null) {
+              jvmArguments.add('-Xmx${instance.javaMemory}m');
+            }
+            if (instance.jvmArguments != null && instance.jvmArguments!.isNotEmpty) {
+              jvmArguments.addAll(instance.jvmArguments!.split(' '));
+            }
+
+            if (instance.windowWidth != null) {
+              gameArguments.addAll(['--width', '${instance.windowWidth}']);
+            }
+            if (instance.windowHeight != null) {
+              gameArguments.addAll(['--height', '${instance.windowHeight}']);
+            }
+
             var model = MinecraftRunModel(
               libraryDirectory: await _fileService.getLibraryDirectory(),
               libraryPaths: libraryPaths,
@@ -449,9 +463,9 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               gameDirectory: await _fileService.getGameDirectory(instance.id),
               nativesDirectory: await _fileService.getNativesDirectory(instance.id),
               clientJarPath: clientJarPath,
-              javaExecutablePath: await _getJavaExecutablePathAbs(
-                int.tryParse(requirements.javaVersion) ?? 17,
-              ),
+              javaExecutablePath: instance.customJavaPath?.isNotEmpty == true
+                  ? instance.customJavaPath!
+                  : await _getJavaExecutablePathAbs(int.tryParse(requirements.javaVersion) ?? 17),
               assetIndex: requirements.assetIndex.id,
               minecraftVersion: minecraftVersion,
               profile: profile,

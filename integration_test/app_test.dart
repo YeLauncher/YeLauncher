@@ -1,0 +1,216 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
+import 'package:yelauncher/config/dependencies.dart';
+import 'package:yelauncher/data/repositories/content/content_repository.dart';
+import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
+import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
+import 'package:yelauncher/data/services/download_service.dart';
+import 'package:yelauncher/data/services/secure_storage_service.dart';
+import 'package:yelauncher/domain/models/content/content_item.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
+import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
+import 'package:yelauncher/domain/models/mod_loader/mod_loader_version_model.dart';
+import 'package:yelauncher/main.dart';
+import 'package:yelauncher/utilities/result.dart';
+
+import '../test/integration_mocks.mocks.dart';
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  group('End-to-End User Flow', () {
+    provideDummy<Result<List<ModLoaderVersionModel>>>(Result.success([]));
+    provideDummy<Result<List<MinecraftVersionModel>>>(Result.success([]));
+    provideDummy<Result<List<ContentItem>>>(Result.success([]));
+    provideDummy<Result<MinecraftProcessModel>>(Result.success(
+      MinecraftProcessModel(
+        exitCode: Future.value(0),
+        stdout: const Stream.empty(),
+        stderr: const Stream.empty(),
+        kill: () => true,
+      )
+    ));
+    provideDummy<Result<List<MinecraftProfileModel>>>(Result.success([]));
+    provideDummy<Result<MinecraftProfileModel?>>(Result.success(null));
+    provideDummy<Result<void>>(Result.success(null));
+    
+    late MockMinecraftRepository mockMinecraftRepo;
+    late MockContentRepository mockContentRepo;
+    late MockModLoaderRepository mockModLoaderRepo;
+    late MockDownloadService mockDownloadService;
+
+    setUp(() async {
+      mockMinecraftRepo = MockMinecraftRepository();
+      mockContentRepo = MockContentRepository();
+      mockModLoaderRepo = MockModLoaderRepository();
+      mockDownloadService = MockDownloadService();
+
+      // Ensure storage is initialized
+      final secureStorage = SecureStorageService();
+      final profile = MinecraftProfileModel(
+        nickname: 'TestAccount',
+        uuid: '00000000-0000-0000-0000-000000000000',
+        accessToken: 'dummy-token',
+        userType: 'mojang',
+      );
+      await secureStorage.saveProfiles([profile]);
+      await secureStorage.saveSelectedProfileId(profile.uuid);
+
+      // Setup basic mocks
+      when(mockMinecraftRepo.getVersions()).thenAnswer((_) async => Result.success([
+        MinecraftVersionModel(id: '1.20.1', type: 'release', releaseTime: DateTime.now()),
+      ]));
+      when(mockMinecraftRepo.run(any)).thenAnswer((_) async => Result.success(
+        MinecraftProcessModel(
+          exitCode: Future.value(0),
+          stdout: const Stream.empty(),
+          stderr: const Stream.empty(),
+          kill: () => true,
+        )
+      ));
+      
+      when(mockContentRepo.searchContent(
+        query: anyNamed('query'),
+        projectType: anyNamed('projectType'),
+        limit: anyNamed('limit'),
+        offset: anyNamed('offset'),
+      )).thenAnswer((_) async => Result.success([
+        ContentItem(
+          id: 'fabric-api',
+          slug: 'fabric-api',
+          title: 'Fabric API',
+          description: 'Core API for Fabric mods',
+          projectType: 'mod',
+          author: 'FabricMC',
+          downloads: 1000000,
+          gameVersions: ['1.20.1'],
+          loaders: ['fabric'],
+        ),
+      ]));
+
+      when(mockModLoaderRepo.id).thenReturn('fabric');
+      when(mockModLoaderRepo.name).thenReturn('Fabric');
+      when(mockModLoaderRepo.icon).thenReturn('assets/fabric.svg');
+
+      when(mockModLoaderRepo.getVersions(any)).thenAnswer((_) async => Result.success([
+        ModLoaderVersionModel(id: '0.14.21', version: '0.14.21', type: 'stable'),
+      ]));
+
+      when(mockDownloadService.download(any, onProgress: anyNamed('onProgress')))
+          .thenAnswer((_) async => Result.success(null));
+      when(mockDownloadService.downloadIfMissing(any, onProgress: anyNamed('onProgress')))
+          .thenAnswer((_) async => Result.success(null));
+    });
+
+    testWidgets('Create, install, and launch instance', (tester) async {
+      // 1. Build the app with mocked dependencies injected over local providers
+      final List<SingleChildWidget> integrationProviders = List.from(providersLocal);
+      
+      // We replace specific providers by adding them at the end (Provider uses the nearest ancestor)
+      integrationProviders.addAll([
+        Provider<MinecraftRepository>.value(value: mockMinecraftRepo),
+        Provider<ContentRepository>.value(value: mockContentRepo),
+        Provider<List<ModLoaderRepository>>.value(value: [mockModLoaderRepo]),
+        Provider<DownloadService>.value(value: mockDownloadService),
+      ]);
+
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: integrationProviders,
+          child: const YeLauncherApp(),
+        ),
+      );
+
+      // Wait for app to start and load instances
+      await tester.pumpAndSettle();
+
+      // 2. Create Instance Flow
+      // Tap 'Create Instance'
+      await tester.tap(find.byKey(const ValueKey('create_instance_button')));
+      await tester.pumpAndSettle();
+
+      // Enter instance name
+      await tester.enterText(find.byKey(const ValueKey('instance_name_input')), 'E2E Instance');
+      
+      // Tap Next to go to Version step
+      await tester.tap(find.byKey(const ValueKey('instance_creation_next_button')));
+      await tester.pumpAndSettle();
+
+      // Select '1.20.1' version
+      await tester.tap(find.byKey(const ValueKey('version_item_1.20.1')));
+      await tester.pumpAndSettle();
+
+      // Tap Next to go to Mod Loader step
+      await tester.tap(find.byKey(const ValueKey('instance_creation_next_button')));
+      await tester.pumpAndSettle();
+
+      // Select 'fabric' mod loader
+      await tester.tap(find.byKey(const ValueKey('mod_loader_button_fabric')));
+      await tester.pumpAndSettle();
+
+      // Tap Create
+      await tester.tap(find.byKey(const ValueKey('instance_creation_next_button')));
+      await tester.pumpAndSettle();
+
+      // Verify the instance was created (wait for the card to appear)
+      expect(find.text('E2E Instance'), findsOneWidget);
+      expect(find.text('1.20.1 • 0.14.21'), findsOneWidget); // Actually modLoaderVersion might be different if mocked
+
+      // Get the instance ID generated by the creation process by reading the provider state
+      // Actually, we can just tap the Install button for the new instance by finding the button that contains 'Install'
+      // But first we should navigate to Content to install something! Wait, the instruction said:
+      // "Switch to the Content tab. Search for a specific mod..."
+      
+      // 3. Content Installation Flow
+      await tester.tap(find.byKey(const ValueKey('nav_content')));
+      await tester.pumpAndSettle();
+
+      // Search for Fabric API
+      await tester.enterText(find.byKey(const ValueKey('content_search_input')), 'Fabric API');
+      await tester.pumpAndSettle(const Duration(seconds: 1)); // allow debounce
+
+      // Tap the mod in the results
+      await tester.tap(find.text('Fabric API').first);
+      await tester.pumpAndSettle();
+
+      // Tap "Install" on the Detail Dialog
+      // We need a key or just text
+      await tester.tap(find.text('Install').first);
+      await tester.pumpAndSettle();
+
+      // Select the instance in the Install Dialog
+      await tester.tap(find.text('E2E Instance'));
+      await tester.pumpAndSettle();
+
+      // Tap the bottom Install button
+      // Let's tap the button that has text "Install"
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Install').last);
+      // Wait for installation
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      // 4. Launch Instance Flow
+      // Close detail dialog
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+
+      // Switch back to Instances Tab
+      await tester.tap(find.byKey(const ValueKey('nav_instances')));
+      await tester.pumpAndSettle();
+
+      // Tap 'Play' on the instance card
+      // Since it's the only instance, we can just tap Play.
+      await tester.tap(find.text('Play').first);
+      
+      // pump to start launch
+      await tester.pump();
+      
+      // Verify mock was called
+      verify(mockMinecraftRepo.run(any)).called(1);
+    });
+  });
+}

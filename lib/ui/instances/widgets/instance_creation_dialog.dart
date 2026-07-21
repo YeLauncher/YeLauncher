@@ -215,6 +215,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         ),
         const SizedBox(height: 16),
         core_text_field.TextField(
+          key: const ValueKey('instance_name_input'),
           controller: _nameController,
           labelText: AppLocalizations.of(context)!.enterNameHint,
           width: double.infinity,
@@ -245,6 +246,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         ),
         const SizedBox(height: 12),
         core_text_field.TextField(
+          key: const ValueKey('version_search_input'),
           controller: _searchController,
           labelText: AppLocalizations.of(context)!.searchVersionHint,
           width: double.infinity,
@@ -303,6 +305,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
     final isSelected = widget.viewModel.selectedVersion?.id == version.id;
 
     return ListItem.secondary(
+      key: ValueKey('version_item_${version.id}'),
       title: version.id,
       chip: typeLabel == 'Stable' ? Chip.primary(typeLabel) : Chip.secondary(typeLabel),
       // trailingIcon:
@@ -649,6 +652,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
     final isSelected = widget.viewModel.selectedModLoader == id;
     return Expanded(
       child: GestureDetector(
+        key: ValueKey('mod_loader_button_$id'),
         onTap: () => widget.viewModel.selectModLoader(id),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
@@ -698,6 +702,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             },
           ),
           Button.primary(
+            key: const ValueKey('instance_creation_next_button'),
             widget.viewModel.currentStep == 2 ? AppLocalizations.of(context)!.createButton : AppLocalizations.of(context)!.nextButton,
             iconData: widget.viewModel.currentStep == 2
                 ? Symbols.check_rounded

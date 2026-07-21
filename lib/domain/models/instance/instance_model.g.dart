@@ -22,6 +22,14 @@ InstanceModel _$InstanceModelFromJson(Map<String, dynamic> json) =>
               )
               .toList() ??
           [],
+      lastPlayed: json['lastPlayed'] == null
+          ? null
+          : DateTime.parse(json['lastPlayed'] as String),
+      javaMemory: (json['javaMemory'] as num?)?.toInt(),
+      windowWidth: (json['windowWidth'] as num?)?.toInt(),
+      windowHeight: (json['windowHeight'] as num?)?.toInt(),
+      customJavaPath: json['customJavaPath'] as String?,
+      jvmArguments: json['jvmArguments'] as String?,
     );
 
 Map<String, dynamic> _$InstanceModelToJson(InstanceModel instance) =>
@@ -33,4 +41,10 @@ Map<String, dynamic> _$InstanceModelToJson(InstanceModel instance) =>
       'modLoaderVersion': instance.modLoaderVersion,
       'isInstalled': instance.isInstalled,
       'installedContent': instance.installedContent,
+      'lastPlayed': instance.lastPlayed?.toIso8601String(),
+      'javaMemory': instance.javaMemory,
+      'windowWidth': instance.windowWidth,
+      'windowHeight': instance.windowHeight,
+      'customJavaPath': instance.customJavaPath,
+      'jvmArguments': instance.jvmArguments,
     };
