@@ -87,12 +87,16 @@
   },
   "installedContentTitle": "Встановлений контент",
   "contentMissing": "Контент відсутній",
-  "profilesTabTitle": "Профілі",
-  "manageAccountsSubtitle": "Керуйте своїми акаунтами Minecraft",
+  "profilesTabTitle": "Акаунти",
+  "manageAccountsSubtitle": "Керуйте вашими акаунтами Minecraft",
   "noAccountsTitle": "Немає акаунтів",
   "noAccountsSubtitle": "Додайте акаунт для гри в Minecraft",
   "activeBadge": "Активний",
-  "addAccountButton": "Додати акаунт",
+  "addAccountButton": "Додати акаунт Microsoft",
+  "addOfflineAccountButton": "Додати офлайн акаунт",
+  "addOfflineAccountTitle": "Додати офлайн акаунт",
+  "addOfflineAccountSubtitle": "Введіть ім'я для вашого офлайн профілю. Цей акаунт не зможе підключатися до преміум серверів.",
+  "nicknameLabel": "Им'я гравця",
   "selectButton": "Вибрати",
   "minecraftAccountNotExists": "Акаунта Minecraft не існує",
   "authSuccessMessage": "Ви можете закрити це вікно і перейти до лаунчера",
@@ -155,5 +159,16 @@
       }
     }
   },
-  "selectAllButton": "Вибрати всі"
+  "selectAllButton": "Вибрати всі",
+  "installStepDownloadingJava": "Завантаження Java {version}",
+  "@installStepDownloadingJava": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installStepInstallingClientAndAssets": "Встановлення клієнта та ресурсів",
+  "installStepProcessingForge": "Обробка встановлення Forge...",
+  "installStepProcessingFabric": "Обробка встановлення Fabric..."
 }

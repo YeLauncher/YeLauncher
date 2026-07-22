@@ -497,7 +497,7 @@ abstract class AppLocalizations {
   /// No description provided for @profilesTabTitle.
   ///
   /// In en, this message translates to:
-  /// **'Profiles'**
+  /// **'Accounts'**
   String get profilesTabTitle;
 
   /// No description provided for @manageAccountsSubtitle.
@@ -505,6 +505,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage your Minecraft accounts'**
   String get manageAccountsSubtitle;
+
+  /// No description provided for @addAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Microsoft Account'**
+  String get addAccountButton;
+
+  /// No description provided for @addOfflineAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Offline Account'**
+  String get addOfflineAccountButton;
+
+  /// No description provided for @addOfflineAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Offline Account'**
+  String get addOfflineAccountTitle;
+
+  /// No description provided for @addOfflineAccountSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a nickname for your offline profile. This account will not be able to join premium servers.'**
+  String get addOfflineAccountSubtitle;
+
+  /// No description provided for @nicknameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname'**
+  String get nicknameLabel;
 
   /// No description provided for @noAccountsTitle.
   ///
@@ -523,12 +553,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Active'**
   String get activeBadge;
-
-  /// No description provided for @addAccountButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Account'**
-  String get addAccountButton;
 
   /// No description provided for @selectButton.
   ///
@@ -865,6 +889,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select All'**
   String get selectAllButton;
+
+  /// No description provided for @installStepDownloadingJava.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading Java {version}'**
+  String installStepDownloadingJava(String version);
+
+  /// No description provided for @installStepInstallingClientAndAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation client & assets'**
+  String get installStepInstallingClientAndAssets;
+
+  /// No description provided for @installStepProcessingForge.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing Forge installation...'**
+  String get installStepProcessingForge;
+
+  /// No description provided for @installStepProcessingFabric.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing Fabric installation...'**
+  String get installStepProcessingFabric;
 }
 
 class _AppLocalizationsDelegate

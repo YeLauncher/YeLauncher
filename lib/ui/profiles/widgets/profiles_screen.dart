@@ -8,6 +8,8 @@ import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/profiles/view_models/profiles_viewmodel.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
+import 'package:yelauncher/config/environment_config.dart';
+import 'package:yelauncher/ui/profiles/widgets/offline_profile_dialog.dart';
 
 class ProfilesScreen extends StatefulWidget {
   const ProfilesScreen({super.key, required this.viewModel});
@@ -88,10 +90,32 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                         ],
                       );
                     }
-                    return Button.primary(
-                      AppLocalizations.of(context)!.addAccountButton,
-                      iconData: Symbols.person_add_rounded,
-                      onPressed: widget.viewModel.authenticate.execute,
+                    return Row(
+                      spacing: 12,
+                      children: [
+                        if (context.read<EnvironmentConfig>().isDevelopment)
+                          Button.surface(
+                            AppLocalizations.of(context)!.addOfflineAccountButton,
+                            iconData: Symbols.person_add_rounded,
+                            onPressed: () {
+                              showGeneralDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierLabel: 'offline_profile_dialog',
+                                pageBuilder: (context, animation1, animation2) {
+                                  return OfflineProfileDialog(
+                                    onCreate: widget.viewModel.addOfflineProfile.execute,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        Button.primary(
+                          AppLocalizations.of(context)!.addAccountButton,
+                          iconData: Symbols.person_add_rounded,
+                          onPressed: widget.viewModel.authenticate.execute,
+                        ),
+                      ],
                     );
                   },
                 ),

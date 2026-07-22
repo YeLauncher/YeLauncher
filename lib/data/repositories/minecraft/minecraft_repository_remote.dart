@@ -230,6 +230,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
           }
 
           _log.info('Install finished successfully for ${instance.id}');
+          await _fileService.createDirectory('instances/${instance.id}');
           return const Result.success(null);
         }, (error) async => Result.failure(error));
     } on Exception catch (e) {
@@ -813,8 +814,27 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
       return Result.failure(Exception('authenticate failed: $e'));
     }
   }
+  @override
+  Future<Result<void>> addOfflineProfile(String nickname) async {
+    try {
+      final profile = MinecraftProfileModel(
+        nickname: nickname,
+        uuid: 'offline-${DateTime.now().millisecondsSinceEpoch}',
+        accessToken: 'offline',
+        userType: 'offline',
+      );
 
+      final profiles = await _secureStorage.getProfiles();
+      profiles.add(profile);
+      await _secureStorage.saveProfiles(profiles);
+      await _secureStorage.saveSelectedProfileId(profile.uuid);
 
+      return const Result.success(null);
+    } catch (e) {
+      _log.severe('addOfflineProfile error: $e');
+      return Result.failure(Exception('addOfflineProfile failed: $e'));
+    }
+  }
 
   @override
   Future<Result<List<MinecraftProfileModel>>> getProfiles() async {

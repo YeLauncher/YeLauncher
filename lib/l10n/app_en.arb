@@ -87,12 +87,16 @@
   },
   "installedContentTitle": "Installed Content",
   "contentMissing": "No content installed",
-  "profilesTabTitle": "Profiles",
+  "profilesTabTitle": "Accounts",
   "manageAccountsSubtitle": "Manage your Minecraft accounts",
+  "addAccountButton": "Add Microsoft Account",
+  "addOfflineAccountButton": "Add Offline Account",
+  "addOfflineAccountTitle": "Add Offline Account",
+  "addOfflineAccountSubtitle": "Enter a nickname for your offline profile. This account will not be able to join premium servers.",
+  "nicknameLabel": "Nickname",
   "noAccountsTitle": "No Accounts",
   "noAccountsSubtitle": "Add an account to play Minecraft",
   "activeBadge": "Active",
-  "addAccountButton": "Add Account",
   "selectButton": "Select",
   "minecraftAccountNotExists": "Minecraft account does not exist",
   "authSuccessMessage": "You can close this window and go to the launcher",
@@ -155,5 +159,16 @@
       }
     }
   },
-  "selectAllButton": "Select All"
+  "selectAllButton": "Select All",
+  "installStepDownloadingJava": "Downloading Java {version}",
+  "@installStepDownloadingJava": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installStepInstallingClientAndAssets": "Installation client & assets",
+  "installStepProcessingForge": "Processing Forge installation...",
+  "installStepProcessingFabric": "Processing Fabric installation..."
 }

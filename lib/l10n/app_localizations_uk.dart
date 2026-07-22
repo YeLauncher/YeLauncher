@@ -216,10 +216,26 @@ class AppLocalizationsUk extends AppLocalizations {
   String get contentMissing => 'Контент відсутній';
 
   @override
-  String get profilesTabTitle => 'Профілі';
+  String get profilesTabTitle => 'Акаунти';
 
   @override
-  String get manageAccountsSubtitle => 'Керуйте своїми акаунтами Minecraft';
+  String get manageAccountsSubtitle => 'Керуйте вашими акаунтами Minecraft';
+
+  @override
+  String get addAccountButton => 'Додати акаунт Microsoft';
+
+  @override
+  String get addOfflineAccountButton => 'Додати офлайн акаунт';
+
+  @override
+  String get addOfflineAccountTitle => 'Додати офлайн акаунт';
+
+  @override
+  String get addOfflineAccountSubtitle =>
+      'Введіть ім\'я для вашого офлайн профілю. Цей акаунт не зможе підключатися до преміум серверів.';
+
+  @override
+  String get nicknameLabel => 'Им\'я гравця';
 
   @override
   String get noAccountsTitle => 'Немає акаунтів';
@@ -229,9 +245,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get activeBadge => 'Активний';
-
-  @override
-  String get addAccountButton => 'Додати акаунт';
 
   @override
   String get selectButton => 'Вибрати';
@@ -410,4 +423,19 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get selectAllButton => 'Вибрати всі';
+
+  @override
+  String installStepDownloadingJava(String version) {
+    return 'Завантаження Java $version';
+  }
+
+  @override
+  String get installStepInstallingClientAndAssets =>
+      'Встановлення клієнта та ресурсів';
+
+  @override
+  String get installStepProcessingForge => 'Обробка встановлення Forge...';
+
+  @override
+  String get installStepProcessingFabric => 'Обробка встановлення Fabric...';
 }

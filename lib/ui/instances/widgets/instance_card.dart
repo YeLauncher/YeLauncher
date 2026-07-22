@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show Tooltip, showDialog, AlertDialog, SystemMouseCursors;
+import 'package:flutter/material.dart' show showDialog, AlertDialog, SystemMouseCursors;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/chip.dart' as ye_chip;
@@ -9,6 +9,7 @@ import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
 import 'package:yelauncher/ui/core/icon_button.dart' as ye_icon_button;
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
+import 'package:yelauncher/ui/core/tooltip.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
 
 import 'package:yelauncher/l10n/app_localizations.dart';
@@ -104,6 +105,26 @@ class _InstanceCardState extends State<InstanceCard> {
     }
   }
 
+  String _getLocalizedStep(BuildContext context) {
+    final step = widget.viewModel.rawInstallStep;
+    if (step == null) return AppLocalizations.of(context)!.installingStatus;
+    
+    if (step.startsWith('Downloading Java ')) {
+      final version = step.substring(17);
+      return AppLocalizations.of(context)!.installStepDownloadingJava(version);
+    }
+    if (step == 'Installation client & assets') {
+      return AppLocalizations.of(context)!.installStepInstallingClientAndAssets;
+    }
+    if (step == 'Processing Forge installation...') {
+      return AppLocalizations.of(context)!.installStepProcessingForge;
+    }
+    if (step == 'Processing Fabric installation...') {
+      return AppLocalizations.of(context)!.installStepProcessingFabric;
+    }
+    return step;
+  }
+
   IconData _getIconData(String? iconName) {
     switch (iconName) {
       case 'swords_rounded': return Symbols.swords_rounded;
@@ -158,8 +179,17 @@ class _InstanceCardState extends State<InstanceCard> {
     return [
       if (widget.viewModel.isDownloading || widget.viewModel.installInstance.running)
         Tooltip(
-          message: widget.viewModel.currentInstallStep ??
-              AppLocalizations.of(context)!.installingTooltip,
+          message: () {
+            final stepText = _getLocalizedStep(context);
+            final total = widget.viewModel.totalInstallBytes;
+            final completed = widget.viewModel.completedInstallBytes;
+            if (total != null && completed != null) {
+              final completedMB = (completed / (1024 * 1024)).toStringAsFixed(2);
+              final totalMB = (total / (1024 * 1024)).toStringAsFixed(2);
+              return '$stepText ($completedMB MB / $totalMB MB)';
+            }
+            return stepText;
+          }(),
           preferBelow: false,
           child: SizedBox(
             width: 48,

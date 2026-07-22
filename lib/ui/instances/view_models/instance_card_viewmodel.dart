@@ -34,6 +34,10 @@ class InstanceCardViewModel extends ChangeNotifier {
     return _currentInstallStep;
   }
 
+  String? get rawInstallStep => _currentInstallStep;
+  int? get totalInstallBytes => _totalInstallBytes;
+  int? get completedInstallBytes => _completedInstallBytes;
+
   double? _javaDownloadProgress;
   double? get javaDownloadProgress => _javaDownloadProgress;
 
@@ -113,6 +117,10 @@ class InstanceCardViewModel extends ChangeNotifier {
       },
       onStepChanged: (step) {
         _currentInstallStep = step;
+        if (step.contains('Processing')) {
+          _totalInstallBytes = null;
+          _completedInstallBytes = null;
+        }
         notifyListeners();
       },
     );

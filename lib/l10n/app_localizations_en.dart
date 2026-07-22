@@ -216,10 +216,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contentMissing => 'No content installed';
 
   @override
-  String get profilesTabTitle => 'Profiles';
+  String get profilesTabTitle => 'Accounts';
 
   @override
   String get manageAccountsSubtitle => 'Manage your Minecraft accounts';
+
+  @override
+  String get addAccountButton => 'Add Microsoft Account';
+
+  @override
+  String get addOfflineAccountButton => 'Add Offline Account';
+
+  @override
+  String get addOfflineAccountTitle => 'Add Offline Account';
+
+  @override
+  String get addOfflineAccountSubtitle =>
+      'Enter a nickname for your offline profile. This account will not be able to join premium servers.';
+
+  @override
+  String get nicknameLabel => 'Nickname';
 
   @override
   String get noAccountsTitle => 'No Accounts';
@@ -229,9 +245,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get activeBadge => 'Active';
-
-  @override
-  String get addAccountButton => 'Add Account';
 
   @override
   String get selectButton => 'Select';
@@ -410,4 +423,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectAllButton => 'Select All';
+
+  @override
+  String installStepDownloadingJava(String version) {
+    return 'Downloading Java $version';
+  }
+
+  @override
+  String get installStepInstallingClientAndAssets =>
+      'Installation client & assets';
+
+  @override
+  String get installStepProcessingForge => 'Processing Forge installation...';
+
+  @override
+  String get installStepProcessingFabric => 'Processing Fabric installation...';
 }
