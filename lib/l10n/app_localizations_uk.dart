@@ -390,4 +390,16 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get showSnapshots => 'Снапшоти';
+
+  @override
+  String get stepAppearance => 'Вигляд';
+
+  @override
+  String get iconLabel => 'Іконка';
+
+  @override
+  String get colorLabel => 'Колір';
+
+  @override
+  String get previewLabel => 'Попередній перегляд';
 }

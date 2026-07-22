@@ -829,6 +829,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Snapshots'**
   String get showSnapshots;
+
+  /// No description provided for @stepAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get stepAppearance;
+
+  /// No description provided for @iconLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get iconLabel;
+
+  /// No description provided for @colorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get colorLabel;
+
+  /// No description provided for @previewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get previewLabel;
 }
 
 class _AppLocalizationsDelegate

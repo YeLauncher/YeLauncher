@@ -390,4 +390,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showSnapshots => 'Snapshots';
+
+  @override
+  String get stepAppearance => 'Appearance';
+
+  @override
+  String get iconLabel => 'Icon';
+
+  @override
+  String get colorLabel => 'Color';
+
+  @override
+  String get previewLabel => 'Preview';
 }

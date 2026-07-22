@@ -23,6 +23,27 @@ class InstanceCreationViewModel extends ChangeNotifier {
   MinecraftVersionModel? selectedVersion;
   String selectedModLoader = 'vanilla';
   
+  static const List<String> availableIcons = [
+    'inventory_2_rounded',
+    'swords_rounded',
+    'eco_rounded',
+    'home_rounded',
+    'star_rounded',
+    'sports_esports_rounded',
+    'public_rounded',
+  ];
+
+  static const List<String> availableColors = [
+    '#3D5A80',
+    '#EE6C4D',
+    '#81B29A',
+    '#9B5DE5',
+    '#293241',
+  ];
+
+  String selectedIcon = availableIcons.first;
+  String selectedColor = availableColors.first;
+  
   final List<String> _existingInstanceNames;
 
   List<ModLoaderRepository> availableModLoaders = [];
@@ -38,7 +59,22 @@ class InstanceCreationViewModel extends ChangeNotifier {
 
   final _log = Logger('InstanceCreationViewModel');
 
-  late final Command0 loadVersions;
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_isDisposed) {
+      super.notifyListeners();
+    }
+  }
+
+  late final Command0<void> loadVersions;
   late final Command1<void, String> loadModLoaders;
 
   InstanceCreationViewModel({
@@ -55,7 +91,7 @@ class InstanceCreationViewModel extends ChangeNotifier {
   }
 
   void nextStep() {
-    if (currentStep < 2) {
+    if (currentStep < 3) {
       currentStep++;
       notifyListeners();
     }
@@ -78,6 +114,16 @@ class InstanceCreationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void selectIcon(String icon) {
+    selectedIcon = icon;
+    notifyListeners();
+  }
+
+  void selectColor(String color) {
+    selectedColor = color;
+    notifyListeners();
+  }
+
   String? get nameError {
     if (instanceName.trim().isEmpty) return null;
     if (_existingInstanceNames.contains(instanceName.trim().toLowerCase())) {
@@ -91,6 +137,10 @@ class InstanceCreationViewModel extends ChangeNotifier {
       return instanceName.trim().isNotEmpty && nameError == null;
     }
     if (currentStep == 1) {
+      // Customization step: always can proceed
+      return true;
+    }
+    if (currentStep == 2) {
       return selectedVersion != null;
     }
     return true;
@@ -248,6 +298,8 @@ class InstanceCreationViewModel extends ChangeNotifier {
       modLoader: selectedModLoader,
       modLoaderVersion: mlVersion,
       isInstalled: false,
+      icon: selectedIcon,
+      color: selectedColor,
     );
 
     await _instanceRepository.createInstance(newInstance);

@@ -31,6 +31,11 @@ class InstanceModel {
   @JsonKey(name: 'jvmArguments')
   final String? jvmArguments;
 
+  @JsonKey(name: 'icon')
+  final String? icon;
+  @JsonKey(name: 'color')
+  final String? color;
+
   InstanceModel({
     required this.id,
     required this.name,
@@ -45,6 +50,8 @@ class InstanceModel {
     this.windowHeight,
     this.customJavaPath,
     this.jvmArguments,
+    this.icon,
+    this.color,
   });
 
   factory InstanceModel.fromJson(Map<String, dynamic> json) =>
@@ -66,6 +73,8 @@ class InstanceModel {
     int? windowHeight,
     String? customJavaPath,
     String? jvmArguments,
+    String? icon,
+    String? color,
   }) {
     return InstanceModel(
       id: id ?? this.id,
@@ -81,6 +90,8 @@ class InstanceModel {
       windowHeight: windowHeight ?? this.windowHeight,
       customJavaPath: customJavaPath ?? this.customJavaPath,
       jvmArguments: jvmArguments ?? this.jvmArguments,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
     );
   }
 }

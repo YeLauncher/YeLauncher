@@ -142,5 +142,9 @@
   "categoryUtility": "Utility",
   "categoryDecoration": "Decoration",
   "categoryWorldgen": "World Generation",
-  "showSnapshots": "Snapshots"
+  "showSnapshots": "Snapshots",
+  "stepAppearance": "Appearance",
+  "iconLabel": "Icon",
+  "colorLabel": "Color",
+  "previewLabel": "Preview"
 }

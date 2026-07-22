@@ -142,5 +142,9 @@
   "categoryUtility": "Утиліти",
   "categoryDecoration": "Декорації",
   "categoryWorldgen": "Генерація світу",
-  "showSnapshots": "Снапшоти"
+  "showSnapshots": "Снапшоти",
+  "stepAppearance": "Вигляд",
+  "iconLabel": "Іконка",
+  "colorLabel": "Колір",
+  "previewLabel": "Попередній перегляд"
 }

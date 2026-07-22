@@ -164,17 +164,24 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         ),
         _spacer,
         core_step.Step.primary(
-          title: AppLocalizations.of(context)!.stepVersion,
-          iconData: Symbols.app_badging_rounded,
+          title: AppLocalizations.of(context)!.stepAppearance,
+          iconData: Symbols.palette_rounded,
           isCurrent: step == 1,
           isCompleted: step > 1,
         ),
         _spacer,
         core_step.Step.primary(
-          title: AppLocalizations.of(context)!.stepModLoader,
-          iconData: Symbols.extension_rounded,
+          title: AppLocalizations.of(context)!.stepVersion,
+          iconData: Symbols.app_badging_rounded,
           isCurrent: step == 2,
           isCompleted: step > 2,
+        ),
+        _spacer,
+        core_step.Step.primary(
+          title: AppLocalizations.of(context)!.stepModLoader,
+          iconData: Symbols.extension_rounded,
+          isCurrent: step == 3,
+          isCompleted: step > 3,
         ),
       ],
     );
@@ -185,10 +192,11 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
       case 0:
         return _stepName;
       case 1:
-        return _stepVersion;
+        return _stepAppearance;
       case 2:
+        return _stepVersion;
+      case 3:
         return _stepModLoader;
-      // You can add steps 3 here later
       default:
         return const SizedBox.shrink();
     }
@@ -196,6 +204,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
 
   Widget get _stepName {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           spacing: 8,
@@ -223,6 +232,182 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               ? AppLocalizations.of(context)!.nameAlreadyExists
               : widget.viewModel.nameError,
           width: double.infinity,
+        ),
+      ],
+    );
+  }
+
+  Widget get _stepAppearance {
+    IconData getIconData(String iconName) {
+      switch (iconName) {
+        case 'inventory_2_rounded': return Symbols.inventory_2_rounded;
+        case 'swords_rounded': return Symbols.swords_rounded;
+        case 'eco_rounded': return Symbols.eco_rounded;
+        case 'home_rounded': return Symbols.home_rounded;
+        case 'star_rounded': return Symbols.star_rounded;
+        case 'sports_esports_rounded': return Symbols.sports_esports_rounded;
+        case 'public_rounded': return Symbols.public_rounded;
+        default: return Symbols.inventory_2_rounded;
+      }
+    }
+
+    final selectedColorHex = widget.viewModel.selectedColor;
+    final selectedBgColor = Color(int.parse(selectedColorHex.replaceAll('#', '0xFF')));
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Icon(
+                    Symbols.palette_rounded,
+                    size: 20,
+                    weight: 600,
+                    color: AppColors.dark.primary,
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.iconLabel,
+                    style: AppText.defaultTheme.label.copyWith(
+                      color: AppColors.dark.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: InstanceCreationViewModel.availableIcons.map((icon) {
+                  final isSelected = widget.viewModel.selectedIcon == icon;
+                  return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => widget.viewModel.selectIcon(icon),
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.dark.primaryContainer : AppColors.dark.surfaceContainerHigh,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected ? AppColors.dark.primary : const Color(0x00000000),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            getIconData(icon),
+                            color: isSelected ? AppColors.dark.primary : AppColors.dark.onSurfaceVariant,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                spacing: 8,
+                children: [
+                  Icon(
+                    Symbols.format_color_fill_rounded,
+                    size: 20,
+                    weight: 600,
+                    color: AppColors.dark.primary,
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.colorLabel,
+                    style: AppText.defaultTheme.label.copyWith(
+                      color: AppColors.dark.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: InstanceCreationViewModel.availableColors.map((colorHex) {
+                  final isSelected = widget.viewModel.selectedColor == colorHex;
+                  final color = Color(int.parse(colorHex.replaceAll('#', '0xFF')));
+                  return MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => widget.viewModel.selectColor(colorHex),
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected ? AppColors.dark.onSurface : const Color(0x00000000),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            if (isSelected)
+                              BoxShadow(
+                                color: color.withValues(alpha: 0.5),
+                                blurRadius: 8,
+                                spreadRadius: 2,
+                              )
+                          ],
+                        ),
+                        child: isSelected
+                            ? const Icon(
+                                Symbols.check_rounded,
+                                color: Color(0xFFFFFFFF),
+                                size: 16,
+                              )
+                            : null,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 32),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.previewLabel,
+              style: AppText.defaultTheme.label.copyWith(
+                color: AppColors.dark.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
+                color: selectedBgColor,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: selectedBgColor.withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  )
+                ],
+              ),
+              child: Center(
+                child: Icon(
+                  getIconData(widget.viewModel.selectedIcon),
+                  color: const Color(0xFFFFFFFF),
+                  size: 48,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
