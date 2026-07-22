@@ -21,13 +21,15 @@ class MinecraftService {
 
       final jvmArgs = <String>[];
 
-      if (model.jvmArguments.isEmpty) {
+      bool hasClasspath = model.jvmArguments.any((arg) => 
+          arg.contains('-cp') || arg.contains('\${classpath}'));
+          
+      if (!hasClasspath) {
         jvmArgs.add('-Djava.library.path=${model.nativesDirectory}');
         jvmArgs.add('-cp');
         jvmArgs.add(classpath);
-      } else {
-        jvmArgs.addAll(model.jvmArguments);
       }
+      jvmArgs.addAll(model.jvmArguments);
 
       final originalArgs = <String>[
         '-Xmx2G',
@@ -68,7 +70,7 @@ class MinecraftService {
         await workingDir.create(recursive: true);
       }
 
-      _log.fine("Launching Minecraft with args: ${finalArgs.join(' ')}");
+      _log.info("Launching Minecraft with args: ${finalArgs.join(' ')}");
       final process = await Process.start(
         model.javaExecutablePath,
         finalArgs,

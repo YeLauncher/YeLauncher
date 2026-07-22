@@ -18,10 +18,9 @@ class FileService {
     await Isolate.run(() async {
       final jarFile = File(absoluteJarPath);
       if (!await jarFile.exists()) {
-        _log.severe('Native JAR not found: $absoluteJarPath');
         throw Exception('Native JAR not found: $absoluteJarPath');
       }
-
+      
       final bytes = await jarFile.readAsBytes();
       final archive = ZipDecoder().decodeBytes(bytes);
 

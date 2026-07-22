@@ -218,11 +218,6 @@ void main() {
       debugPrint('Minecraft $version is already installed.');
     }
 
-    debugPrint('Running Minecraft $version instance...');
-    final runResult = await minecraftRepository.run(instance);
-    expect(runResult, isA<Success>());
-    debugPrint('Minecraft $version process started. Waiting for launch...');
-
     bool isLaunched = false;
     final logSubscription = Logger.root.onRecord.listen((record) {
       final msg = record.message.toLowerCase();
@@ -235,6 +230,11 @@ void main() {
         isLaunched = true;
       }
     });
+
+    debugPrint('Running Minecraft $version instance...');
+    final runResult = await minecraftRepository.run(instance);
+    expect(runResult, isA<Success>());
+    debugPrint('Minecraft $version process started. Waiting for launch...');
 
     int waitTime = 0;
     while (!isLaunched && waitTime < 180) {
