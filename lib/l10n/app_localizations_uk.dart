@@ -402,4 +402,12 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get previewLabel => 'Попередній перегляд';
+
+  @override
+  String selectedCount(int count) {
+    return 'Вибрано $count';
+  }
+
+  @override
+  String get selectAllButton => 'Вибрати всі';
 }

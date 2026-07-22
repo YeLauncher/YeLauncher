@@ -20,11 +20,17 @@ import 'package:yelauncher/ui/instances/view_models/instance_screen_viewmodel.da
 class InstanceCard extends StatefulWidget {
   final InstanceCardViewModel viewModel;
   final bool isBigCard;
+  final bool isSelectionMode;
+  final bool isSelected;
+  final VoidCallback? onSelect;
 
   const InstanceCard({
     super.key, 
     required this.viewModel,
     this.isBigCard = false,
+    this.isSelectionMode = false,
+    this.isSelected = false,
+    this.onSelect,
   });
 
   @override
@@ -231,11 +237,12 @@ class _InstanceCardState extends State<InstanceCard> {
 
   Widget _buildBigCard(BuildContext context) {
     final bool showButtons =
-        _isHovered ||
+        !widget.isSelectionMode &&
+        (_isHovered ||
         widget.viewModel.isRunning ||
         widget.viewModel.isDownloading ||
         widget.viewModel.installInstance.running ||
-        widget.viewModel.runInstance.running;
+        widget.viewModel.runInstance.running);
 
     return AnimatedScale(
       scale: _isHovered ? 1.01 : 1.0,
@@ -247,10 +254,12 @@ class _InstanceCardState extends State<InstanceCard> {
             color: AppColors.dark.surfaceContainer,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: _isHovered
-                  ? AppColors.dark.primary.withValues(alpha: 0.3)
-                  : const Color(0x00000000),
-              width: 1,
+              color: widget.isSelected
+                  ? AppColors.dark.primary
+                  : _isHovered
+                      ? AppColors.dark.primary.withValues(alpha: 0.3)
+                      : const Color(0x00000000),
+              width: widget.isSelected ? 2 : 1,
             ),
           ),
           child: Row(
@@ -281,15 +290,23 @@ class _InstanceCardState extends State<InstanceCard> {
                   ],
                 ),
               ),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 250),
-                opacity: showButtons ? 1.0 : 0.0,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 12,
-                  children: _buildButtons(context),
+              if (widget.isSelectionMode)
+                Icon(
+                  widget.isSelected ? Symbols.check_circle_rounded : Symbols.radio_button_unchecked_rounded,
+                  color: widget.isSelected ? AppColors.dark.primary : AppColors.dark.onSurfaceVariant,
+                  size: 32,
+                  fill: widget.isSelected ? 1.0 : 0.0,
+                )
+              else
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 250),
+                  opacity: showButtons ? 1.0 : 0.0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 12,
+                    children: _buildButtons(context),
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -298,11 +315,12 @@ class _InstanceCardState extends State<InstanceCard> {
 
   Widget _buildGridCard(BuildContext context) {
     final bool showButtons =
-        _isHovered ||
+        !widget.isSelectionMode &&
+        (_isHovered ||
         widget.viewModel.isRunning ||
         widget.viewModel.isDownloading ||
         widget.viewModel.installInstance.running ||
-        widget.viewModel.runInstance.running;
+        widget.viewModel.runInstance.running);
 
     return AnimatedScale(
       scale: _isHovered ? 1.02 : 1.0,
@@ -313,10 +331,12 @@ class _InstanceCardState extends State<InstanceCard> {
             color: AppColors.dark.surfaceContainer,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: _isHovered
-                  ? AppColors.dark.primary.withValues(alpha: 0.3)
-                  : const Color(0x00000000),
-              width: 1,
+              color: widget.isSelected
+                  ? AppColors.dark.primary
+                  : _isHovered
+                      ? AppColors.dark.primary.withValues(alpha: 0.3)
+                      : const Color(0x00000000),
+              width: widget.isSelected ? 2 : 1,
             ),
           ),
           child: ClipRRect(
@@ -351,6 +371,17 @@ class _InstanceCardState extends State<InstanceCard> {
                     ],
                   ),
                 ),
+                if (widget.isSelectionMode)
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: Icon(
+                      widget.isSelected ? Symbols.check_circle_rounded : Symbols.radio_button_unchecked_rounded,
+                      color: widget.isSelected ? AppColors.dark.primary : AppColors.dark.onSurfaceVariant,
+                      size: 28,
+                      fill: widget.isSelected ? 1.0 : 0.0,
+                    ),
+                  ),
                 if (showButtons)
                   Positioned.fill(
                     child: AnimatedOpacity(
@@ -384,19 +415,22 @@ class _InstanceCardState extends State<InstanceCard> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: ListenableBuilder(
-        listenable: widget.viewModel,
-        builder: (context, child) {
-          if (widget.isBigCard) {
-            return _buildBigCard(context);
-          } else {
-            return _buildGridCard(context);
-          }
-        },
+    return GestureDetector(
+      onTap: widget.isSelectionMode ? widget.onSelect : null,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: ListenableBuilder(
+          listenable: widget.viewModel,
+          builder: (context, child) {
+            if (widget.isBigCard) {
+              return _buildBigCard(context);
+            } else {
+              return _buildGridCard(context);
+            }
+          },
+        ),
       ),
     );
   }

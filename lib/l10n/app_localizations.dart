@@ -853,6 +853,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview'**
   String get previewLabel;
+
+  /// No description provided for @selectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Selected'**
+  String selectedCount(int count);
+
+  /// No description provided for @selectAllButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAllButton;
 }
 
 class _AppLocalizationsDelegate

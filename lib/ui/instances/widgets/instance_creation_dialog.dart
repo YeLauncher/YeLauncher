@@ -850,10 +850,13 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   Widget _modLoaderButton(String id, String label, String assetPath) {
     final isSelected = widget.viewModel.selectedModLoader == id;
     return Expanded(
-      child: GestureDetector(
-        key: ValueKey('mod_loader_button_$id'),
-        onTap: () => widget.viewModel.selectModLoader(id),
-        child: AnimatedContainer(
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          key: ValueKey('mod_loader_button_$id'),
+          onTap: () => widget.viewModel.selectModLoader(id),
+          child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           height: 160,
           decoration: BoxDecoration(
@@ -881,6 +884,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
           ),
         ),
       ),
+      ),
     );
   }
 
@@ -902,13 +906,13 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
           ),
           Button.primary(
             key: const ValueKey('instance_creation_next_button'),
-            widget.viewModel.currentStep == 2 ? AppLocalizations.of(context)!.createButton : AppLocalizations.of(context)!.nextButton,
-            iconData: widget.viewModel.currentStep == 2
+            widget.viewModel.currentStep == 3 ? AppLocalizations.of(context)!.createButton : AppLocalizations.of(context)!.nextButton,
+            iconData: widget.viewModel.currentStep == 3
                 ? Symbols.check_rounded
                 : null,
             onPressed: widget.viewModel.canProceedToNextStep
                 ? () async {
-                    if (widget.viewModel.currentStep == 2) {
+                    if (widget.viewModel.currentStep == 3) {
                       await widget.viewModel.saveInstance();
                       if (mounted) {
                         Navigator.of(context).pop();

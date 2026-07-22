@@ -146,5 +146,14 @@
   "stepAppearance": "Appearance",
   "iconLabel": "Icon",
   "colorLabel": "Color",
-  "previewLabel": "Preview"
+  "previewLabel": "Preview",
+  "selectedCount": "{count} Selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectAllButton": "Select All"
 }

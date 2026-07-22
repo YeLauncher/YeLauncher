@@ -146,5 +146,14 @@
   "stepAppearance": "Вигляд",
   "iconLabel": "Іконка",
   "colorLabel": "Колір",
-  "previewLabel": "Попередній перегляд"
+  "previewLabel": "Попередній перегляд",
+  "selectedCount": "Вибрано {count}",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectAllButton": "Вибрати всі"
 }

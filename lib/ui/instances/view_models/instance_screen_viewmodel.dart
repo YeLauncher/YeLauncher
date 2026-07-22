@@ -22,6 +22,49 @@ class InstanceScreenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _isSelectionMode = false;
+  bool get isSelectionMode => _isSelectionMode;
+
+  final Set<String> _selectedInstanceIds = {};
+  Set<String> get selectedInstanceIds => _selectedInstanceIds;
+
+  void toggleSelectionMode() {
+    _isSelectionMode = !_isSelectionMode;
+    if (!_isSelectionMode) {
+      _selectedInstanceIds.clear();
+    }
+    notifyListeners();
+  }
+
+  void toggleInstanceSelection(String id) {
+    if (_selectedInstanceIds.contains(id)) {
+      _selectedInstanceIds.remove(id);
+    } else {
+      _selectedInstanceIds.add(id);
+    }
+    notifyListeners();
+  }
+
+  void selectAll() {
+    _selectedInstanceIds.clear();
+    _selectedInstanceIds.addAll(instances.map((e) => e.id));
+    notifyListeners();
+  }
+
+  void clearSelection() {
+    _selectedInstanceIds.clear();
+    notifyListeners();
+  }
+
+  Future<void> deleteSelectedInstances() async {
+    for (final id in _selectedInstanceIds) {
+      await _instanceRepository.deleteInstance(id);
+    }
+    _selectedInstanceIds.clear();
+    _isSelectionMode = false;
+    await _loadInstances();
+  }
+
   InstanceSortOrder _sortOrder = InstanceSortOrder.lastPlayed;
   InstanceSortOrder get sortOrder => _sortOrder;
   set sortOrder(InstanceSortOrder value) {

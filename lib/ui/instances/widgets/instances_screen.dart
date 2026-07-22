@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart'
+    show showDialog, AlertDialog, showGeneralDialog;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
@@ -54,172 +56,249 @@ class _InstancesScreenState extends State<InstancesScreen> {
       child: Stack(
         children: [
           Container(
-        alignment: Alignment.topCenter,
-        constraints: BoxConstraints.expand(),
-        color: AppColors.dark.surface,
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
+            alignment: Alignment.topCenter,
+            constraints: BoxConstraints.expand(),
+            color: AppColors.dark.surface,
+            padding: const EdgeInsets.all(32),
+            child: Column(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  spacing: 8,
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      spacing: 16,
+                ListenableBuilder(
+                  listenable: widget.viewModel,
+                  builder: (context, _) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Symbols.sports_esports_rounded,
-                          size: 40,
-                          weight: 700,
-                          color: AppColors.dark.primary,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!.instancesTab,
-                          style: AppText.defaultTheme.titleLarge.copyWith(
-                            color: AppColors.dark.onSurface,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!.instancesSubtitle,
-                      style: AppText.defaultTheme.body.copyWith(
-                        color: AppColors.dark.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 250,
-                      child: ye_text_field.TextField(
-                        controller: _searchController,
-                        labelText: AppLocalizations.of(context)!.searchInstances,
-                        isSearchField: true,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Selector<InstanceScreenViewModel, InstanceSortOrder>(
-                      selector: (_, viewModel) => viewModel.sortOrder,
-                      builder: (context, sortOrder, _) {
-                        return Dropdown<InstanceSortOrder>(
-                          iconData: Symbols.sort_rounded,
-                          value: sortOrder,
-                          items: [
-                            DropdownItem(
-                              value: InstanceSortOrder.lastPlayed,
-                              label: AppLocalizations.of(context)!.sortLastPlayed,
+                        Column(
+                          spacing: 8,
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              spacing: 16,
+                              children: [
+                                Icon(
+                                  Symbols.sports_esports_rounded,
+                                  size: 40,
+                                  weight: 700,
+                                  color: AppColors.dark.primary,
+                                ),
+                                Text(
+                                  AppLocalizations.of(context)!.instancesTab,
+                                  style: AppText.defaultTheme.titleLarge
+                                      .copyWith(
+                                        color: AppColors.dark.onSurface,
+                                      ),
+                                ),
+                              ],
                             ),
-                            DropdownItem(
-                              value: InstanceSortOrder.nameAsc,
-                              label: AppLocalizations.of(context)!.sortNameAsc,
+                            Text(
+                              AppLocalizations.of(context)!.instancesSubtitle,
+                              style: AppText.defaultTheme.body.copyWith(
+                                color: AppColors.dark.onSurfaceVariant,
+                              ),
                             ),
-                            DropdownItem(
-                              value: InstanceSortOrder.nameDesc,
-                              label: AppLocalizations.of(context)!.sortNameDesc,
+                            const SizedBox(height: 8),
+                            widget.viewModel.isSelectionMode
+                                ? Row(
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!.selectedCount(
+                                          widget.viewModel.selectedInstanceIds.length,
+                                        ),
+                                        style: AppText.defaultTheme.label.copyWith(
+                                          color: AppColors.dark.onSurface,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Button.surface(
+                                        AppLocalizations.of(context)!.selectAllButton,
+                                        iconData: Symbols.select_all_rounded,
+                                        onPressed: widget.viewModel.selectAll,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Button.surface(
+                                        AppLocalizations.of(context)!.cancel,
+                                        iconData: Symbols.close_rounded,
+                                        onPressed: widget.viewModel.toggleSelectionMode,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Button.error(
+                                        AppLocalizations.of(context)!.deleteButton,
+                                        iconData: Symbols.delete_rounded,
+                                        onPressed: widget.viewModel.selectedInstanceIds.isEmpty
+                                            ? null
+                                            : () => _showDeleteConfirmationDialog(context),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    children: [
+                                      Button.surface(
+                                        AppLocalizations.of(context)!.selectButton,
+                                        iconData: Symbols.checklist_rounded,
+                                        onPressed: widget.viewModel.toggleSelectionMode,
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Selector<InstanceScreenViewModel, InstanceSortOrder>(
+                                        selector: (_, viewModel) => viewModel.sortOrder,
+                                        builder: (context, sortOrder, _) {
+                                          return Dropdown<InstanceSortOrder>(
+                                            iconData: Symbols.sort_rounded,
+                                            value: sortOrder,
+                                            items: [
+                                              DropdownItem(
+                                                value: InstanceSortOrder.lastPlayed,
+                                                label: AppLocalizations.of(context)!.sortLastPlayed,
+                                              ),
+                                              DropdownItem(
+                                                value: InstanceSortOrder.nameAsc,
+                                                label: AppLocalizations.of(context)!.sortNameAsc,
+                                              ),
+                                              DropdownItem(
+                                                value: InstanceSortOrder.nameDesc,
+                                                label: AppLocalizations.of(context)!.sortNameDesc,
+                                              ),
+                                            ],
+                                            onChanged: (val) => widget.viewModel.sortOrder = val,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 250,
+                              child: ye_text_field.TextField(
+                                controller: _searchController,
+                                labelText: AppLocalizations.of(context)!.searchInstances,
+                                isSearchField: true,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Button.primary(
+                              key: const ValueKey('create_instance_button'),
+                              AppLocalizations.of(context)!.createButton,
+                              iconData: Symbols.add_rounded,
+                              onPressed: () => _showInstanceCreationDialog(context),
                             ),
                           ],
-                          onChanged: (val) => widget.viewModel.sortOrder = val,
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    Button.primary(
-                      key: const ValueKey('create_instance_button'),
-                      AppLocalizations.of(context)!.createButton,
-                      iconData: Symbols.add_rounded,
-                      onPressed: () => _showInstanceCreationDialog(context),
-                    ),
-                  ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            Expanded(
-              child: ListenableBuilder(
-                listenable: widget.viewModel,
-                builder: (context, _) {
-                  if (widget.viewModel.loadInstances.running && widget.viewModel.instances.isEmpty) {
-                    return Center(child: CircularProgressIndicator.primary());
-                  }
-                  
-                  if (widget.viewModel.instances.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 8,
-                        children: [
-                          Icon(
-                            Symbols.folder_off_rounded,
-                            size: 80,
-                            weight: 800,
-                            color: AppColors.dark.onSurface,
-                          ),
-                          Column(
-                            spacing: 4,
+                const SizedBox(height: 32),
+                Expanded(
+                  child: ListenableBuilder(
+                    listenable: widget.viewModel,
+                    builder: (context, _) {
+                      if (widget.viewModel.loadInstances.running &&
+                          widget.viewModel.instances.isEmpty) {
+                        return Center(
+                          child: CircularProgressIndicator.primary(),
+                        );
+                      }
+
+                      if (widget.viewModel.instances.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 8,
                             children: [
-                              Text(
-                                AppLocalizations.of(context)!.noInstancesTitle,
-                                style: AppText.defaultTheme.titleSmall.copyWith(
-                                  color: AppColors.dark.onSurface,
-                                ),
+                              Icon(
+                                Symbols.folder_off_rounded,
+                                size: 80,
+                                weight: 800,
+                                color: AppColors.dark.onSurface,
                               ),
-                              Text(
-                                AppLocalizations.of(context)!.noInstancesSubtitle,
-                                style: AppText.defaultTheme.bodySmall.copyWith(
-                                  color: AppColors.dark.onSurfaceVariant,
-                                ),
+                              Column(
+                                spacing: 4,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.noInstancesTitle,
+                                    style: AppText.defaultTheme.titleSmall
+                                        .copyWith(
+                                          color: AppColors.dark.onSurface,
+                                        ),
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.noInstancesSubtitle,
+                                    style: AppText.defaultTheme.bodySmall
+                                        .copyWith(
+                                          color:
+                                              AppColors.dark.onSurfaceVariant,
+                                        ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    );
-                  }
+                        );
+                      }
 
-                  final sortedInstances = widget.viewModel.filteredAndSortedInstances;
+                      final sortedInstances =
+                          widget.viewModel.filteredAndSortedInstances;
 
-                  InstanceModel? lastPlayedInstance;
-                  List<InstanceModel> regularInstances = sortedInstances;
+                      InstanceModel? lastPlayedInstance;
+                      List<InstanceModel> regularInstances = sortedInstances;
 
-                  if (sortedInstances.isNotEmpty && sortedInstances.first.lastPlayed != null) {
-                    lastPlayedInstance = sortedInstances.first;
-                    regularInstances = sortedInstances.sublist(1);
-                  }
+                      if (sortedInstances.isNotEmpty &&
+                          sortedInstances.first.lastPlayed != null) {
+                        lastPlayedInstance = sortedInstances.first;
+                        regularInstances = sortedInstances.sublist(1);
+                      }
 
-                  Widget buildCard(InstanceModel instance, {bool isBigCard = false}) {
-                    return ChangeNotifierProvider(
-                      key: ValueKey(instance.id),
-                      create: (context) => InstanceCardViewModel(
-                        instance: instance,
-                        minecraftRepository: context.read<MinecraftRepository>(),
-                        instanceRepository: context.read<InstanceRepository>(),
-                        downloadService: context.read<DownloadService>(),
-                        javaRepository: context.read<JavaRepository>(),
-                      ),
-                      child: Builder(
-                        builder: (context) {
-                          return InstanceCard(
-                            viewModel: context.read<InstanceCardViewModel>(),
-                            isBigCard: isBigCard,
-                          );
-                        },
-                      ),
-                    );
-                  }
+                      Widget buildCard(
+                        InstanceModel instance, {
+                        bool isBigCard = false,
+                      }) {
+                        final isSelectionMode =
+                            widget.viewModel.isSelectionMode;
+                        final isSelected = widget.viewModel.selectedInstanceIds
+                            .contains(instance.id);
 
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                        return ChangeNotifierProvider(
+                          key: ValueKey(instance.id),
+                          create: (context) => InstanceCardViewModel(
+                            instance: instance,
+                            minecraftRepository: context
+                                .read<MinecraftRepository>(),
+                            instanceRepository: context
+                                .read<InstanceRepository>(),
+                            downloadService: context.read<DownloadService>(),
+                            javaRepository: context.read<JavaRepository>(),
+                          ),
+                          child: Builder(
+                            builder: (context) {
+                              return InstanceCard(
+                                viewModel: context
+                                    .read<InstanceCardViewModel>(),
+                                isBigCard: isBigCard,
+                                isSelectionMode: isSelectionMode,
+                                isSelected: isSelected,
+                                onSelect: () => widget.viewModel
+                                    .toggleInstanceSelection(instance.id),
+                              );
+                            },
+                          ),
+                        );
+                      }
+
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             if (lastPlayedInstance != null) ...[
                               buildCard(lastPlayedInstance, isBigCard: true),
                               const SizedBox(height: 32),
@@ -228,15 +307,19 @@ class _InstancesScreenState extends State<InstancesScreen> {
                               GridView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 280,
-                                  mainAxisSpacing: 16,
-                                  crossAxisSpacing: 16,
-                                  childAspectRatio: 1.0,
-                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 280,
+                                      mainAxisSpacing: 16,
+                                      crossAxisSpacing: 16,
+                                      childAspectRatio: 1.0,
+                                    ),
                                 itemCount: regularInstances.length,
                                 itemBuilder: (context, index) {
-                                  return buildCard(regularInstances[index], isBigCard: false);
+                                  return buildCard(
+                                    regularInstances[index],
+                                    isBigCard: false,
+                                  );
                                 },
                               ),
                           ],
@@ -251,8 +334,9 @@ class _InstancesScreenState extends State<InstancesScreen> {
           ListenableBuilder(
             listenable: widget.viewModel,
             builder: (context, _) {
-              final isDrawerOpen = widget.viewModel.selectedInstanceForDrawer != null;
-              
+              final isDrawerOpen =
+                  widget.viewModel.selectedInstanceForDrawer != null;
+
               return Stack(
                 children: [
                   if (isDrawerOpen)
@@ -271,19 +355,28 @@ class _InstancesScreenState extends State<InstancesScreen> {
                     right: isDrawerOpen ? 0 : -600,
                     width: 600,
                     child: Container(
-                      margin: const EdgeInsets.only(top: 8, bottom: 8, right: 8),
+                      margin: const EdgeInsets.only(
+                        top: 8,
+                        bottom: 8,
+                        right: 8,
+                      ),
                       decoration: BoxDecoration(
                         boxShadow: [
                           if (isDrawerOpen)
                             BoxShadow(
-                              color: AppColors.dark.scrim.withValues(alpha: 0.3),
+                              color: AppColors.dark.scrim.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 24,
                               offset: const Offset(-8, 0),
                             ),
                         ],
                       ),
                       child: widget.viewModel.selectedInstanceForDrawer != null
-                          ? InstanceDrawer(instance: widget.viewModel.selectedInstanceForDrawer!)
+                          ? InstanceDrawer(
+                              instance:
+                                  widget.viewModel.selectedInstanceForDrawer!,
+                            )
                           : const SizedBox.shrink(),
                     ),
                   ),
@@ -301,7 +394,9 @@ class _InstancesScreenState extends State<InstancesScreen> {
       minecraftRepository: context.read<MinecraftRepository>(),
       modLoaderRepositories: context.read<List<ModLoaderRepository>>(),
       instanceRepository: context.read<InstanceRepository>(),
-      existingInstanceNames: widget.viewModel.instances.map((i) => i.name).toList(),
+      existingInstanceNames: widget.viewModel.instances
+          .map((i) => i.name)
+          .toList(),
     );
 
     showGeneralDialog(
@@ -317,5 +412,41 @@ class _InstancesScreenState extends State<InstancesScreen> {
       viewModel.dispose();
       widget.viewModel.loadInstances.execute();
     });
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.dark.surfaceContainerHigh,
+          title: Text(
+            AppLocalizations.of(context)!.deleteInstanceTitle,
+            style: AppText.defaultTheme.titleSmall.copyWith(
+              color: AppColors.dark.onSurface,
+            ),
+          ),
+          content: Text(
+            AppLocalizations.of(context)!.deleteInstanceContent,
+            style: AppText.defaultTheme.body.copyWith(
+              color: AppColors.dark.onSurfaceVariant,
+            ),
+          ),
+          actions: [
+            Button.surface(
+              AppLocalizations.of(context)!.cancel,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            Button.error(
+              AppLocalizations.of(context)!.deleteButton,
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await widget.viewModel.deleteSelectedInstances();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

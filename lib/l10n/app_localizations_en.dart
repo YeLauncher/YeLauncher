@@ -402,4 +402,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get previewLabel => 'Preview';
+
+  @override
+  String selectedCount(int count) {
+    return '$count Selected';
+  }
+
+  @override
+  String get selectAllButton => 'Select All';
 }
