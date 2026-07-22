@@ -36,6 +36,7 @@ class ContentScreenViewModel extends ChangeNotifier {
       offset: _offset,
     );
 
+    isLoading = false;
     if (result is Success<List<ContentItem>>) {
       items = result.value;
       // If retrieved items are less than the limit, no more data is available

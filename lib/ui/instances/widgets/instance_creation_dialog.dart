@@ -218,6 +218,9 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
           key: const ValueKey('instance_name_input'),
           controller: _nameController,
           labelText: AppLocalizations.of(context)!.enterNameHint,
+          errorText: widget.viewModel.nameError == 'nameAlreadyExists'
+              ? AppLocalizations.of(context)!.nameAlreadyExists
+              : widget.viewModel.nameError,
           width: double.infinity,
         ),
       ],
@@ -707,16 +710,18 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             iconData: widget.viewModel.currentStep == 2
                 ? Symbols.check_rounded
                 : null,
-            onPressed: () async {
-              if (widget.viewModel.currentStep == 2) {
-                await widget.viewModel.saveInstance();
-                if (mounted) {
-                  Navigator.of(context).pop();
-                }
-              } else {
-                widget.viewModel.nextStep();
-              }
-            },
+            onPressed: widget.viewModel.canProceedToNextStep
+                ? () async {
+                    if (widget.viewModel.currentStep == 2) {
+                      await widget.viewModel.saveInstance();
+                      if (mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    } else {
+                      widget.viewModel.nextStep();
+                    }
+                  }
+                : null,
           ),
         ],
       ),

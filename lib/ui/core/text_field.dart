@@ -8,6 +8,8 @@ class TextField extends StatefulWidget {
   final double width;
   final String? labelText;
   final String? errorText;
+  final IconData? suffixIcon;
+  final VoidCallback? onSuffixPressed;
 
   const TextField({
     super.key,
@@ -15,6 +17,8 @@ class TextField extends StatefulWidget {
     this.width = 300,
     this.labelText,
     this.errorText,
+    this.suffixIcon,
+    this.onSuffixPressed,
   });
 
   @override
@@ -78,39 +82,59 @@ class _TextFieldState extends State<TextField>
                 borderRadius: BorderRadius.circular(12),
               ),
               duration: const Duration(milliseconds: 150),
-              child: Stack(
-                alignment: Alignment.centerLeft,
+              child: Row(
                 children: [
-                  if (widget.labelText != null)
-                    ValueListenableBuilder(
-                      valueListenable: widget.controller,
-                      builder: (context, value, child) {
-                        if (value.text.isNotEmpty) {
-                          return const SizedBox.shrink();
-                        }
-                        return Text(
-                          widget.labelText!,
-                          style: AppText.defaultTheme.bodySmall.copyWith(
-                            color: AppColors.dark.onSurfaceVariant,
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.centerLeft,
+                      children: [
+                        if (widget.labelText != null)
+                          ValueListenableBuilder(
+                            valueListenable: widget.controller,
+                            builder: (context, value, child) {
+                              if (value.text.isNotEmpty) {
+                                return const SizedBox.shrink();
+                              }
+                              return Text(
+                                widget.labelText!,
+                                style: AppText.defaultTheme.bodySmall.copyWith(
+                                  color: AppColors.dark.onSurfaceVariant,
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        EditableText(
+                          key: editableTextKey,
+                          enableInteractiveSelection: true,
+                          selectAllOnFocus: false,
+                          rendererIgnoresPointer: true,
+                          controller: widget.controller,
+                          focusNode: _focusNode,
+                          style: AppText.defaultTheme.bodySmall.copyWith(
+                            color: AppColors.dark.onSurface,
+                          ),
+                          cursorColor: _cursorColor,
+                          selectionColor: AppColors.dark.secondary,
+                          backgroundCursorColor: AppColors.dark.primary,
+                          onTapOutside: (_) => _focusNode.unfocus(),
+                        ),
+                      ],
                     ),
-                  EditableText(
-                    key: editableTextKey,
-                    enableInteractiveSelection: true,
-                    selectAllOnFocus: false,
-                    rendererIgnoresPointer: true,
-                    controller: widget.controller,
-                    focusNode: _focusNode,
-                    style: AppText.defaultTheme.bodySmall.copyWith(
-                      color: AppColors.dark.onSurface,
-                    ),
-                    cursorColor: _cursorColor,
-                    selectionColor: AppColors.dark.secondary,
-                    backgroundCursorColor: AppColors.dark.primary,
-                    onTapOutside: (_) => _focusNode.unfocus(),
                   ),
+                  if (widget.suffixIcon != null) ...[
+                    const SizedBox(width: 8),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: widget.onSuffixPressed,
+                        child: Icon(
+                          widget.suffixIcon,
+                          color: AppColors.dark.onSurfaceVariant,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

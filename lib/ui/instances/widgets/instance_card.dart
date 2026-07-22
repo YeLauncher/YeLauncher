@@ -142,7 +142,7 @@ class _InstanceCardState extends State<InstanceCard> {
             ),
           ),
         )
-      else if (widget.viewModel.instance.isInstalled == false)
+      else if (widget.viewModel.instance.isInstalled == false) ...[
         Button.primary(
           key: ValueKey('instance_install_button_${widget.viewModel.instance.id}'),
           AppLocalizations.of(context)!.installButton,
@@ -155,7 +155,14 @@ class _InstanceCardState extends State<InstanceCard> {
               context.read<InstanceScreenViewModel>().loadInstances.execute();
             }
           },
-        )
+        ),
+        ye_icon_button.IconButton.surface(
+          iconData: Symbols.settings_rounded,
+          onPressed: () {
+            context.read<InstanceScreenViewModel>().openDrawer(widget.viewModel.instance);
+          },
+        ),
+      ]
       else if (widget.viewModel.instance.isInstalled == true) ...[
         if (widget.viewModel.isRunning)
           Button.error(

@@ -691,6 +691,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Missing File'**
   String get missingFile;
+
+  /// No description provided for @deleteInstanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Instance'**
+  String get deleteInstanceTitle;
+
+  /// No description provided for @deleteInstanceContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this instance? This action cannot be undone and will permanently delete all mods, resourcepacks, and save data.'**
+  String get deleteInstanceContent;
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
+  /// No description provided for @sortLastPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Played'**
+  String get sortLastPlayed;
+
+  /// No description provided for @sortNameAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (A-Z)'**
+  String get sortNameAsc;
+
+  /// No description provided for @sortNameDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Z-A)'**
+  String get sortNameDesc;
+
+  /// No description provided for @searchInstances.
+  ///
+  /// In en, this message translates to:
+  /// **'Search instances...'**
+  String get searchInstances;
+
+  /// No description provided for @nameAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'An instance with this name already exists'**
+  String get nameAlreadyExists;
 }
 
 class _AppLocalizationsDelegate

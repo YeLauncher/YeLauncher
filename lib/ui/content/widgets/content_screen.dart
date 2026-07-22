@@ -97,6 +97,7 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   void _showInfoDialog(BuildContext context, ContentItem item) {
+    debugPrint('_showInfoDialog called for ${item.title}');
     final viewModel = ContentDetailViewModel(
       item: item,
       contentRepository: context.read<ContentRepository>(),

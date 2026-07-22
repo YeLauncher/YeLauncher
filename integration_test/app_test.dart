@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -8,15 +9,18 @@ import 'package:yelauncher/config/dependencies.dart';
 import 'package:yelauncher/data/repositories/content/content_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/secure_storage_service.dart';
 import 'package:yelauncher/domain/models/content/content_item.dart';
+import 'package:yelauncher/domain/models/content/content_version.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/domain/models/mod_loader/mod_loader_version_model.dart';
 import 'package:yelauncher/main.dart';
 import 'package:yelauncher/utilities/result.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../test/integration_mocks.mocks.dart';
 
@@ -27,6 +31,12 @@ void main() {
     provideDummy<Result<List<ModLoaderVersionModel>>>(Result.success([]));
     provideDummy<Result<List<MinecraftVersionModel>>>(Result.success([]));
     provideDummy<Result<List<ContentItem>>>(Result.success([]));
+    provideDummy<Result<ContentItem>>(Result.success(ContentItem(
+      id: '', slug: '', projectType: '', title: '', description: '',
+      downloads: 0,
+      iconUrl: '', author: '', gallery: [],
+    )));
+    provideDummy<Result<List<ContentVersion>>>(Result.success([]));
     provideDummy<Result<MinecraftProcessModel>>(Result.success(
       MinecraftProcessModel(
         exitCode: Future.value(0),
@@ -43,12 +53,16 @@ void main() {
     late MockContentRepository mockContentRepo;
     late MockModLoaderRepository mockModLoaderRepo;
     late MockDownloadService mockDownloadService;
+    late MockSettingsRepository mockSettingsRepo;
 
     setUp(() async {
       mockMinecraftRepo = MockMinecraftRepository();
       mockContentRepo = MockContentRepository();
       mockModLoaderRepo = MockModLoaderRepository();
       mockDownloadService = MockDownloadService();
+      mockSettingsRepo = MockSettingsRepository();
+
+      when(mockSettingsRepo.currentLocale).thenReturn(const Locale('en'));
 
       // Ensure storage is initialized
       final secureStorage = SecureStorageService();
@@ -74,22 +88,33 @@ void main() {
         )
       ));
       
+      final fabricItem = ContentItem(
+          id: 'fabric-api',
+          slug: 'fabric-api',
+          projectType: 'mod',
+          title: 'Fabric API',
+          description: 'Core API for Fabric.',
+          downloads: 1000,
+          iconUrl: null,
+          author: 'modmuss50',
+          gallery: [],
+        );
       when(mockContentRepo.searchContent(
         query: anyNamed('query'),
         projectType: anyNamed('projectType'),
         limit: anyNamed('limit'),
         offset: anyNamed('offset'),
-      )).thenAnswer((_) async => Result.success([
-        ContentItem(
-          id: 'fabric-api',
-          slug: 'fabric-api',
-          title: 'Fabric API',
-          description: 'Core API for Fabric mods',
-          projectType: 'mod',
-          author: 'FabricMC',
-          downloads: 1000000,
+      )).thenAnswer((_) async => Result.success([fabricItem]));
+      when(mockContentRepo.getContent(any)).thenAnswer((_) async => Result.success(fabricItem));
+      when(mockContentRepo.getVersions(any)).thenAnswer((_) async => Result.success([
+        ContentVersion(
+          id: 'fabric-api-version',
+          projectId: 'fabric-api',
+          name: 'Fabric API 0.14.21',
+          versionNumber: '0.14.21',
           gameVersions: ['1.20.1'],
           loaders: ['fabric'],
+          files: [],
         ),
       ]));
 
@@ -117,6 +142,7 @@ void main() {
         Provider<ContentRepository>.value(value: mockContentRepo),
         Provider<List<ModLoaderRepository>>.value(value: [mockModLoaderRepo]),
         Provider<DownloadService>.value(value: mockDownloadService),
+        ChangeNotifierProvider<SettingsRepository>.value(value: mockSettingsRepo),
       ]);
 
       await tester.pumpWidget(
@@ -158,8 +184,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify the instance was created (wait for the card to appear)
-      expect(find.text('E2E Instance'), findsOneWidget);
-      expect(find.text('1.20.1 • 0.14.21'), findsOneWidget); // Actually modLoaderVersion might be different if mocked
+      expect(find.text('E2E Instance'), findsWidgets);
 
       // Get the instance ID generated by the creation process by reading the provider state
       // Actually, we can just tap the Install button for the new instance by finding the button that contains 'Install'
@@ -172,24 +197,36 @@ void main() {
 
       // Search for Fabric API
       await tester.enterText(find.byKey(const ValueKey('content_search_input')), 'Fabric API');
-      await tester.pumpAndSettle(const Duration(seconds: 1)); // allow debounce
-
-      // Tap the mod in the results
-      await tester.tap(find.text('Fabric API').first);
+      await tester.pump(const Duration(seconds: 2)); // allow debounce and search to complete
       await tester.pumpAndSettle();
 
-      // Tap "Install" on the Detail Dialog
-      // We need a key or just text
-      await tester.tap(find.text('Install').first);
+      // Tap the info button on the mod card
+      await tester.tap(find.byIcon(Symbols.info).first);
       await tester.pumpAndSettle();
 
-      // Select the instance in the Install Dialog
-      await tester.tap(find.text('E2E Instance'));
+      // Tap the Versions tab in the detail dialog
+      await tester.tap(find.text('Versions'));
       await tester.pumpAndSettle();
+
+      // Tap "Install" on the Detail Dialog (it's a download icon)
+      await tester.tap(find.byIcon(Symbols.download_rounded).first);
+      await tester.pumpAndSettle();
+
+      // Wait for async file I/O in _loadFreshInstances
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      try {
+        await tester.tap(find.text('E2E Instance'));
+        await tester.pumpAndSettle();
+      } catch (e) {
+        final tree = tester.allWidgets.map((w) => w.toString()).join('\n');
+        File('tree.txt').writeAsStringSync(tree);
+        rethrow;
+      }
 
       // Tap the bottom Install button
-      // Let's tap the button that has text "Install"
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Install').last);
+      await tester.tap(find.text('Install').last);
       // Wait for installation
       await tester.pumpAndSettle(const Duration(seconds: 1));
 

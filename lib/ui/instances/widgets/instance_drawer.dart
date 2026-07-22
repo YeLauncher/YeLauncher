@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart' show AlertDialog, showDialog;
 import 'package:flutter/widgets.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:path/path.dart' as p;
@@ -81,11 +82,19 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
     _loadContent();
   }
 
+  bool _contentChanged(List<InstalledContentModel> old, List<InstalledContentModel> current) {
+    if (old.length != current.length) return true;
+    for (int i = 0; i < old.length; i++) {
+      if (old[i].filename != current[i].filename) return true;
+    }
+    return false;
+  }
+
   @override
   void didUpdateWidget(InstanceDrawer oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.instance.id != widget.instance.id ||
-        oldWidget.instance.installedContent.length != widget.instance.installedContent.length) {
+        _contentChanged(oldWidget.instance.installedContent, widget.instance.installedContent)) {
       _initSettingsState();
       _loadContent();
     }
@@ -184,11 +193,9 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
               filename.endsWith('.zip') ||
               isDisabled) {
             final decodedFilename = Uri.decodeFull(filename);
-            final model =
-                managedMap[decodedFilename] ??
-                (isDisabled
-                    ? managedMap[decodedFilename.replaceAll('.disabled', '')]
-                    : null);
+            final model = managedMap[decodedFilename] ??
+                managedMap['$decodedFilename.disabled'] ??
+                managedMap[decodedFilename.replaceAll('.disabled', '')];
 
             items.add(
               _DisplayContent(
@@ -544,8 +551,13 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
         Padding(
           padding: const EdgeInsets.all(24),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Button.error(
+                AppLocalizations.of(context)!.deleteButton,
+                onPressed: _deleteInstance,
+                iconData: Symbols.delete_rounded,
+              ),
               if (_isSaving)
                 CircularProgressIndicator.primary(size: 24)
               else
@@ -559,6 +571,48 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
         ),
       ],
     );
+  }
+
+  Future<void> _deleteInstance() async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.dark.surfaceContainerHigh,
+        title: Text(
+          AppLocalizations.of(context)!.deleteInstanceTitle,
+          style: AppText.defaultTheme.titleSmall.copyWith(
+            color: AppColors.dark.onSurface,
+          ),
+        ),
+        content: Text(
+          AppLocalizations.of(context)!.deleteInstanceContent,
+          style: AppText.defaultTheme.body.copyWith(
+            color: AppColors.dark.onSurfaceVariant,
+          ),
+        ),
+        actions: [
+          Button.surface(
+            AppLocalizations.of(context)!.cancel,
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          Button.error(
+            AppLocalizations.of(context)!.deleteButton,
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      if (mounted) {
+        final instanceRepo = context.read<InstanceRepository>();
+        await instanceRepo.deleteInstance(widget.instance.id);
+        if (mounted) {
+          context.read<InstanceScreenViewModel>().loadInstances.execute();
+          context.read<InstanceScreenViewModel>().closeDrawer();
+        }
+      }
+    }
   }
 
   Widget _buildSettingsRow({
@@ -784,7 +838,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
 
     if (item.isManaged) {
       final newContent = widget.instance.installedContent
-          .where((c) => c.filename != item.model!.filename)
+          .where((c) => c.projectId != item.model!.projectId || c.versionId != item.model!.versionId)
           .toList();
       final updatedInstance = widget.instance.copyWith(
         installedContent: newContent,
@@ -831,7 +885,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
 
       if (item.isManaged && item.model != null) {
         final newContent = widget.instance.installedContent.map((c) {
-          if (c.filename == item.model!.filename) {
+          if (c.projectId == item.model!.projectId && c.versionId == item.model!.versionId) {
             return c.copyWith(filename: newFilename);
           }
           return c;

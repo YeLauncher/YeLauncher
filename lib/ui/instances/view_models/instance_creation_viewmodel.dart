@@ -21,6 +21,8 @@ class InstanceCreationViewModel extends ChangeNotifier {
   String searchQuery = "";
   MinecraftVersionModel? selectedVersion;
   String selectedModLoader = 'vanilla';
+  
+  final List<String> _existingInstanceNames;
 
   List<ModLoaderRepository> availableModLoaders = [];
   final Map<String, String> _modLoaderLatestVersion = {};
@@ -42,9 +44,11 @@ class InstanceCreationViewModel extends ChangeNotifier {
     required MinecraftRepository minecraftRepository,
     required List<ModLoaderRepository> modLoaderRepositories,
     required InstanceRepository instanceRepository,
+    required List<String> existingInstanceNames,
   }) : _minecraftRepository = minecraftRepository,
        _modLoaderRepositories = modLoaderRepositories,
-       _instanceRepository = instanceRepository {
+       _instanceRepository = instanceRepository,
+       _existingInstanceNames = existingInstanceNames.map((n) => n.toLowerCase()).toList() {
     loadVersions = Command0(_loadVersions);
     loadModLoaders = Command1(_loadModLoaders);
   }
@@ -71,6 +75,24 @@ class InstanceCreationViewModel extends ChangeNotifier {
   void updateSearchQuery(String query) {
     searchQuery = query;
     notifyListeners();
+  }
+
+  String? get nameError {
+    if (instanceName.trim().isEmpty) return null;
+    if (_existingInstanceNames.contains(instanceName.trim().toLowerCase())) {
+      return 'nameAlreadyExists'; // Will be mapped to l10n in dialog
+    }
+    return null;
+  }
+
+  bool get canProceedToNextStep {
+    if (currentStep == 0) {
+      return instanceName.trim().isNotEmpty && nameError == null;
+    }
+    if (currentStep == 1) {
+      return selectedVersion != null;
+    }
+    return true;
   }
 
   List<MinecraftVersionModel> get filteredVersions {

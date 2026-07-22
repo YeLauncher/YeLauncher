@@ -3,11 +3,14 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
+import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
+import 'package:yelauncher/ui/core/dropdown.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
+import 'package:yelauncher/ui/core/text_field.dart' as ye_text_field;
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_card_viewmodel.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_creation_viewmodel.dart';
@@ -26,10 +29,22 @@ class InstancesScreen extends StatefulWidget {
 }
 
 class _InstancesScreenState extends State<InstancesScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+    _searchController.text = widget.viewModel.searchQuery;
+    _searchController.addListener(() {
+      widget.viewModel.searchQuery = _searchController.text;
+    });
     widget.viewModel.loadInstances.execute();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,6 +98,45 @@ class _InstancesScreenState extends State<InstancesScreen> {
                 ),
                 Row(
                   children: [
+                    SizedBox(
+                      width: 250,
+                      child: ValueListenableBuilder(
+                        valueListenable: _searchController,
+                        builder: (context, value, _) {
+                          return ye_text_field.TextField(
+                            controller: _searchController,
+                            labelText: AppLocalizations.of(context)!.searchInstances,
+                            suffixIcon: value.text.isNotEmpty ? Symbols.close_rounded : null,
+                            onSuffixPressed: () => _searchController.clear(),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Selector<InstanceScreenViewModel, InstanceSortOrder>(
+                      selector: (_, viewModel) => viewModel.sortOrder,
+                      builder: (context, sortOrder, _) {
+                        return Dropdown<InstanceSortOrder>(
+                          value: sortOrder,
+                          items: [
+                            DropdownItem(
+                              value: InstanceSortOrder.lastPlayed,
+                              label: AppLocalizations.of(context)!.sortLastPlayed,
+                            ),
+                            DropdownItem(
+                              value: InstanceSortOrder.nameAsc,
+                              label: AppLocalizations.of(context)!.sortNameAsc,
+                            ),
+                            DropdownItem(
+                              value: InstanceSortOrder.nameDesc,
+                              label: AppLocalizations.of(context)!.sortNameDesc,
+                            ),
+                          ],
+                          onChanged: (val) => widget.viewModel.sortOrder = val,
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 16),
                     Button.primary(
                       key: const ValueKey('create_instance_button'),
                       AppLocalizations.of(context)!.createButton,
@@ -136,13 +190,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                     );
                   }
 
-                  final sortedInstances = List<InstanceModel>.from(widget.viewModel.instances)
-                    ..sort((a, b) {
-                      if (a.lastPlayed == null && b.lastPlayed == null) return 0;
-                      if (a.lastPlayed == null) return 1;
-                      if (b.lastPlayed == null) return -1;
-                      return b.lastPlayed!.compareTo(a.lastPlayed!);
-                    });
+                  final sortedInstances = widget.viewModel.filteredAndSortedInstances;
 
                   InstanceModel? lastPlayedInstance;
                   List<InstanceModel> regularInstances = sortedInstances;
@@ -154,6 +202,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
 
                   Widget buildCard(InstanceModel instance, {bool isBigCard = false}) {
                     return ChangeNotifierProvider(
+                      key: ValueKey(instance.id),
                       create: (context) => InstanceCardViewModel(
                         instance: instance,
                         minecraftRepository: context.read<MinecraftRepository>(),
@@ -254,9 +303,10 @@ class _InstancesScreenState extends State<InstancesScreen> {
 
   void _showInstanceCreationDialog(BuildContext context) {
     final viewModel = InstanceCreationViewModel(
-      minecraftRepository: context.read(),
-      modLoaderRepositories: context.read(),
-      instanceRepository: context.read(),
+      minecraftRepository: context.read<MinecraftRepository>(),
+      modLoaderRepositories: context.read<List<ModLoaderRepository>>(),
+      instanceRepository: context.read<InstanceRepository>(),
+      existingInstanceNames: widget.viewModel.instances.map((i) => i.name).toList(),
     );
 
     showGeneralDialog(

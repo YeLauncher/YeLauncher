@@ -4,10 +4,55 @@ import 'package:yelauncher/domain/models/instance/instance_model.dart';
 import 'package:yelauncher/utilities/command.dart';
 import 'package:yelauncher/utilities/result.dart';
 
+enum InstanceSortOrder {
+  lastPlayed,
+  nameAsc,
+  nameDesc,
+}
+
 class InstanceScreenViewModel extends ChangeNotifier {
   final InstanceRepository _instanceRepository;
 
   List<InstanceModel> instances = [];
+
+  String _searchQuery = '';
+  String get searchQuery => _searchQuery;
+  set searchQuery(String value) {
+    _searchQuery = value;
+    notifyListeners();
+  }
+
+  InstanceSortOrder _sortOrder = InstanceSortOrder.lastPlayed;
+  InstanceSortOrder get sortOrder => _sortOrder;
+  set sortOrder(InstanceSortOrder value) {
+    _sortOrder = value;
+    notifyListeners();
+  }
+
+  List<InstanceModel> get filteredAndSortedInstances {
+    var result = List<InstanceModel>.from(instances);
+
+    if (_searchQuery.isNotEmpty) {
+      final query = _searchQuery.toLowerCase();
+      result = result.where((i) => i.name.toLowerCase().contains(query)).toList();
+    }
+
+    result.sort((a, b) {
+      switch (_sortOrder) {
+        case InstanceSortOrder.lastPlayed:
+          if (a.lastPlayed == null && b.lastPlayed == null) return 0;
+          if (a.lastPlayed == null) return 1;
+          if (b.lastPlayed == null) return -1;
+          return b.lastPlayed!.compareTo(a.lastPlayed!);
+        case InstanceSortOrder.nameAsc:
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        case InstanceSortOrder.nameDesc:
+          return b.name.toLowerCase().compareTo(a.name.toLowerCase());
+      }
+    });
+
+    return result;
+  }
 
   late final Command0 loadInstances;
 

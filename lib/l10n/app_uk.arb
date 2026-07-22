@@ -119,5 +119,13 @@
   "saveChangesButton": "Зберегти зміни",
   "launcherManaged": "Лаунчер",
   "manualInstalled": "Вручну",
-  "missingFile": "Відсутній файл"
+  "missingFile": "Відсутній файл",
+  "deleteInstanceTitle": "Видалити екземпляр",
+  "deleteInstanceContent": "Ви впевнені, що хочете видалити цей екземпляр? Цю дію неможливо скасувати, вона назавжди видалить усі моди, ресурспаки та збереження.",
+  "deleteButton": "Видалити",
+  "sortLastPlayed": "Останні запущені",
+  "sortNameAsc": "Назва (А-Я)",
+  "sortNameDesc": "Назва (Я-А)",
+  "searchInstances": "Пошук екземплярів...",
+  "nameAlreadyExists": "Екземпляр з такою назвою вже існує"
 }

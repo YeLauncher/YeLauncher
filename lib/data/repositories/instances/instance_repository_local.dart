@@ -89,7 +89,14 @@ class InstanceRepositoryLocal implements InstanceRepository {
     final file = await _fileFor(id);
     if (await file.exists()) {
       await file.delete();
-      _log.info('Deleted instance $id');
+      _log.info('Deleted instance config $id');
+    }
+
+    final appData = await getApplicationSupportDirectory();
+    final instanceDir = Directory(p.join(appData.path, 'instances', id));
+    if (await instanceDir.exists()) {
+      await instanceDir.delete(recursive: true);
+      _log.info('Deleted instance data directory $id');
     }
   }
 

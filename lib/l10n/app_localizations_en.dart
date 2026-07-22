@@ -320,4 +320,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get missingFile => 'Missing File';
+
+  @override
+  String get deleteInstanceTitle => 'Delete Instance';
+
+  @override
+  String get deleteInstanceContent =>
+      'Are you sure you want to delete this instance? This action cannot be undone and will permanently delete all mods, resourcepacks, and save data.';
+
+  @override
+  String get deleteButton => 'Delete';
+
+  @override
+  String get sortLastPlayed => 'Last Played';
+
+  @override
+  String get sortNameAsc => 'Name (A-Z)';
+
+  @override
+  String get sortNameDesc => 'Name (Z-A)';
+
+  @override
+  String get searchInstances => 'Search instances...';
+
+  @override
+  String get nameAlreadyExists => 'An instance with this name already exists';
 }

@@ -320,4 +320,29 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get missingFile => 'Відсутній файл';
+
+  @override
+  String get deleteInstanceTitle => 'Видалити екземпляр';
+
+  @override
+  String get deleteInstanceContent =>
+      'Ви впевнені, що хочете видалити цей екземпляр? Цю дію неможливо скасувати, вона назавжди видалить усі моди, ресурспаки та збереження.';
+
+  @override
+  String get deleteButton => 'Видалити';
+
+  @override
+  String get sortLastPlayed => 'Останні запущені';
+
+  @override
+  String get sortNameAsc => 'Назва (А-Я)';
+
+  @override
+  String get sortNameDesc => 'Назва (Я-А)';
+
+  @override
+  String get searchInstances => 'Пошук екземплярів...';
+
+  @override
+  String get nameAlreadyExists => 'Екземпляр з такою назвою вже існує';
 }
