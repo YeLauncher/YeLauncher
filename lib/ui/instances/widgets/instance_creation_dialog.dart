@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:yelauncher/config/assets.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/ui/core/button.dart';
+import 'package:yelauncher/ui/core/checkbox.dart' as core_checkbox;
 import 'package:yelauncher/ui/core/chip.dart';
 import 'package:yelauncher/ui/core/list_item.dart';
 import 'package:yelauncher/ui/core/step.dart' as core_step;
@@ -67,7 +68,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
       builder: (context, _) {
         return Container(
           width: 700,
-          height: math.max(550.0, MediaQuery.sizeOf(context).height * 0.75),
+          height: math.max(650.0, MediaQuery.sizeOf(context).height * 0.8),
           decoration: BoxDecoration(
             color: AppColors.dark.surfaceContainer,
             borderRadius: BorderRadius.circular(24),
@@ -115,13 +116,13 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               ),
               _divider,
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 child: _stepper,
               ),
               _divider,
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(28),
+                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                   child: _buildCurrentStep(),
                 ),
               ),
@@ -253,6 +254,16 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
           controller: _searchController,
           labelText: AppLocalizations.of(context)!.searchVersionHint,
           width: double.infinity,
+          isSearchField: true,
+        ),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: core_checkbox.CoreCheckbox(
+            value: widget.viewModel.showSnapshots,
+            onChanged: (val) => widget.viewModel.toggleShowSnapshots(val ?? false),
+            label: AppLocalizations.of(context)!.showSnapshots,
+          ),
         ),
         const SizedBox(height: 8),
         Expanded(

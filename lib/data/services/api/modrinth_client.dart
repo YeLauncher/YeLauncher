@@ -20,13 +20,33 @@ class ModrinthClient implements ContentProvider {
   Future<Result<List<ContentItem>>> searchContent({
     required String query,
     required String projectType,
+    List<String> versions = const [],
+    List<String> modLoaders = const [],
+    List<String> categories = const [],
+    String sortOrder = 'relevance',
     int limit = 20,
     int offset = 0,
   }) async {
     try {
+      final List<String> facets = [];
+      facets.add('["project_type:$projectType"]');
+      if (versions.isNotEmpty) {
+        final versionFacets = versions.map((v) => '"versions:$v"').join(',');
+        facets.add('[$versionFacets]');
+      }
+      if (modLoaders.isNotEmpty) {
+        final loaderFacets = modLoaders.map((l) => '"categories:$l"').join(',');
+        facets.add('[$loaderFacets]');
+      }
+      if (categories.isNotEmpty) {
+        final categoryFacets = categories.map((c) => '"categories:$c"').join(',');
+        facets.add('[$categoryFacets]');
+      }
+
       final uri = Uri.parse('$_baseUrl/search').replace(queryParameters: {
         if (query.isNotEmpty) 'query': query,
-        'facets': '[["project_type:$projectType"]]',
+        'facets': '[${facets.join(",")}]',
+        'index': sortOrder,
         'limit': limit.toString(),
         'offset': offset.toString(),
       });

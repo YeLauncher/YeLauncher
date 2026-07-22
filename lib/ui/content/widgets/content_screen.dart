@@ -7,6 +7,7 @@ import 'package:yelauncher/domain/models/content/content_version.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/ui/content/view_models/content_screen_viewmodel.dart';
 import 'package:yelauncher/ui/content/widgets/content_detail_dialog.dart';
+import 'package:yelauncher/ui/content/widgets/content_filter_bar.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/card.dart';
 import 'package:yelauncher/ui/core/loading_indicator.dart';
@@ -172,6 +173,7 @@ class _ContentScreenState extends State<ContentScreen> {
               controller: _searchController,
               labelText: AppLocalizations.of(context)!.searchHint,
               width: double.infinity,
+              isSearchField: true,
             ),
             const SizedBox(height: 16),
             Row(
@@ -203,6 +205,8 @@ class _ContentScreenState extends State<ContentScreen> {
                 );
               }),
             ),
+            const SizedBox(height: 16),
+            ContentFilterBar(viewModel: widget.viewModel),
             const SizedBox(height: 16),
             Expanded(
               child: Consumer<ContentScreenViewModel>(

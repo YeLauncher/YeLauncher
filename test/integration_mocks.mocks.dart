@@ -317,6 +317,10 @@ class MockContentRepository extends _i1.Mock implements _i11.ContentRepository {
   _i4.Future<_i5.Result<List<_i12.ContentItem>>> searchContent({
     required String? query,
     required String? projectType,
+    List<String>? versions = const [],
+    List<String>? modLoaders = const [],
+    List<String>? categories = const [],
+    String? sortOrder = 'relevance',
     int? limit = 20,
     int? offset = 0,
   }) =>
@@ -324,6 +328,10 @@ class MockContentRepository extends _i1.Mock implements _i11.ContentRepository {
             Invocation.method(#searchContent, [], {
               #query: query,
               #projectType: projectType,
+              #versions: versions,
+              #modLoaders: modLoaders,
+              #categories: categories,
+              #sortOrder: sortOrder,
               #limit: limit,
               #offset: offset,
             }),
@@ -333,6 +341,10 @@ class MockContentRepository extends _i1.Mock implements _i11.ContentRepository {
                 Invocation.method(#searchContent, [], {
                   #query: query,
                   #projectType: projectType,
+                  #versions: versions,
+                  #modLoaders: modLoaders,
+                  #categories: categories,
+                  #sortOrder: sortOrder,
                   #limit: limit,
                   #offset: offset,
                 }),
@@ -345,6 +357,10 @@ class MockContentRepository extends _i1.Mock implements _i11.ContentRepository {
                     Invocation.method(#searchContent, [], {
                       #query: query,
                       #projectType: projectType,
+                      #versions: versions,
+                      #modLoaders: modLoaders,
+                      #categories: categories,
+                      #sortOrder: sortOrder,
                       #limit: limit,
                       #offset: offset,
                     }),

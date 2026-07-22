@@ -6,6 +6,10 @@ abstract interface class ContentProvider {
   Future<Result<List<ContentItem>>> searchContent({
     required String query,
     required String projectType,
+    List<String> versions = const [],
+    List<String> modLoaders = const [],
+    List<String> categories = const [],
+    String sortOrder = 'relevance',
     int limit = 20,
     int offset = 0,
   });

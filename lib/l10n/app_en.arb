@@ -127,5 +127,20 @@
   "sortNameAsc": "Name (A-Z)",
   "sortNameDesc": "Name (Z-A)",
   "searchInstances": "Search instances...",
-  "nameAlreadyExists": "An instance with this name already exists"
+  "nameAlreadyExists": "An instance with this name already exists",
+  "filterAllVersions": "All Versions",
+  "filterAllLoaders": "All Loaders",
+  "filterAllCategories": "All Categories",
+  "sortRelevance": "Relevance",
+  "sortDownloads": "Downloads",
+  "sortNewest": "Newest",
+  "sortUpdated": "Updated",
+  "categoryAdventure": "Adventure",
+  "categoryMagic": "Magic",
+  "categoryTechnology": "Technology",
+  "categoryOptimization": "Optimization",
+  "categoryUtility": "Utility",
+  "categoryDecoration": "Decoration",
+  "categoryWorldgen": "World Generation",
+  "showSnapshots": "Snapshots"
 }

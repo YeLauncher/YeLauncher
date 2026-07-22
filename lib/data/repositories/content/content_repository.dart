@@ -18,10 +18,17 @@ class ContentRepository {
   Future<Result<List<ContentItem>>> searchContent({
     required String query,
     required String projectType,
+    List<String> versions = const [],
+    List<String> modLoaders = const [],
+    List<String> categories = const [],
+    String sortOrder = 'relevance',
     int limit = 20,
     int offset = 0,
   }) async {
-    final cacheKey = '${query}_${projectType}_${limit}_$offset';
+    final vStr = versions.join(',');
+    final lStr = modLoaders.join(',');
+    final cStr = categories.join(',');
+    final cacheKey = '${query}_${projectType}_${vStr}_${lStr}_${cStr}_${sortOrder}_${limit}_$offset';
     if (_searchCache.containsKey(cacheKey)) {
       _log.fine('Returning cached search results for query: $query');
       return Result.success(_searchCache[cacheKey]!);
@@ -32,6 +39,10 @@ class ContentRepository {
     final result = await _provider.searchContent(
       query: query,
       projectType: projectType,
+      versions: versions,
+      modLoaders: modLoaders,
+      categories: categories,
+      sortOrder: sortOrder,
       limit: limit,
       offset: offset,
     );

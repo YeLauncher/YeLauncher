@@ -9,8 +9,17 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
 import 'package:yelauncher/data/repositories/content/content_repository.dart'
     as _i2;
+import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart'
+    as _i8;
 import 'package:yelauncher/domain/models/content/content_item.dart' as _i5;
 import 'package:yelauncher/domain/models/content/content_version.dart' as _i7;
+import 'package:yelauncher/domain/models/instance/instance_model.dart' as _i11;
+import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart'
+    as _i12;
+import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart'
+    as _i9;
+import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart'
+    as _i10;
 import 'package:yelauncher/utilities/result.dart' as _i4;
 
 // ignore_for_file: type=lint
@@ -40,6 +49,10 @@ class MockContentRepository extends _i1.Mock implements _i2.ContentRepository {
   _i3.Future<_i4.Result<List<_i5.ContentItem>>> searchContent({
     required String? query,
     required String? projectType,
+    List<String>? versions = const [],
+    List<String>? modLoaders = const [],
+    List<String>? categories = const [],
+    String? sortOrder = 'relevance',
     int? limit = 20,
     int? offset = 0,
   }) =>
@@ -47,6 +60,10 @@ class MockContentRepository extends _i1.Mock implements _i2.ContentRepository {
             Invocation.method(#searchContent, [], {
               #query: query,
               #projectType: projectType,
+              #versions: versions,
+              #modLoaders: modLoaders,
+              #categories: categories,
+              #sortOrder: sortOrder,
               #limit: limit,
               #offset: offset,
             }),
@@ -56,6 +73,10 @@ class MockContentRepository extends _i1.Mock implements _i2.ContentRepository {
                 Invocation.method(#searchContent, [], {
                   #query: query,
                   #projectType: projectType,
+                  #versions: versions,
+                  #modLoaders: modLoaders,
+                  #categories: categories,
+                  #sortOrder: sortOrder,
                   #limit: limit,
                   #offset: offset,
                 }),
@@ -89,4 +110,190 @@ class MockContentRepository extends _i1.Mock implements _i2.ContentRepository {
             ),
           )
           as _i3.Future<_i4.Result<List<_i7.ContentVersion>>>);
+}
+
+/// A class which mocks [MinecraftRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMinecraftRepository extends _i1.Mock
+    implements _i8.MinecraftRepository {
+  MockMinecraftRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<_i4.Result<List<_i9.MinecraftProfileModel>>> getProfiles() =>
+      (super.noSuchMethod(
+            Invocation.method(#getProfiles, []),
+            returnValue:
+                _i3.Future<_i4.Result<List<_i9.MinecraftProfileModel>>>.value(
+                  _i6.dummyValue<_i4.Result<List<_i9.MinecraftProfileModel>>>(
+                    this,
+                    Invocation.method(#getProfiles, []),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.Result<List<_i9.MinecraftProfileModel>>>);
+
+  @override
+  _i3.Future<_i4.Result<_i9.MinecraftProfileModel?>> getSelectedProfile() =>
+      (super.noSuchMethod(
+            Invocation.method(#getSelectedProfile, []),
+            returnValue:
+                _i3.Future<_i4.Result<_i9.MinecraftProfileModel?>>.value(
+                  _i6.dummyValue<_i4.Result<_i9.MinecraftProfileModel?>>(
+                    this,
+                    Invocation.method(#getSelectedProfile, []),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.Result<_i9.MinecraftProfileModel?>>);
+
+  @override
+  _i3.Future<_i4.Result<void>> selectProfile(String? uuid) =>
+      (super.noSuchMethod(
+            Invocation.method(#selectProfile, [uuid]),
+            returnValue: _i3.Future<_i4.Result<void>>.value(
+              _i6.dummyValue<_i4.Result<void>>(
+                this,
+                Invocation.method(#selectProfile, [uuid]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<void>>);
+
+  @override
+  _i3.Future<_i4.Result<void>> removeProfile(String? uuid) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeProfile, [uuid]),
+            returnValue: _i3.Future<_i4.Result<void>>.value(
+              _i6.dummyValue<_i4.Result<void>>(
+                this,
+                Invocation.method(#removeProfile, [uuid]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<void>>);
+
+  @override
+  _i3.Future<_i4.Result<_i9.MinecraftProfileModel>> authenticate() =>
+      (super.noSuchMethod(
+            Invocation.method(#authenticate, []),
+            returnValue:
+                _i3.Future<_i4.Result<_i9.MinecraftProfileModel>>.value(
+                  _i6.dummyValue<_i4.Result<_i9.MinecraftProfileModel>>(
+                    this,
+                    Invocation.method(#authenticate, []),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.Result<_i9.MinecraftProfileModel>>);
+
+  @override
+  void cancelAuthentication() => super.noSuchMethod(
+    Invocation.method(#cancelAuthentication, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i3.Future<_i4.Result<List<_i10.MinecraftVersionModel>>> getVersions() =>
+      (super.noSuchMethod(
+            Invocation.method(#getVersions, []),
+            returnValue:
+                _i3.Future<_i4.Result<List<_i10.MinecraftVersionModel>>>.value(
+                  _i6.dummyValue<_i4.Result<List<_i10.MinecraftVersionModel>>>(
+                    this,
+                    Invocation.method(#getVersions, []),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.Result<List<_i10.MinecraftVersionModel>>>);
+
+  @override
+  _i3.Future<_i4.Result<void>> install(
+    _i11.InstanceModel? instance, {
+    void Function(int, int?)? onProgress,
+    void Function(String)? onStepChanged,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #install,
+              [instance],
+              {#onProgress: onProgress, #onStepChanged: onStepChanged},
+            ),
+            returnValue: _i3.Future<_i4.Result<void>>.value(
+              _i6.dummyValue<_i4.Result<void>>(
+                this,
+                Invocation.method(
+                  #install,
+                  [instance],
+                  {#onProgress: onProgress, #onStepChanged: onStepChanged},
+                ),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<void>>);
+
+  @override
+  _i3.Future<_i4.Result<bool>> isInstalled(_i11.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#isInstalled, [instance]),
+            returnValue: _i3.Future<_i4.Result<bool>>.value(
+              _i6.dummyValue<_i4.Result<bool>>(
+                this,
+                Invocation.method(#isInstalled, [instance]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<bool>>);
+
+  @override
+  _i3.Future<_i4.Result<String>> getJavaVersion(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#getJavaVersion, [id]),
+            returnValue: _i3.Future<_i4.Result<String>>.value(
+              _i6.dummyValue<_i4.Result<String>>(
+                this,
+                Invocation.method(#getJavaVersion, [id]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<String>>);
+
+  @override
+  _i3.Future<_i4.Result<_i12.MinecraftProcessModel>> run(
+    _i11.InstanceModel? instance,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#run, [instance]),
+            returnValue:
+                _i3.Future<_i4.Result<_i12.MinecraftProcessModel>>.value(
+                  _i6.dummyValue<_i4.Result<_i12.MinecraftProcessModel>>(
+                    this,
+                    Invocation.method(#run, [instance]),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.Result<_i12.MinecraftProcessModel>>);
+
+  @override
+  _i3.Future<bool> isAuthenticated() =>
+      (super.noSuchMethod(
+            Invocation.method(#isAuthenticated, []),
+            returnValue: _i3.Future<bool>.value(false),
+          )
+          as _i3.Future<bool>);
+
+  @override
+  _i3.Future<_i4.Result<void>> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i3.Future<_i4.Result<void>>.value(
+              _i6.dummyValue<_i4.Result<void>>(
+                this,
+                Invocation.method(#logout, []),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<void>>);
 }

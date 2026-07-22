@@ -19,6 +19,7 @@ class InstanceCreationViewModel extends ChangeNotifier {
   int currentStep = 0;
   String instanceName = "";
   String searchQuery = "";
+  bool showSnapshots = false;
   MinecraftVersionModel? selectedVersion;
   String selectedModLoader = 'vanilla';
   
@@ -96,10 +97,25 @@ class InstanceCreationViewModel extends ChangeNotifier {
   }
 
   List<MinecraftVersionModel> get filteredVersions {
-    if (searchQuery.isEmpty) return versions;
-    return versions
-        .where((v) => v.id.toLowerCase().contains(searchQuery.toLowerCase()))
-        .toList();
+    Iterable<MinecraftVersionModel> filtered = versions;
+    
+    if (!showSnapshots) {
+      filtered = filtered.where((v) => v.type == 'release');
+    }
+    
+    if (searchQuery.isNotEmpty) {
+      filtered = filtered.where((v) => v.id.toLowerCase().contains(searchQuery.toLowerCase()));
+    }
+    
+    return filtered.toList();
+  }
+
+  void toggleShowSnapshots(bool value) {
+    showSnapshots = value;
+    if (selectedVersion != null && !showSnapshots && selectedVersion!.type != 'release') {
+      selectedVersion = null; // Unselect if it was a snapshot and we hid them
+    }
+    notifyListeners();
   }
 
   void selectVersion(MinecraftVersionModel version) {

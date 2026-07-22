@@ -100,16 +100,10 @@ class _InstancesScreenState extends State<InstancesScreen> {
                   children: [
                     SizedBox(
                       width: 250,
-                      child: ValueListenableBuilder(
-                        valueListenable: _searchController,
-                        builder: (context, value, _) {
-                          return ye_text_field.TextField(
-                            controller: _searchController,
-                            labelText: AppLocalizations.of(context)!.searchInstances,
-                            suffixIcon: value.text.isNotEmpty ? Symbols.close_rounded : null,
-                            onSuffixPressed: () => _searchController.clear(),
-                          );
-                        },
+                      child: ye_text_field.TextField(
+                        controller: _searchController,
+                        labelText: AppLocalizations.of(context)!.searchInstances,
+                        isSearchField: true,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -117,6 +111,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                       selector: (_, viewModel) => viewModel.sortOrder,
                       builder: (context, sortOrder, _) {
                         return Dropdown<InstanceSortOrder>(
+                          iconData: Symbols.sort_rounded,
                           value: sortOrder,
                           items: [
                             DropdownItem(

@@ -127,5 +127,20 @@
   "sortNameAsc": "Назва (А-Я)",
   "sortNameDesc": "Назва (Я-А)",
   "searchInstances": "Пошук екземплярів...",
-  "nameAlreadyExists": "Екземпляр з такою назвою вже існує"
+  "nameAlreadyExists": "Екземпляр з такою назвою вже існує",
+  "filterAllVersions": "Усі версії",
+  "filterAllLoaders": "Усі завантажувачі",
+  "filterAllCategories": "Усі категорії",
+  "sortRelevance": "За релевантністю",
+  "sortDownloads": "За завантаженнями",
+  "sortNewest": "Найновіші",
+  "sortUpdated": "Останні оновлені",
+  "categoryAdventure": "Пригоди",
+  "categoryMagic": "Магія",
+  "categoryTechnology": "Технології",
+  "categoryOptimization": "Оптимізація",
+  "categoryUtility": "Утиліти",
+  "categoryDecoration": "Декорації",
+  "categoryWorldgen": "Генерація світу",
+  "showSnapshots": "Снапшоти"
 }

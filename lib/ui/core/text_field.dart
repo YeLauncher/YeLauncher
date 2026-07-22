@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class TextField extends StatefulWidget {
   final TextEditingController controller;
@@ -10,6 +11,8 @@ class TextField extends StatefulWidget {
   final String? errorText;
   final IconData? suffixIcon;
   final VoidCallback? onSuffixPressed;
+  final IconData? prefixIcon;
+  final bool isSearchField;
 
   const TextField({
     super.key,
@@ -19,6 +22,8 @@ class TextField extends StatefulWidget {
     this.errorText,
     this.suffixIcon,
     this.onSuffixPressed,
+    this.prefixIcon,
+    this.isSearchField = false,
   });
 
   @override
@@ -84,6 +89,14 @@ class _TextFieldState extends State<TextField>
               duration: const Duration(milliseconds: 150),
               child: Row(
                 children: [
+                  if (widget.prefixIcon != null || widget.isSearchField) ...[
+                    Icon(
+                      widget.prefixIcon ?? Symbols.search_rounded,
+                      color: AppColors.dark.onSurfaceVariant,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   Expanded(
                     child: Stack(
                       alignment: Alignment.centerLeft,
@@ -92,7 +105,7 @@ class _TextFieldState extends State<TextField>
                           ValueListenableBuilder(
                             valueListenable: widget.controller,
                             builder: (context, value, child) {
-                              if (value.text.isNotEmpty) {
+                               if (value.text.isNotEmpty) {
                                 return const SizedBox.shrink();
                               }
                               return Text(
@@ -121,20 +134,46 @@ class _TextFieldState extends State<TextField>
                       ],
                     ),
                   ),
-                  if (widget.suffixIcon != null) ...[
-                    const SizedBox(width: 8),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: widget.onSuffixPressed,
-                        child: Icon(
-                          widget.suffixIcon,
-                          color: AppColors.dark.onSurfaceVariant,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ValueListenableBuilder(
+                    valueListenable: widget.controller,
+                    builder: (context, value, child) {
+                      final hasText = value.text.isNotEmpty;
+                      if (widget.isSearchField && hasText) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () {
+                                widget.controller.clear();
+                              },
+                              child: Icon(
+                                Symbols.close_rounded,
+                                color: AppColors.dark.onSurfaceVariant,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else if (widget.suffixIcon != null) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: widget.onSuffixPressed,
+                              child: Icon(
+                                widget.suffixIcon,
+                                color: AppColors.dark.onSurfaceVariant,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 ],
               ),
             ),

@@ -739,6 +739,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An instance with this name already exists'**
   String get nameAlreadyExists;
+
+  /// No description provided for @filterAllVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'All Versions'**
+  String get filterAllVersions;
+
+  /// No description provided for @filterAllLoaders.
+  ///
+  /// In en, this message translates to:
+  /// **'All Loaders'**
+  String get filterAllLoaders;
+
+  /// No description provided for @filterAllCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get filterAllCategories;
+
+  /// No description provided for @sortRelevance.
+  ///
+  /// In en, this message translates to:
+  /// **'Relevance'**
+  String get sortRelevance;
+
+  /// No description provided for @sortDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get sortDownloads;
+
+  /// No description provided for @sortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest'**
+  String get sortNewest;
+
+  /// No description provided for @sortUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get sortUpdated;
+
+  /// No description provided for @categoryAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure'**
+  String get categoryAdventure;
+
+  /// No description provided for @categoryMagic.
+  ///
+  /// In en, this message translates to:
+  /// **'Magic'**
+  String get categoryMagic;
+
+  /// No description provided for @categoryTechnology.
+  ///
+  /// In en, this message translates to:
+  /// **'Technology'**
+  String get categoryTechnology;
+
+  /// No description provided for @categoryOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimization'**
+  String get categoryOptimization;
+
+  /// No description provided for @categoryUtility.
+  ///
+  /// In en, this message translates to:
+  /// **'Utility'**
+  String get categoryUtility;
+
+  /// No description provided for @categoryDecoration.
+  ///
+  /// In en, this message translates to:
+  /// **'Decoration'**
+  String get categoryDecoration;
+
+  /// No description provided for @categoryWorldgen.
+  ///
+  /// In en, this message translates to:
+  /// **'World Generation'**
+  String get categoryWorldgen;
+
+  /// No description provided for @showSnapshots.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshots'**
+  String get showSnapshots;
 }
 
 class _AppLocalizationsDelegate

@@ -345,4 +345,49 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get nameAlreadyExists => 'Екземпляр з такою назвою вже існує';
+
+  @override
+  String get filterAllVersions => 'Усі версії';
+
+  @override
+  String get filterAllLoaders => 'Усі завантажувачі';
+
+  @override
+  String get filterAllCategories => 'Усі категорії';
+
+  @override
+  String get sortRelevance => 'За релевантністю';
+
+  @override
+  String get sortDownloads => 'За завантаженнями';
+
+  @override
+  String get sortNewest => 'Найновіші';
+
+  @override
+  String get sortUpdated => 'Останні оновлені';
+
+  @override
+  String get categoryAdventure => 'Пригоди';
+
+  @override
+  String get categoryMagic => 'Магія';
+
+  @override
+  String get categoryTechnology => 'Технології';
+
+  @override
+  String get categoryOptimization => 'Оптимізація';
+
+  @override
+  String get categoryUtility => 'Утиліти';
+
+  @override
+  String get categoryDecoration => 'Декорації';
+
+  @override
+  String get categoryWorldgen => 'Генерація світу';
+
+  @override
+  String get showSnapshots => 'Снапшоти';
 }

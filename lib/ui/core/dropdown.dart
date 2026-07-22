@@ -14,12 +14,14 @@ class Dropdown<T> extends StatefulWidget {
   final T value;
   final List<DropdownItem<T>> items;
   final ValueChanged<T> onChanged;
+  final IconData? iconData;
 
   const Dropdown({
     super.key,
     required this.value,
     required this.items,
     required this.onChanged,
+    this.iconData,
   });
 
   @override
@@ -87,20 +89,26 @@ class _DropdownState<T> extends State<Dropdown<T>> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: widget.items.map((item) {
-                        final isSelected = item.value == widget.value;
-                        return _DropdownMenuItem(
-                          item: item,
-                          isSelected: isSelected,
-                          onTap: () {
-                            widget.onChanged(item.value);
-                            _closeDropdown();
-                          },
-                        );
-                      }).toList(),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 300),
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: widget.items.map((item) {
+                            final isSelected = item.value == widget.value;
+                            return _DropdownMenuItem(
+                              item: item,
+                              isSelected: isSelected,
+                              onTap: () {
+                                widget.onChanged(item.value);
+                                _closeDropdown();
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -152,12 +160,14 @@ class _DropdownState<T> extends State<Dropdown<T>> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Symbols.sort_rounded,
-                  color: AppColors.dark.onSurface,
-                  size: AppText.defaultTheme.label.fontSize,
-                ),
-                const SizedBox(width: 8),
+                if (widget.iconData != null) ...[
+                  Icon(
+                    widget.iconData,
+                    color: AppColors.dark.onSurface,
+                    size: AppText.defaultTheme.label.fontSize,
+                  ),
+                  const SizedBox(width: 8),
+                ],
                 Text(
                   currentItem.label,
                   style: AppText.defaultTheme.label.copyWith(

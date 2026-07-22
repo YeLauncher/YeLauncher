@@ -345,4 +345,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nameAlreadyExists => 'An instance with this name already exists';
+
+  @override
+  String get filterAllVersions => 'All Versions';
+
+  @override
+  String get filterAllLoaders => 'All Loaders';
+
+  @override
+  String get filterAllCategories => 'All Categories';
+
+  @override
+  String get sortRelevance => 'Relevance';
+
+  @override
+  String get sortDownloads => 'Downloads';
+
+  @override
+  String get sortNewest => 'Newest';
+
+  @override
+  String get sortUpdated => 'Updated';
+
+  @override
+  String get categoryAdventure => 'Adventure';
+
+  @override
+  String get categoryMagic => 'Magic';
+
+  @override
+  String get categoryTechnology => 'Technology';
+
+  @override
+  String get categoryOptimization => 'Optimization';
+
+  @override
+  String get categoryUtility => 'Utility';
+
+  @override
+  String get categoryDecoration => 'Decoration';
+
+  @override
+  String get categoryWorldgen => 'World Generation';
+
+  @override
+  String get showSnapshots => 'Snapshots';
 }
