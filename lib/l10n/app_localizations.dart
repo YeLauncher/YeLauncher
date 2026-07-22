@@ -689,8 +689,20 @@ abstract class AppLocalizations {
   /// No description provided for @settingsJvmArgsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Advanced Java arguments passed at startup. Proceed with caution.'**
+  /// **'Advanced parameters passed to the Java Virtual Machine.'**
   String get settingsJvmArgsDesc;
+
+  /// No description provided for @resetToDefaultsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Defaults'**
+  String get resetToDefaultsButton;
+
+  /// No description provided for @defaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Default: {value}'**
+  String defaultHint(String value);
 
   /// No description provided for @saveChangesButton.
   ///
@@ -913,6 +925,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Processing Fabric installation...'**
   String get installStepProcessingFabric;
+
+  /// No description provided for @inheritsGlobalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherits global setting'**
+  String get inheritsGlobalSetting;
+
+  /// No description provided for @inheritsGlobalSettingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently inherits: {value}'**
+  String inheritsGlobalSettingDesc(String value);
+
+  /// No description provided for @overrideGlobalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Override global setting'**
+  String get overrideGlobalSetting;
+
+  /// No description provided for @useGlobalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Use global setting'**
+  String get useGlobalSetting;
 }
 
 class _AppLocalizationsDelegate

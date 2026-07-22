@@ -99,6 +99,7 @@ List<SingleChildWidget> get providersLocal {
         secureStorage: context.read(),
         forgeRepository: context.read(),
         fabricRepository: context.read<FabricRepositoryRemote>(),
+        settingsRepository: context.read(),
       ),
     ),
     Provider<List<ModLoaderRepository>>(
@@ -156,6 +157,7 @@ List<SingleChildWidget> get providersRemote {
         secureStorage: context.read(),
         forgeRepository: context.read(),
         fabricRepository: context.read<FabricRepositoryRemote>(),
+        settingsRepository: context.read(),
       ),
     ),
     Provider<List<ModLoaderRepository>>(

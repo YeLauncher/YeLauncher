@@ -119,7 +119,16 @@
   "settingsCustomJavaPath": "Custom Java Path",
   "settingsCustomJavaPathDesc": "Provide an absolute path to a specific javaw.exe executable. Leave blank to use the launcher default.",
   "settingsJvmArgs": "JVM Arguments",
-  "settingsJvmArgsDesc": "Advanced Java arguments passed at startup. Proceed with caution.",
+  "settingsJvmArgsDesc": "Advanced parameters passed to the Java Virtual Machine.",
+  "resetToDefaultsButton": "Reset to Defaults",
+  "defaultHint": "Default: {value}",
+  "@defaultHint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "saveChangesButton": "Save Changes",
   "launcherManaged": "Launcher",
   "manualInstalled": "Manual",
@@ -170,5 +179,16 @@
   },
   "installStepInstallingClientAndAssets": "Installation client & assets",
   "installStepProcessingForge": "Processing Forge installation...",
-  "installStepProcessingFabric": "Processing Fabric installation..."
+  "installStepProcessingFabric": "Processing Fabric installation...",
+  "inheritsGlobalSetting": "Inherits global setting",
+  "inheritsGlobalSettingDesc": "Currently inherits: {value}",
+  "@inheritsGlobalSettingDesc": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "overrideGlobalSetting": "Override global setting",
+  "useGlobalSetting": "Use global setting"
 }

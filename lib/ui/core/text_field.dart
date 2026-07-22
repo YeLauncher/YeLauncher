@@ -8,6 +8,7 @@ class TextField extends StatefulWidget {
   final TextEditingController controller;
   final double width;
   final String? labelText;
+  final String? hintText;
   final String? errorText;
   final IconData? suffixIcon;
   final VoidCallback? onSuffixPressed;
@@ -19,6 +20,7 @@ class TextField extends StatefulWidget {
     required this.controller,
     this.width = 300,
     this.labelText,
+    this.hintText,
     this.errorText,
     this.suffixIcon,
     this.onSuffixPressed,
@@ -101,7 +103,7 @@ class _TextFieldState extends State<TextField>
                     child: Stack(
                       alignment: Alignment.centerLeft,
                       children: [
-                        if (widget.labelText != null)
+                        if (widget.labelText != null || widget.hintText != null)
                           ValueListenableBuilder(
                             valueListenable: widget.controller,
                             builder: (context, value, child) {
@@ -109,9 +111,9 @@ class _TextFieldState extends State<TextField>
                                 return const SizedBox.shrink();
                               }
                               return Text(
-                                widget.labelText!,
+                                widget.hintText ?? widget.labelText!,
                                 style: AppText.defaultTheme.bodySmall.copyWith(
-                                  color: AppColors.dark.onSurfaceVariant,
+                                  color: AppColors.dark.onSurfaceVariant.withValues(alpha: widget.hintText != null ? 0.5 : 1.0),
                                 ),
                               );
                             },

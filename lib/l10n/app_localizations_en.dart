@@ -320,7 +320,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsJvmArgsDesc =>
-      'Advanced Java arguments passed at startup. Proceed with caution.';
+      'Advanced parameters passed to the Java Virtual Machine.';
+
+  @override
+  String get resetToDefaultsButton => 'Reset to Defaults';
+
+  @override
+  String defaultHint(String value) {
+    return 'Default: $value';
+  }
 
   @override
   String get saveChangesButton => 'Save Changes';
@@ -438,4 +446,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get installStepProcessingFabric => 'Processing Fabric installation...';
+
+  @override
+  String get inheritsGlobalSetting => 'Inherits global setting';
+
+  @override
+  String inheritsGlobalSettingDesc(String value) {
+    return 'Currently inherits: $value';
+  }
+
+  @override
+  String get overrideGlobalSetting => 'Override global setting';
+
+  @override
+  String get useGlobalSetting => 'Use global setting';
 }

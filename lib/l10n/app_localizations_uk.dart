@@ -309,21 +309,29 @@ class AppLocalizationsUk extends AppLocalizations {
   String get settingsMB => 'МБ';
 
   @override
-  String get settingsCustomJavaPath => 'Власний шлях до Java';
+  String get settingsCustomJavaPath => 'Шлях до Java';
 
   @override
   String get settingsCustomJavaPathDesc =>
-      'Вкажіть абсолютний шлях до конкретного виконуваного файлу javaw.exe. Залиште пустим, щоб використовувати стандартний лаунчера.';
+      'Вкажіть абсолютний шлях до файлу javaw.exe. Залиште порожнім, щоб використовувати стандартний для лаунчера.';
 
   @override
   String get settingsJvmArgs => 'Аргументи JVM';
 
   @override
   String get settingsJvmArgsDesc =>
-      'Розширені аргументи Java, що передаються при запуску. Будьте обережні.';
+      'Додаткові параметри, які передаються віртуальній машині Java при запуску.';
 
   @override
-  String get saveChangesButton => 'Зберегти зміни';
+  String get resetToDefaultsButton => 'Скинути до стандартних';
+
+  @override
+  String defaultHint(String value) {
+    return 'Стандартно: $value';
+  }
+
+  @override
+  String get saveChangesButton => 'Зберегти';
 
   @override
   String get launcherManaged => 'Лаунчер';
@@ -438,4 +446,18 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get installStepProcessingFabric => 'Обробка встановлення Fabric...';
+
+  @override
+  String get inheritsGlobalSetting => 'Успадковує глобальне налаштування';
+
+  @override
+  String inheritsGlobalSettingDesc(String value) {
+    return 'Наразі успадковує: $value';
+  }
+
+  @override
+  String get overrideGlobalSetting => 'Перевизначити глобальне налаштування';
+
+  @override
+  String get useGlobalSetting => 'Використовувати глобальне налаштування';
 }

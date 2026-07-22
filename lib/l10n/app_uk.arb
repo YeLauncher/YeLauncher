@@ -116,11 +116,20 @@
   "settingsMaxMemory": "Максимальна пам'ять",
   "settingsMaxMemoryDesc": "Максимальний обсяг оперативної пам'яті (у мегабайтах), який може використовувати гра.",
   "settingsMB": "МБ",
-  "settingsCustomJavaPath": "Власний шлях до Java",
-  "settingsCustomJavaPathDesc": "Вкажіть абсолютний шлях до конкретного виконуваного файлу javaw.exe. Залиште пустим, щоб використовувати стандартний лаунчера.",
+  "settingsCustomJavaPath": "Шлях до Java",
+  "settingsCustomJavaPathDesc": "Вкажіть абсолютний шлях до файлу javaw.exe. Залиште порожнім, щоб використовувати стандартний для лаунчера.",
   "settingsJvmArgs": "Аргументи JVM",
-  "settingsJvmArgsDesc": "Розширені аргументи Java, що передаються при запуску. Будьте обережні.",
-  "saveChangesButton": "Зберегти зміни",
+  "settingsJvmArgsDesc": "Додаткові параметри, які передаються віртуальній машині Java при запуску.",
+  "resetToDefaultsButton": "Скинути до стандартних",
+  "defaultHint": "Стандартно: {value}",
+  "@defaultHint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "saveChangesButton": "Зберегти",
   "launcherManaged": "Лаунчер",
   "manualInstalled": "Вручну",
   "missingFile": "Відсутній файл",
@@ -170,5 +179,16 @@
   },
   "installStepInstallingClientAndAssets": "Встановлення клієнта та ресурсів",
   "installStepProcessingForge": "Обробка встановлення Forge...",
-  "installStepProcessingFabric": "Обробка встановлення Fabric..."
+  "installStepProcessingFabric": "Обробка встановлення Fabric...",
+  "inheritsGlobalSetting": "Успадковує глобальне налаштування",
+  "inheritsGlobalSettingDesc": "Наразі успадковує: {value}",
+  "@inheritsGlobalSettingDesc": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "overrideGlobalSetting": "Перевизначити глобальне налаштування",
+  "useGlobalSetting": "Використовувати глобальне налаштування"
 }

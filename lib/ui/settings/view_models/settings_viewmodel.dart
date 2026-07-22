@@ -18,6 +18,12 @@ class SettingsViewModel extends ChangeNotifier {
 
   bool get isAuthenticated => _isAuthenticated;
 
+  int get javaMemory => _settingsRepository.javaMemory;
+  int get windowWidth => _settingsRepository.windowWidth;
+  int get windowHeight => _settingsRepository.windowHeight;
+  String get customJavaPath => _settingsRepository.customJavaPath;
+  String get jvmArguments => _settingsRepository.jvmArguments;
+
   Future<void> refreshAuth() async {
     _isAuthenticated = await _minecraftRepository.isAuthenticated();
     notifyListeners();
@@ -27,6 +33,22 @@ class SettingsViewModel extends ChangeNotifier {
 
   Future<void> setLocale(Locale locale) async {
     await _settingsRepository.setLocale(locale);
+  }
+
+  Future<void> saveMinecraftSettings({
+    required int javaMemory,
+    required int windowWidth,
+    required int windowHeight,
+    required String customJavaPath,
+    required String jvmArguments,
+  }) async {
+    await _settingsRepository.setMinecraftSettings(
+      javaMemory: javaMemory,
+      windowWidth: windowWidth,
+      windowHeight: windowHeight,
+      customJavaPath: customJavaPath,
+      jvmArguments: jvmArguments,
+    );
   }
 
   Future<void> logout() async {

@@ -533,8 +533,9 @@ class _TooltipPositionDelegate extends SingleChildLayoutDelegate {
     const double padding = 8.0;
     if (x < padding) {
       x = padding;
-    } else if (x + childSize.width > size.width - padding)
+    } else if (x + childSize.width > size.width - padding) {
       x = size.width - childSize.width - padding;
+    }
 
     if (y + childSize.height > size.height - padding) {
       y = target.dy - targetSize.height / 2 - childSize.height - 8.0;

@@ -11,6 +11,7 @@ import 'package:yelauncher/data/services/api/forge_api_client.dart';
 import 'package:yelauncher/data/services/api/fabric_api_client.dart';
 import 'package:yelauncher/data/repositories/mod_loader/fabric_repository_remote.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
@@ -122,6 +123,7 @@ void main() {
       secureStorage: fakeSecureStorage,
       forgeRepository: forgeRepository,
       fabricRepository: fabricRepository,
+      settingsRepository: SettingsRepositoryLocal(storageService: fakeSecureStorage),
     );
   });
 
