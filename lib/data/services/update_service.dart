@@ -100,10 +100,11 @@ class UpdateService {
   Future<void> installUpdate(File file) async {
     try {
       if (Platform.isWindows) {
+        final installDir = p.dirname(Platform.resolvedExecutable);
         // Launch the Inno Setup / executable installer detached so the launcher can exit
         await Process.start(
           file.path,
-          ['/SILENT'], // Optional flag for Inno Setup to run without prompts
+          ['/SILENT', '/DIR=$installDir'], // Optional flag for Inno Setup to run without prompts
           mode: ProcessStartMode.detached,
         );
         exit(0);
