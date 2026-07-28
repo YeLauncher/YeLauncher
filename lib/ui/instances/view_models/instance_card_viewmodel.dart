@@ -7,7 +7,9 @@ import 'package:yelauncher/utilities/command.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
-
+import 'package:yelauncher/ui/core/notification_service.dart';
+import 'package:yelauncher/ui/core/button.dart';
+import 'package:material_symbols_icons/symbols.dart';
 class InstanceCardViewModel extends ChangeNotifier {
   InstanceModel _instance;
   final MinecraftRepository _minecraftRepository;
@@ -157,7 +159,21 @@ class InstanceCardViewModel extends ChangeNotifier {
           await _instanceRepository.saveInstance(_instance);
           notifyListeners();
           
-          process.exitCode.then((_) {
+          process.exitCode.then((code) {
+            if (code != 0) {
+              NotificationService.showNotification(
+                'Instance crashed with exit code $code',
+                isError: true,
+                duration: const Duration(seconds: 10),
+                action: Button.surface(
+                  'Open Logs',
+                  iconData: Symbols.folder_open_rounded,
+                  onPressed: () {
+                    _instanceRepository.openLogsFolder(_instance);
+                  },
+                ),
+              );
+            }
             if (_activeProcess == process) {
               _activeProcess = null;
               notifyListeners();

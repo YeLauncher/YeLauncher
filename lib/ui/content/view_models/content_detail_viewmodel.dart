@@ -24,6 +24,7 @@ class ContentDetailViewModel extends ChangeNotifier {
   bool isLoading = true;
   List<ContentVersion> versions = [];
   List<InstanceModel> instances = [];
+  List<ContentItem> dependencies = [];
 
   Future<void> loadDetails() async {
     isLoading = true;
@@ -40,6 +41,11 @@ class ContentDetailViewModel extends ChangeNotifier {
       versions = result.value;
     }
     
+    final depsResult = await _contentRepository.getProjectDependencies(item.id);
+    if (depsResult is Success<List<ContentItem>>) {
+      dependencies = depsResult.value;
+    }
+
     final instancesResult = await _instanceRepository.getInstances();
     instances = instancesResult;
 

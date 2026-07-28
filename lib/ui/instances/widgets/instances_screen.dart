@@ -337,6 +337,8 @@ class _InstancesScreenState extends State<InstancesScreen> {
               final isDrawerOpen =
                   widget.viewModel.selectedInstanceForDrawer != null;
 
+              final drawerWidth = (MediaQuery.sizeOf(context).width * 0.7).clamp(600.0, 900.0);
+
               return Stack(
                 children: [
                   if (isDrawerOpen)
@@ -352,8 +354,8 @@ class _InstancesScreenState extends State<InstancesScreen> {
                     curve: Curves.easeOutQuart,
                     top: 0,
                     bottom: 0,
-                    right: isDrawerOpen ? 0 : -600,
-                    width: 600,
+                    right: isDrawerOpen ? 0 : -drawerWidth,
+                    width: drawerWidth,
                     child: Container(
                       margin: const EdgeInsets.only(
                         top: 8,

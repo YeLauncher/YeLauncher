@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:yelauncher/domain/models/content/content_file.dart';
+import 'package:yelauncher/domain/models/content/content_dependency.dart';
 
 part 'content_version.g.dart';
 
@@ -12,6 +13,7 @@ class ContentVersion {
   final List<String> gameVersions;
   final List<String> loaders;
   final List<ContentFile> files;
+  final List<ContentDependency>? dependencies;
 
   const ContentVersion({
     required this.id,
@@ -21,6 +23,7 @@ class ContentVersion {
     required this.gameVersions,
     required this.loaders,
     required this.files,
+    this.dependencies,
   });
 
   factory ContentVersion.fromJson(Map<String, dynamic> json) =>

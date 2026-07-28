@@ -17,4 +17,8 @@ abstract interface class ContentProvider {
   Future<Result<ContentItem>> getContent(String id);
 
   Future<Result<List<ContentVersion>>> getVersions(String id);
+
+  Future<Result<ContentVersion>> getVersion(String versionId);
+
+  Future<Result<List<ContentItem>>> getProjectDependencies(String id);
 }

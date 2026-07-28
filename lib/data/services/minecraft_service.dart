@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 import 'package:logging/logging.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_run_model.dart';
@@ -55,6 +56,9 @@ class MinecraftService {
         if (arg.contains('\${quickPlay') || arg == '--demo') {
           continue;
         }
+        if (arg.trim().isEmpty) {
+          continue;
+        }
         filteredArgs.add(arg);
       }
 
@@ -77,18 +81,35 @@ class MinecraftService {
         workingDirectory: model.gameDirectory,
       );
 
+      final logDir = Directory(p.join(model.gameDirectory, 'logs'));
+      if (!await logDir.exists()) {
+        await logDir.create(recursive: true);
+      }
+      final logFile = File(p.join(logDir.path, 'launcher_log.txt'));
+      final sink = logFile.openWrite();
+      sink.writeln('--- Launching Minecraft ---');
+      sink.writeln('Args: \${finalArgs.join(' ')}');
+      
       final stdoutStream = process.stdout.asBroadcastStream();
       final stderrStream = process.stderr.asBroadcastStream();
       
       stdoutStream
           .transform(utf8.decoder)
-          .listen((data) => _log.info('Minecraft: $data'));
+          .listen((data) {
+            _log.info('Minecraft: $data');
+            sink.write(data);
+          });
       stderrStream
           .transform(utf8.decoder)
-          .listen((data) => _log.severe('Minecraft: $data'));
+          .listen((data) {
+            _log.severe('Minecraft: $data');
+            sink.write(data);
+          });
 
       process.exitCode.then((code) {
         _log.info('Minecraft process exited with code $code');
+        sink.writeln('--- Process exited with code $code ---');
+        sink.close();
       });
       return Result.success(MinecraftProcessModel(
         exitCode: process.exitCode,
@@ -124,8 +145,6 @@ class MinecraftService {
             .replaceAll('\${user_type}', model.profile.userType)
             .replaceAll('\${user_properties}', '{}')
             .replaceAll('\${version_type}', 'release')
-            .replaceAll('\${resolution_width}', '854')
-            .replaceAll('\${resolution_height}', '480')
             .replaceAll('\${natives_directory}', model.nativesDirectory)
             .replaceAll('\${launcher_name}', 'yelauncher')
             .replaceAll('\${launcher_version}', '1.0.0')

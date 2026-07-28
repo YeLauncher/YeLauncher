@@ -186,6 +186,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabVersions => 'Versions';
 
   @override
+  String get tabDependencies => 'Dependencies';
+
+  @override
   String get galleryEmpty => 'Gallery is empty';
 
   @override

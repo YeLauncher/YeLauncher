@@ -106,6 +106,11 @@ class InstanceRepositoryLocal implements InstanceRepository {
   }
 
   @override
+  Future<void> openLogsFolder(InstanceModel instance) async {
+    await _instanceService.openLogsFolder(instance);
+  }
+
+  @override
   Future<void> createInstance(InstanceModel instance) async {
     await saveInstance(instance);
   }

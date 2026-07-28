@@ -15,6 +15,7 @@ import 'package:yelauncher/data/services/system_info_service.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/chip.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
+import 'package:yelauncher/ui/core/checkbox.dart';
 import 'package:yelauncher/ui/core/icon_button.dart';
 import 'package:yelauncher/ui/core/list_item.dart';
 import 'package:yelauncher/ui/core/slider.dart';
@@ -62,6 +63,8 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
   String _searchQuery = '';
   bool _sortAscending = true;
   late TextEditingController _searchController;
+  final Set<String> _selectedMods = {};
+  bool _isSelectionMode = false;
 
   // Settings Tab State
   late TextEditingController _nameController;
@@ -213,8 +216,11 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
     }
   }
 
-  Future<void> _loadContent() async {
-    setState(() => _isLoadingContent = true);
+  Future<void> _loadContent({bool showLoader = true}) async {
+    if (showLoader) {
+      setState(() => _isLoadingContent = true);
+      _selectedMods.clear();
+    }
 
     final appData = await getApplicationSupportDirectory();
     final instanceDir = Directory(
@@ -319,43 +325,12 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
             padding: const EdgeInsets.all(32),
             child: Row(
               children: [
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () =>
+                Tooltip(
+                  message: AppLocalizations.of(context)!.instancesTab,
+                  child: IconButton.surface(
+                    onPressed: () =>
                         context.read<InstanceScreenViewModel>().closeDrawer(),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.dark.surfaceContainer,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppColors.dark.outlineVariant.withValues(
-                            alpha: 0.5,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Symbols.arrow_back_rounded,
-                            color: AppColors.dark.onSurfaceVariant,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            AppLocalizations.of(context)!.instancesTab,
-                            style: AppText.defaultTheme.titleSmall.copyWith(
-                              color: AppColors.dark.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    iconData: Symbols.arrow_back_rounded,
                   ),
                 ),
                 Padding(
@@ -847,9 +822,13 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
   }
 
   Widget _buildContentTab() {
-    if (_isLoadingContent) {
+    if (_isLoadingContent && _allContentItems.isEmpty) {
       return Center(child: CircularProgressIndicator.primary());
     }
+
+    final allDisplayedSelected = _displayItems.isNotEmpty &&
+        _displayItems.every((item) => _selectedMods.contains(item.filename));
+
 
     if (_allContentItems.isEmpty) {
       return Center(
@@ -884,8 +863,46 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                 child: TextField(
                   controller: _searchController,
                   labelText: 'Search...',
+                  isSearchField: true,
                 ),
               ),
+              const SizedBox(width: 16),
+              Button.surface(
+                _isSelectionMode ? 'Cancel' : 'Select',
+                iconData: _isSelectionMode
+                    ? Symbols.close_rounded
+                    : Symbols.checklist_rounded,
+                onPressed: () {
+                  setState(() {
+                    _isSelectionMode = !_isSelectionMode;
+                    if (!_isSelectionMode) {
+                      _selectedMods.clear();
+                    }
+                  });
+                },
+              ),
+              if (_isSelectionMode) ...[
+                const SizedBox(width: 16),
+                Button.surface(
+                  allDisplayedSelected ? 'Deselect All' : 'Select All',
+                  iconData: allDisplayedSelected
+                      ? Symbols.deselect_rounded
+                      : Symbols.select_all_rounded,
+                  onPressed: () {
+                    setState(() {
+                      if (allDisplayedSelected) {
+                        for (var item in _displayItems) {
+                          _selectedMods.remove(item.filename);
+                        }
+                      } else {
+                        for (var item in _displayItems) {
+                          _selectedMods.add(item.filename);
+                        }
+                      }
+                    });
+                  },
+                ),
+              ],
               const SizedBox(width: 16),
               Button.surface(
                 _sortAscending ? 'A-Z' : 'Z-A',
@@ -893,15 +910,26 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                     ? Symbols.sort_by_alpha_rounded
                     : Symbols.sort_rounded,
                 onPressed: () {
-                  _sortAscending = !_sortAscending;
-                  _applyFilters();
+                  setState(() {
+                    _sortAscending = !_sortAscending;
+                    _applyFilters();
+                  });
                 },
               ),
+              if (_isSelectionMode) ...[
+                const SizedBox(width: 16),
+                Button.error(
+                  'Delete (${_selectedMods.length})',
+                  iconData: Symbols.delete_rounded,
+                  onPressed: _selectedMods.isNotEmpty ? _deleteSelectedMods : null,
+                ),
+              ],
             ],
           ),
           const SizedBox(height: 16),
           Expanded(
             child: Container(
+              clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: AppColors.dark.surfaceContainer,
                 borderRadius: BorderRadius.circular(16),
@@ -910,56 +938,145 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                   width: 1,
                 ),
               ),
-              child: _displayItems.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No results found',
-                        style: AppText.defaultTheme.titleSmall.copyWith(
-                          color: AppColors.dark.onSurfaceVariant,
-                        ),
-                      ),
-                    )
-                  : ListView.separated(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _displayItems.isEmpty && !_isLoadingContent
+                        ? Center(
+                            child: Text(
+                              'No results found',
+                              style: AppText.defaultTheme.titleSmall.copyWith(
+                                color: AppColors.dark.onSurfaceVariant,
+                              ),
+                            ),
+                          )
+                        : ListView.separated(
                       padding: const EdgeInsets.all(16),
                       itemCount: _displayItems.length,
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         final item = _displayItems[index];
+
+                        Widget? iconWidget;
+                        if (item.model?.iconUrl != null &&
+                            item.model!.iconUrl!.isNotEmpty) {
+                          iconWidget = ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              item.model!.iconUrl!,
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  width: 48,
+                                  height: 48,
+                                  color: AppColors.dark.surfaceContainerHighest,
+                                  child: Center(
+                                    child: CircularProgressIndicator.primary(size: 24),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 48,
+                                height: 48,
+                                color: AppColors.dark.surfaceContainerHighest,
+                                child: Icon(
+                                  item.type == 'resourcepack'
+                                      ? Symbols.palette_rounded
+                                      : Symbols.extension_rounded,
+                                  color: AppColors.dark.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          iconWidget = Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: AppColors.dark.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              item.type == 'resourcepack'
+                                  ? Symbols.palette_rounded
+                                  : Symbols.extension_rounded,
+                              color: AppColors.dark.onSurfaceVariant,
+                            ),
+                          );
+                        }
+
                         return ListItem.primary(
                           title:
                               item.model?.title ??
                               item.filename.replaceAll('.disabled', ''),
                           subtitle: item.isManaged
-                              ? '${item.type} - v${item.model?.version} by ${item.model?.author}'
-                              : '${item.type} - ${item.filename}${!item.fileExists ? AppLocalizations.of(context)!.missingFile : ''}',
-                          isSelected: false,
+                              ? 'by ${item.model?.author}'
+                              : '${item.filename}${!item.fileExists ? ' (${AppLocalizations.of(context)!.missingFile})' : ''}',
+                          isSelected: _isSelectionMode && _selectedMods.contains(item.filename),
+                          onTap: _isSelectionMode
+                              ? () {
+                                  setState(() {
+                                    if (_selectedMods.contains(item.filename)) {
+                                      _selectedMods.remove(item.filename);
+                                    } else {
+                                      _selectedMods.add(item.filename);
+                                    }
+                                  });
+                                }
+                              : null,
+                          leadingWidget: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_isSelectionMode) ...[
+                                CoreCheckbox(
+                                  value: _selectedMods.contains(item.filename),
+                                  label: '',
+                                  onChanged: (val) {
+                                    setState(() {
+                                      if (_selectedMods.contains(item.filename)) {
+                                        _selectedMods.remove(item.filename);
+                                      } else {
+                                        _selectedMods.add(item.filename);
+                                      }
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: 16),
+                              ],
+                              iconWidget,
+                            ],
+                          ),
                           chip: item.isManaged
-                              ? Chip.primary(
-                                  AppLocalizations.of(context)!.launcherManaged,
-                                  iconData: Symbols.rocket_launch_rounded,
-                                )
+                              ? null
                               : Chip.surface(
                                   AppLocalizations.of(context)!.manualInstalled,
                                   iconData: Symbols.folder_rounded,
                                 ),
-                          trailingWidget: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SwitchButton(
-                                value: !item.isDisabled,
-                                onChanged: (value) => _toggleContent(item),
-                              ),
-                              const SizedBox(width: 16),
-                              IconButton.transparent(
-                                onPressed: () => _removeContent(item),
-                                iconData: Symbols.delete_rounded,
-                              ),
-                            ],
+                          tags: [
+                            Chip.tertiary(
+                              item.type.toUpperCase(),
+                              iconData: item.type == 'resourcepack'
+                                  ? Symbols.palette_rounded
+                                  : Symbols.extension_rounded,
+                            ),
+                            if (item.isManaged && item.model?.version != null)
+                              Chip.surface('v${item.model!.version}'),
+                          ],
+                          trailingWidget: SwitchButton(
+                            value: !item.isDisabled,
+                            onChanged: (value) => _toggleContent(item),
                           ),
                         );
                       },
                     ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -967,43 +1084,50 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
     );
   }
 
-  Future<void> _removeContent(_DisplayContent item) async {
+  Future<void> _deleteSelectedMods() async {
+    if (_selectedMods.isEmpty) return;
+
+    final itemsToDelete = _allContentItems
+        .where((item) => _selectedMods.contains(item.filename))
+        .toList();
     final instanceRepo = context.read<InstanceRepository>();
-    final folderName = item.type == 'resourcepack' ? 'resourcepacks' : 'mods';
     final appData = await getApplicationSupportDirectory();
-    final file = File(
-      p.join(
-        appData.path,
-        'instances',
-        widget.instance.id,
-        folderName,
-        Uri.decodeFull(item.filename),
-      ),
-    );
+    List<InstalledContentModel> newContent = widget.instance.installedContent.toList();
 
-    if (await file.exists()) {
-      await file.delete();
-    }
-
-    if (item.isManaged) {
-      final newContent = widget.instance.installedContent
-          .where(
-            (c) =>
-                c.projectId != item.model!.projectId ||
-                c.versionId != item.model!.versionId,
-          )
-          .toList();
-      final updatedInstance = widget.instance.copyWith(
-        installedContent: newContent,
+    for (final item in itemsToDelete) {
+      final folderName = item.type == 'resourcepack' ? 'resourcepacks' : 'mods';
+      final file = File(
+        p.join(
+          appData.path,
+          'instances',
+          widget.instance.id,
+          folderName,
+          Uri.decodeFull(item.filename),
+        ),
       );
-      await instanceRepo.saveInstance(updatedInstance);
 
-      if (mounted) {
-        context.read<InstanceScreenViewModel>().loadInstances.execute();
+      if (await file.exists()) {
+        await file.delete();
+      }
+
+      if (item.isManaged && item.model != null) {
+        newContent.removeWhere((c) =>
+            c.projectId == item.model!.projectId &&
+            c.versionId == item.model!.versionId);
       }
     }
 
-    _loadContent(); // Reload local list
+    final updatedInstance = widget.instance.copyWith(
+      installedContent: newContent,
+    );
+    await instanceRepo.saveInstance(updatedInstance);
+
+    if (mounted) {
+      context.read<InstanceScreenViewModel>().loadInstances.execute();
+    }
+
+    _selectedMods.clear();
+    _loadContent(showLoader: false); // Reload local list
   }
 
   Future<void> _toggleContent(_DisplayContent item) async {
@@ -1055,7 +1179,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
         }
       }
 
-      _loadContent();
+      _loadContent(showLoader: false);
     }
   }
 }

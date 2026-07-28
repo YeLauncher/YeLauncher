@@ -186,6 +186,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tabVersions => 'Версії';
 
   @override
+  String get tabDependencies => 'Dependencies';
+
+  @override
   String get galleryEmpty => 'Галерея порожня';
 
   @override

@@ -71,6 +71,7 @@
   "tabDescription": "Description",
   "tabGallery": "Gallery",
   "tabVersions": "Versions",
+  "tabDependencies": "Dependencies",
   "galleryEmpty": "Gallery is empty",
   "versionsNotFound": "Versions not found",
   "selectInstance": "Select Instance",
