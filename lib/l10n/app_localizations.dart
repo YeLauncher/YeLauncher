@@ -440,6 +440,12 @@ abstract class AppLocalizations {
   /// **'Versions'**
   String get tabVersions;
 
+  /// No description provided for @tabDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Dependencies'**
+  String get tabDependencies;
+
   /// No description provided for @galleryEmpty.
   ///
   /// In en, this message translates to:

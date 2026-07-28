@@ -110,6 +110,34 @@ class MockContentRepository extends _i1.Mock implements _i2.ContentRepository {
             ),
           )
           as _i3.Future<_i4.Result<List<_i7.ContentVersion>>>);
+
+  @override
+  _i3.Future<_i4.Result<_i7.ContentVersion>> getVersion(String? versionId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getVersion, [versionId]),
+            returnValue: _i3.Future<_i4.Result<_i7.ContentVersion>>.value(
+              _i6.dummyValue<_i4.Result<_i7.ContentVersion>>(
+                this,
+                Invocation.method(#getVersion, [versionId]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<_i7.ContentVersion>>);
+
+  @override
+  _i3.Future<_i4.Result<List<_i5.ContentItem>>> getProjectDependencies(
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getProjectDependencies, [id]),
+            returnValue: _i3.Future<_i4.Result<List<_i5.ContentItem>>>.value(
+              _i6.dummyValue<_i4.Result<List<_i5.ContentItem>>>(
+                this,
+                Invocation.method(#getProjectDependencies, [id]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<List<_i5.ContentItem>>>);
 }
 
 /// A class which mocks [MinecraftRepository].
@@ -188,6 +216,19 @@ class MockMinecraftRepository extends _i1.Mock
                 ),
           )
           as _i3.Future<_i4.Result<_i9.MinecraftProfileModel>>);
+
+  @override
+  _i3.Future<_i4.Result<void>> addOfflineProfile(String? nickname) =>
+      (super.noSuchMethod(
+            Invocation.method(#addOfflineProfile, [nickname]),
+            returnValue: _i3.Future<_i4.Result<void>>.value(
+              _i6.dummyValue<_i4.Result<void>>(
+                this,
+                Invocation.method(#addOfflineProfile, [nickname]),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<void>>);
 
   @override
   void cancelAuthentication() => super.noSuchMethod(

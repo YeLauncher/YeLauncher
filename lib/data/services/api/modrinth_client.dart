@@ -101,4 +101,41 @@ class ModrinthClient implements ContentProvider {
       return Failure(Exception('Get versions failed: $e'));
     }
   }
+
+  @override
+  Future<Result<ContentVersion>> getVersion(String versionId) async {
+    try {
+      final uri = Uri.parse('$_baseUrl/version/$versionId');
+      final response = await _httpClient.get(uri, headers: _headers);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return Success(ContentVersion.fromJson(json));
+      } else {
+        return Failure(Exception('Failed to get version: ${response.statusCode}'));
+      }
+    } catch (e, st) {
+      _log.severe('Get version failed', e, st);
+      return Failure(Exception('Get version failed: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<ContentItem>>> getProjectDependencies(String id) async {
+    try {
+      final uri = Uri.parse('$_baseUrl/project/$id/dependencies');
+      final response = await _httpClient.get(uri, headers: _headers);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        final projects = json['projects'] as List;
+        return Success(projects.map((e) => ContentItem.fromJson(e)).toList());
+      } else {
+        return Failure(Exception('Failed to get dependencies: ${response.statusCode}'));
+      }
+    } catch (e, st) {
+      _log.severe('Get dependencies failed', e, st);
+      return Failure(Exception('Get dependencies failed: $e'));
+    }
+  }
 }

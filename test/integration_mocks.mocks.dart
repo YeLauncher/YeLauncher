@@ -10,6 +10,8 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:yelauncher/data/repositories/content/content_repository.dart'
     as _i11;
+import 'package:yelauncher/data/repositories/instances/instance_repository.dart'
+    as _i19;
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart'
     as _i3;
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart'
@@ -156,6 +158,25 @@ class MockMinecraftRepository extends _i1.Mock
                 ),
           )
           as _i4.Future<_i5.Result<_i6.MinecraftProfileModel>>);
+
+  @override
+  _i4.Future<_i5.Result<void>> addOfflineProfile(String? nickname) =>
+      (super.noSuchMethod(
+            Invocation.method(#addOfflineProfile, [nickname]),
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
+                this,
+                Invocation.method(#addOfflineProfile, [nickname]),
+              ),
+            ),
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
+                this,
+                Invocation.method(#addOfflineProfile, [nickname]),
+              ),
+            ),
+          )
+          as _i4.Future<_i5.Result<void>>);
 
   @override
   void cancelAuthentication() => super.noSuchMethod(
@@ -409,6 +430,48 @@ class MockContentRepository extends _i1.Mock implements _i11.ContentRepository {
                 ),
           )
           as _i4.Future<_i5.Result<List<_i13.ContentVersion>>>);
+
+  @override
+  _i4.Future<_i5.Result<_i13.ContentVersion>> getVersion(String? versionId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getVersion, [versionId]),
+            returnValue: _i4.Future<_i5.Result<_i13.ContentVersion>>.value(
+              _i7.dummyValue<_i5.Result<_i13.ContentVersion>>(
+                this,
+                Invocation.method(#getVersion, [versionId]),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i4.Future<_i5.Result<_i13.ContentVersion>>.value(
+                  _i7.dummyValue<_i5.Result<_i13.ContentVersion>>(
+                    this,
+                    Invocation.method(#getVersion, [versionId]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i5.Result<_i13.ContentVersion>>);
+
+  @override
+  _i4.Future<_i5.Result<List<_i12.ContentItem>>> getProjectDependencies(
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getProjectDependencies, [id]),
+            returnValue: _i4.Future<_i5.Result<List<_i12.ContentItem>>>.value(
+              _i7.dummyValue<_i5.Result<List<_i12.ContentItem>>>(
+                this,
+                Invocation.method(#getProjectDependencies, [id]),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i4.Future<_i5.Result<List<_i12.ContentItem>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i12.ContentItem>>>(
+                    this,
+                    Invocation.method(#getProjectDependencies, [id]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i5.Result<List<_i12.ContentItem>>>);
 }
 
 /// A class which mocks [ModLoaderRepository].
@@ -731,6 +794,63 @@ class MockSettingsRepository extends _i1.Mock
           as _i2.Locale);
 
   @override
+  int get javaMemory =>
+      (super.noSuchMethod(
+            Invocation.getter(#javaMemory),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
+
+  @override
+  int get windowWidth =>
+      (super.noSuchMethod(
+            Invocation.getter(#windowWidth),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
+
+  @override
+  int get windowHeight =>
+      (super.noSuchMethod(
+            Invocation.getter(#windowHeight),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
+
+  @override
+  String get customJavaPath =>
+      (super.noSuchMethod(
+            Invocation.getter(#customJavaPath),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#customJavaPath),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#customJavaPath),
+            ),
+          )
+          as String);
+
+  @override
+  String get jvmArguments =>
+      (super.noSuchMethod(
+            Invocation.getter(#jvmArguments),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#jvmArguments),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#jvmArguments),
+            ),
+          )
+          as String);
+
+  @override
   bool get hasListeners =>
       (super.noSuchMethod(
             Invocation.getter(#hasListeners),
@@ -743,6 +863,27 @@ class MockSettingsRepository extends _i1.Mock
   _i4.Future<void> setLocale(_i2.Locale? locale) =>
       (super.noSuchMethod(
             Invocation.method(#setLocale, [locale]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> setMinecraftSettings({
+    required int? javaMemory,
+    required int? windowWidth,
+    required int? windowHeight,
+    required String? customJavaPath,
+    required String? jvmArguments,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#setMinecraftSettings, [], {
+              #javaMemory: javaMemory,
+              #windowWidth: windowWidth,
+              #windowHeight: windowHeight,
+              #customJavaPath: customJavaPath,
+              #jvmArguments: jvmArguments,
+            }),
             returnValue: _i4.Future<void>.value(),
             returnValueForMissingStub: _i4.Future<void>.value(),
           )
@@ -780,4 +921,69 @@ class MockSettingsRepository extends _i1.Mock
     Invocation.method(#notifyListeners, []),
     returnValueForMissingStub: null,
   );
+}
+
+/// A class which mocks [InstanceRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockInstanceRepository extends _i1.Mock
+    implements _i19.InstanceRepository {
+  @override
+  _i4.Future<List<_i9.InstanceModel>> getInstances() =>
+      (super.noSuchMethod(
+            Invocation.method(#getInstances, []),
+            returnValue: _i4.Future<List<_i9.InstanceModel>>.value(
+              <_i9.InstanceModel>[],
+            ),
+            returnValueForMissingStub:
+                _i4.Future<List<_i9.InstanceModel>>.value(
+                  <_i9.InstanceModel>[],
+                ),
+          )
+          as _i4.Future<List<_i9.InstanceModel>>);
+
+  @override
+  _i4.Future<void> saveInstance(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveInstance, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> deleteInstance(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteInstance, [id]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> openFolder(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#openFolder, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> openLogsFolder(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#openLogsFolder, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> createInstance(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#createInstance, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }

@@ -87,4 +87,26 @@ class ContentRepository {
 
     return result;
   }
+
+  Future<Result<ContentVersion>> getVersion(String versionId) async {
+    // Check if we have this version in our versions cache
+    for (final versions in _versionsCache.values) {
+      for (final version in versions) {
+        if (version.id == versionId) {
+          _log.fine('Returning cached version for id: $versionId');
+          return Result.success(version);
+        }
+      }
+    }
+
+    _log.info('Fetching version for id: $versionId');
+    final result = await _provider.getVersion(versionId);
+    return result;
+  }
+
+  Future<Result<List<ContentItem>>> getProjectDependencies(String id) async {
+    _log.info('Fetching project dependencies for id: $id');
+    final result = await _provider.getProjectDependencies(id);
+    return result;
+  }
 }

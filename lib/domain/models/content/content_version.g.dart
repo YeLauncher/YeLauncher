@@ -21,6 +21,9 @@ ContentVersion _$ContentVersionFromJson(Map<String, dynamic> json) =>
       files: (json['files'] as List<dynamic>)
           .map((e) => ContentFile.fromJson(e as Map<String, dynamic>))
           .toList(),
+      dependencies: (json['dependencies'] as List<dynamic>?)
+          ?.map((e) => ContentDependency.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ContentVersionToJson(ContentVersion instance) =>
@@ -32,4 +35,5 @@ Map<String, dynamic> _$ContentVersionToJson(ContentVersion instance) =>
       'game_versions': instance.gameVersions,
       'loaders': instance.loaders,
       'files': instance.files,
+      'dependencies': instance.dependencies,
     };

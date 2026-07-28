@@ -1,4 +1,5 @@
 import 'package:mockito/annotations.dart';
+import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
 import 'package:yelauncher/data/repositories/content/content_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
@@ -12,5 +13,6 @@ import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
   MockSpec<ModLoaderRepository>(),
   MockSpec<DownloadService>(),
   MockSpec<SettingsRepository>(),
+  MockSpec<InstanceRepository>(),
 ])
 void main() {}

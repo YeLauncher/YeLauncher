@@ -80,6 +80,15 @@ class MockInstanceRepository extends _i1.Mock
           as _i3.Future<void>);
 
   @override
+  _i3.Future<void> openLogsFolder(_i4.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#openLogsFolder, [instance]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
   _i3.Future<void> createInstance(_i4.InstanceModel? instance) =>
       (super.noSuchMethod(
             Invocation.method(#createInstance, [instance]),
@@ -188,6 +197,48 @@ class MockContentRepository extends _i1.Mock implements _i5.ContentRepository {
                 ),
           )
           as _i3.Future<_i6.Result<List<_i9.ContentVersion>>>);
+
+  @override
+  _i3.Future<_i6.Result<_i9.ContentVersion>> getVersion(String? versionId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getVersion, [versionId]),
+            returnValue: _i3.Future<_i6.Result<_i9.ContentVersion>>.value(
+              _i8.dummyValue<_i6.Result<_i9.ContentVersion>>(
+                this,
+                Invocation.method(#getVersion, [versionId]),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i3.Future<_i6.Result<_i9.ContentVersion>>.value(
+                  _i8.dummyValue<_i6.Result<_i9.ContentVersion>>(
+                    this,
+                    Invocation.method(#getVersion, [versionId]),
+                  ),
+                ),
+          )
+          as _i3.Future<_i6.Result<_i9.ContentVersion>>);
+
+  @override
+  _i3.Future<_i6.Result<List<_i7.ContentItem>>> getProjectDependencies(
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getProjectDependencies, [id]),
+            returnValue: _i3.Future<_i6.Result<List<_i7.ContentItem>>>.value(
+              _i8.dummyValue<_i6.Result<List<_i7.ContentItem>>>(
+                this,
+                Invocation.method(#getProjectDependencies, [id]),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i3.Future<_i6.Result<List<_i7.ContentItem>>>.value(
+                  _i8.dummyValue<_i6.Result<List<_i7.ContentItem>>>(
+                    this,
+                    Invocation.method(#getProjectDependencies, [id]),
+                  ),
+                ),
+          )
+          as _i3.Future<_i6.Result<List<_i7.ContentItem>>>);
 }
 
 /// A class which mocks [DownloadService].

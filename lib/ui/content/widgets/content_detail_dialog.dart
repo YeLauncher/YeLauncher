@@ -26,7 +26,7 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
 
   List<String> _getTabLabels(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return [l10n.tabDescription, l10n.tabGallery, l10n.tabVersions];
+    return [l10n.tabDescription, l10n.tabGallery, l10n.tabVersions, l10n.tabDependencies];
   }
 
   @override
@@ -132,8 +132,10 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
                     return _buildDescriptionTab(vm);
                   } else if (_selectedTabIndex == 1) {
                     return _buildGalleryTab(vm);
-                  } else {
+                  } else if (_selectedTabIndex == 2) {
                     return _buildVersionsTab(vm);
+                  } else {
+                    return _buildDependenciesTab(vm);
                   }
                 },
               ),
@@ -421,5 +423,69 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
         ),
       );
     }
+  }
+
+  Widget _buildDependenciesTab(ContentDetailViewModel vm) {
+    if (vm.dependencies.isEmpty) {
+      return Center(
+        child: Text(
+          'No dependencies required',
+          style: AppText.defaultTheme.body.copyWith(
+            color: AppColors.dark.onSurfaceVariant,
+          ),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: vm.dependencies.length,
+      itemBuilder: (context, index) {
+        final dep = vm.dependencies[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.dark.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              if (dep.iconUrl != null) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    dep.iconUrl!,
+                    width: 40,
+                    height: 40,
+                    errorBuilder: (context, error, stackTrace) => const SizedBox(width: 40, height: 40),
+                  ),
+                ),
+                const SizedBox(width: 16),
+              ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dep.title,
+                      style: AppText.defaultTheme.titleSmall.copyWith(
+                        color: AppColors.dark.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      dep.projectType,
+                      style: AppText.defaultTheme.bodySmall.copyWith(
+                        color: AppColors.dark.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

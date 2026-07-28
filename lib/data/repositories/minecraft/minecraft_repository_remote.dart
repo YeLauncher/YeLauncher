@@ -455,10 +455,26 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
             }
 
             final width = instance.windowWidth ?? _settingsRepository.windowWidth;
-            gameArguments.addAll(['--width', '$width']);
-
             final height = instance.windowHeight ?? _settingsRepository.windowHeight;
-            gameArguments.addAll(['--height', '$height']);
+            
+            bool hasWidth = false;
+            bool hasHeight = false;
+
+            for (int i = 0; i < gameArguments.length; i++) {
+              if (gameArguments[i] == '--width') hasWidth = true;
+              if (gameArguments[i] == '--height') hasHeight = true;
+              
+              gameArguments[i] = gameArguments[i]
+                  .replaceAll('\${resolution_width}', width.toString())
+                  .replaceAll('\${resolution_height}', height.toString());
+            }
+
+            if (!hasWidth) {
+              gameArguments.addAll(['--width', width.toString()]);
+            }
+            if (!hasHeight) {
+              gameArguments.addAll(['--height', height.toString()]);
+            }
 
             final customJavaPath = instance.customJavaPath?.isNotEmpty == true 
                 ? instance.customJavaPath 
