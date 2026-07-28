@@ -25,6 +25,7 @@ import 'package:yelauncher/ui/core/tooltip.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_screen_viewmodel.dart';
+import 'package:yelauncher/ui/core/tabs.dart';
 
 class _DisplayContent {
   final String filename;
@@ -369,7 +370,23 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                       horizontal: 32,
                       vertical: 24,
                     ),
-                    child: _buildTabs(),
+                    child: Tabs.surface(
+                      currentTabIndex: _currentTabIndex,
+                      onTabChanged: (index) =>
+                          setState(() => _currentTabIndex = index),
+                      tabs: [
+                        Tab(
+                          title: AppLocalizations.of(context)!.settingsTabTitle,
+                          icon: Symbols.settings_rounded,
+                        ),
+                        Tab(
+                          title: AppLocalizations.of(
+                            context,
+                          )!.installedContentTitle,
+                          icon: Symbols.inventory_2_rounded,
+                        ),
+                      ],
+                    ),
                   ),
                   Container(height: 1, color: AppColors.dark.outlineVariant),
                   Expanded(
@@ -382,80 +399,6 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTabs() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: AppColors.dark.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.dark.outlineVariant.withValues(alpha: 0.5),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          _buildTabItem(
-            AppLocalizations.of(context)!.settingsTabTitle,
-            0,
-            Symbols.settings_rounded,
-          ),
-          _buildTabItem(
-            AppLocalizations.of(context)!.installedContentTitle,
-            1,
-            Symbols.inventory_2_rounded,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabItem(String title, int index, IconData icon) {
-    final isSelected = _currentTabIndex == index;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _currentTabIndex = index),
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutQuart,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.dark.primary
-                : const Color(0x00000000),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: isSelected
-                    ? AppColors.dark.onPrimary
-                    : AppColors.dark.onSurfaceVariant,
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppText.defaultTheme.labelLarge.copyWith(
-                    color: isSelected
-                        ? AppColors.dark.onPrimary
-                        : AppColors.dark.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -826,9 +769,9 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
       return Center(child: CircularProgressIndicator.primary());
     }
 
-    final allDisplayedSelected = _displayItems.isNotEmpty &&
+    final allDisplayedSelected =
+        _displayItems.isNotEmpty &&
         _displayItems.every((item) => _selectedMods.contains(item.filename));
-
 
     if (_allContentItems.isEmpty) {
       return Center(
@@ -921,7 +864,9 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                 Button.error(
                   'Delete (${_selectedMods.length})',
                   iconData: Symbols.delete_rounded,
-                  onPressed: _selectedMods.isNotEmpty ? _deleteSelectedMods : null,
+                  onPressed: _selectedMods.isNotEmpty
+                      ? _deleteSelectedMods
+                      : null,
                 ),
               ],
             ],
@@ -952,128 +897,156 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                             ),
                           )
                         : ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: _displayItems.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 8),
-                      itemBuilder: (context, index) {
-                        final item = _displayItems[index];
+                            padding: const EdgeInsets.all(16),
+                            itemCount: _displayItems.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 8),
+                            itemBuilder: (context, index) {
+                              final item = _displayItems[index];
 
-                        Widget? iconWidget;
-                        if (item.model?.iconUrl != null &&
-                            item.model!.iconUrl!.isNotEmpty) {
-                          iconWidget = ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              item.model!.iconUrl!,
-                              width: 48,
-                              height: 48,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  width: 48,
-                                  height: 48,
-                                  color: AppColors.dark.surfaceContainerHighest,
-                                  child: Center(
-                                    child: CircularProgressIndicator.primary(size: 24),
+                              Widget? iconWidget;
+                              if (item.model?.iconUrl != null &&
+                                  item.model!.iconUrl!.isNotEmpty) {
+                                iconWidget = ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    item.model!.iconUrl!,
+                                    width: 48,
+                                    height: 48,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return Container(
+                                            width: 48,
+                                            height: 48,
+                                            color: AppColors
+                                                .dark
+                                                .surfaceContainerHighest,
+                                            child: Center(
+                                              child:
+                                                  CircularProgressIndicator.primary(
+                                                    size: 24,
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                              width: 48,
+                                              height: 48,
+                                              color: AppColors
+                                                  .dark
+                                                  .surfaceContainerHighest,
+                                              child: Icon(
+                                                item.type == 'resourcepack'
+                                                    ? Symbols.palette_rounded
+                                                    : Symbols.extension_rounded,
+                                                color: AppColors
+                                                    .dark
+                                                    .onSurfaceVariant,
+                                              ),
+                                            ),
                                   ),
                                 );
-                              },
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                width: 48,
-                                height: 48,
-                                color: AppColors.dark.surfaceContainerHighest,
-                                child: Icon(
-                                  item.type == 'resourcepack'
-                                      ? Symbols.palette_rounded
-                                      : Symbols.extension_rounded,
-                                  color: AppColors.dark.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          iconWidget = Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: AppColors.dark.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              item.type == 'resourcepack'
-                                  ? Symbols.palette_rounded
-                                  : Symbols.extension_rounded,
-                              color: AppColors.dark.onSurfaceVariant,
-                            ),
-                          );
-                        }
+                              } else {
+                                iconWidget = Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.dark.surfaceContainerHighest,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    item.type == 'resourcepack'
+                                        ? Symbols.palette_rounded
+                                        : Symbols.extension_rounded,
+                                    color: AppColors.dark.onSurfaceVariant,
+                                  ),
+                                );
+                              }
 
-                        return ListItem.primary(
-                          title:
-                              item.model?.title ??
-                              item.filename.replaceAll('.disabled', ''),
-                          subtitle: item.isManaged
-                              ? 'by ${item.model?.author}'
-                              : '${item.filename}${!item.fileExists ? ' (${AppLocalizations.of(context)!.missingFile})' : ''}',
-                          isSelected: _isSelectionMode && _selectedMods.contains(item.filename),
-                          onTap: _isSelectionMode
-                              ? () {
-                                  setState(() {
-                                    if (_selectedMods.contains(item.filename)) {
-                                      _selectedMods.remove(item.filename);
-                                    } else {
-                                      _selectedMods.add(item.filename);
-                                    }
-                                  });
-                                }
-                              : null,
-                          leadingWidget: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (_isSelectionMode) ...[
-                                CoreCheckbox(
-                                  value: _selectedMods.contains(item.filename),
-                                  label: '',
-                                  onChanged: (val) {
-                                    setState(() {
-                                      if (_selectedMods.contains(item.filename)) {
-                                        _selectedMods.remove(item.filename);
-                                      } else {
-                                        _selectedMods.add(item.filename);
+                              return ListItem.primary(
+                                title:
+                                    item.model?.title ??
+                                    item.filename.replaceAll('.disabled', ''),
+                                subtitle: item.isManaged
+                                    ? 'by ${item.model?.author}'
+                                    : '${item.filename}${!item.fileExists ? ' (${AppLocalizations.of(context)!.missingFile})' : ''}',
+                                isSelected:
+                                    _isSelectionMode &&
+                                    _selectedMods.contains(item.filename),
+                                onTap: _isSelectionMode
+                                    ? () {
+                                        setState(() {
+                                          if (_selectedMods.contains(
+                                            item.filename,
+                                          )) {
+                                            _selectedMods.remove(item.filename);
+                                          } else {
+                                            _selectedMods.add(item.filename);
+                                          }
+                                        });
                                       }
-                                    });
-                                  },
+                                    : null,
+                                leadingWidget: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (_isSelectionMode) ...[
+                                      CoreCheckbox(
+                                        value: _selectedMods.contains(
+                                          item.filename,
+                                        ),
+                                        label: '',
+                                        onChanged: (val) {
+                                          setState(() {
+                                            if (_selectedMods.contains(
+                                              item.filename,
+                                            )) {
+                                              _selectedMods.remove(
+                                                item.filename,
+                                              );
+                                            } else {
+                                              _selectedMods.add(item.filename);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 16),
+                                    ],
+                                    iconWidget,
+                                  ],
                                 ),
-                                const SizedBox(width: 16),
-                              ],
-                              iconWidget,
-                            ],
-                          ),
-                          chip: item.isManaged
-                              ? null
-                              : Chip.surface(
-                                  AppLocalizations.of(context)!.manualInstalled,
-                                  iconData: Symbols.folder_rounded,
+                                chip: item.isManaged
+                                    ? null
+                                    : Chip.surface(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.manualInstalled,
+                                        iconData: Symbols.folder_rounded,
+                                      ),
+                                tags: [
+                                  Chip.tertiary(
+                                    item.type.toUpperCase(),
+                                    iconData: item.type == 'resourcepack'
+                                        ? Symbols.palette_rounded
+                                        : Symbols.extension_rounded,
+                                  ),
+                                  if (item.isManaged &&
+                                      item.model?.version != null)
+                                    Chip.surface('v${item.model!.version}'),
+                                ],
+                                trailingWidget: SwitchButton(
+                                  value: !item.isDisabled,
+                                  onChanged: (value) => _toggleContent(item),
                                 ),
-                          tags: [
-                            Chip.tertiary(
-                              item.type.toUpperCase(),
-                              iconData: item.type == 'resourcepack'
-                                  ? Symbols.palette_rounded
-                                  : Symbols.extension_rounded,
-                            ),
-                            if (item.isManaged && item.model?.version != null)
-                              Chip.surface('v${item.model!.version}'),
-                          ],
-                          trailingWidget: SwitchButton(
-                            value: !item.isDisabled,
-                            onChanged: (value) => _toggleContent(item),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                   ),
                 ],
               ),
@@ -1092,7 +1065,8 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
         .toList();
     final instanceRepo = context.read<InstanceRepository>();
     final appData = await getApplicationSupportDirectory();
-    List<InstalledContentModel> newContent = widget.instance.installedContent.toList();
+    List<InstalledContentModel> newContent = widget.instance.installedContent
+        .toList();
 
     for (final item in itemsToDelete) {
       final folderName = item.type == 'resourcepack' ? 'resourcepacks' : 'mods';
@@ -1111,9 +1085,11 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
       }
 
       if (item.isManaged && item.model != null) {
-        newContent.removeWhere((c) =>
-            c.projectId == item.model!.projectId &&
-            c.versionId == item.model!.versionId);
+        newContent.removeWhere(
+          (c) =>
+              c.projectId == item.model!.projectId &&
+              c.versionId == item.model!.versionId,
+        );
       }
     }
 
