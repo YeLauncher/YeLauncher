@@ -955,6 +955,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use global setting'**
   String get useGlobalSetting;
+
+  /// No description provided for @cancelSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelSelection;
+
+  /// No description provided for @selectContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get selectContent;
+
+  /// No description provided for @deselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get deselectAll;
+
+  /// No description provided for @sortAZ.
+  ///
+  /// In en, this message translates to:
+  /// **'A-Z'**
+  String get sortAZ;
+
+  /// No description provided for @sortZA.
+  ///
+  /// In en, this message translates to:
+  /// **'Z-A'**
+  String get sortZA;
+
+  /// No description provided for @deleteSelectedContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete ({count})'**
+  String deleteSelectedContent(int count);
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @contentTypeMod.
+  ///
+  /// In en, this message translates to:
+  /// **'MOD'**
+  String get contentTypeMod;
+
+  /// No description provided for @contentTypeResourcepack.
+  ///
+  /// In en, this message translates to:
+  /// **'RESOURCE PACK'**
+  String get contentTypeResourcepack;
+
+  /// No description provided for @contentTypeDatapack.
+  ///
+  /// In en, this message translates to:
+  /// **'DATA PACK'**
+  String get contentTypeDatapack;
+
+  /// No description provided for @contentTypeModpack.
+  ///
+  /// In en, this message translates to:
+  /// **'MODPACK'**
+  String get contentTypeModpack;
 }
 
 class _AppLocalizationsDelegate

@@ -191,5 +191,23 @@
     }
   },
   "overrideGlobalSetting": "Override global setting",
-  "useGlobalSetting": "Use global setting"
+  "useGlobalSetting": "Use global setting",
+  "cancelSelection": "Cancel",
+  "selectContent": "Select",
+  "deselectAll": "Deselect All",
+  "sortAZ": "A-Z",
+  "sortZA": "Z-A",
+  "deleteSelectedContent": "Delete ({count})",
+  "@deleteSelectedContent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noResultsFound": "No results found",
+  "contentTypeMod": "MOD",
+  "contentTypeResourcepack": "RESOURCE PACK",
+  "contentTypeDatapack": "DATA PACK",
+  "contentTypeModpack": "MODPACK"
 }

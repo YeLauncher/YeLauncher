@@ -463,4 +463,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get useGlobalSetting => 'Use global setting';
+
+  @override
+  String get cancelSelection => 'Cancel';
+
+  @override
+  String get selectContent => 'Select';
+
+  @override
+  String get deselectAll => 'Deselect All';
+
+  @override
+  String get sortAZ => 'A-Z';
+
+  @override
+  String get sortZA => 'Z-A';
+
+  @override
+  String deleteSelectedContent(int count) {
+    return 'Delete ($count)';
+  }
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get contentTypeMod => 'MOD';
+
+  @override
+  String get contentTypeResourcepack => 'RESOURCE PACK';
+
+  @override
+  String get contentTypeDatapack => 'DATA PACK';
+
+  @override
+  String get contentTypeModpack => 'MODPACK';
 }

@@ -186,7 +186,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tabVersions => 'Версії';
 
   @override
-  String get tabDependencies => 'Dependencies';
+  String get tabDependencies => 'Залежності';
 
   @override
   String get galleryEmpty => 'Галерея порожня';
@@ -463,4 +463,39 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get useGlobalSetting => 'Використовувати глобальне налаштування';
+
+  @override
+  String get cancelSelection => 'Скасувати';
+
+  @override
+  String get selectContent => 'Вибрати';
+
+  @override
+  String get deselectAll => 'Зняти виділення';
+
+  @override
+  String get sortAZ => 'А-Я';
+
+  @override
+  String get sortZA => 'Я-А';
+
+  @override
+  String deleteSelectedContent(int count) {
+    return 'Видалити ($count)';
+  }
+
+  @override
+  String get noResultsFound => 'Нічого не знайдено';
+
+  @override
+  String get contentTypeMod => 'МОД';
+
+  @override
+  String get contentTypeResourcepack => 'ТЕКСТУРИ';
+
+  @override
+  String get contentTypeDatapack => 'ДАТАПАК';
+
+  @override
+  String get contentTypeModpack => 'МОДПАК';
 }

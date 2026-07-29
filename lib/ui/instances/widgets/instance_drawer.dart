@@ -805,13 +805,13 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
               Expanded(
                 child: TextField(
                   controller: _searchController,
-                  labelText: 'Search...',
+                  labelText: AppLocalizations.of(context)!.searchHint,
                   isSearchField: true,
                 ),
               ),
               const SizedBox(width: 16),
               Button.surface(
-                _isSelectionMode ? 'Cancel' : 'Select',
+                _isSelectionMode ? AppLocalizations.of(context)!.cancelSelection : AppLocalizations.of(context)!.selectContent,
                 iconData: _isSelectionMode
                     ? Symbols.close_rounded
                     : Symbols.checklist_rounded,
@@ -827,7 +827,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
               if (_isSelectionMode) ...[
                 const SizedBox(width: 16),
                 Button.surface(
-                  allDisplayedSelected ? 'Deselect All' : 'Select All',
+                  allDisplayedSelected ? AppLocalizations.of(context)!.deselectAll : AppLocalizations.of(context)!.selectAllButton,
                   iconData: allDisplayedSelected
                       ? Symbols.deselect_rounded
                       : Symbols.select_all_rounded,
@@ -848,7 +848,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
               ],
               const SizedBox(width: 16),
               Button.surface(
-                _sortAscending ? 'A-Z' : 'Z-A',
+                _sortAscending ? AppLocalizations.of(context)!.sortAZ : AppLocalizations.of(context)!.sortZA,
                 iconData: _sortAscending
                     ? Symbols.sort_by_alpha_rounded
                     : Symbols.sort_rounded,
@@ -862,7 +862,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
               if (_isSelectionMode) ...[
                 const SizedBox(width: 16),
                 Button.error(
-                  'Delete (${_selectedMods.length})',
+                  AppLocalizations.of(context)!.deleteSelectedContent(_selectedMods.length),
                   iconData: Symbols.delete_rounded,
                   onPressed: _selectedMods.isNotEmpty
                       ? _deleteSelectedMods
@@ -890,7 +890,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                     child: _displayItems.isEmpty && !_isLoadingContent
                         ? Center(
                             child: Text(
-                              'No results found',
+                              AppLocalizations.of(context)!.noResultsFound,
                               style: AppText.defaultTheme.titleSmall.copyWith(
                                 color: AppColors.dark.onSurfaceVariant,
                               ),
@@ -903,6 +903,15 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                                 const SizedBox(height: 8),
                             itemBuilder: (context, index) {
                               final item = _displayItems[index];
+
+                              String typeLabel;
+                              switch (item.type.toLowerCase()) {
+                                case 'mod': typeLabel = AppLocalizations.of(context)!.contentTypeMod; break;
+                                case 'resourcepack': typeLabel = AppLocalizations.of(context)!.contentTypeResourcepack; break;
+                                case 'datapack': typeLabel = AppLocalizations.of(context)!.contentTypeDatapack; break;
+                                case 'modpack': typeLabel = AppLocalizations.of(context)!.contentTypeModpack; break;
+                                default: typeLabel = item.type.toUpperCase();
+                              }
 
                               Widget? iconWidget;
                               if (item.model?.iconUrl != null &&
@@ -975,7 +984,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                                     item.model?.title ??
                                     item.filename.replaceAll('.disabled', ''),
                                 subtitle: item.isManaged
-                                    ? 'by ${item.model?.author}'
+                                    ? AppLocalizations.of(context)!.byAuthor(item.model?.author ?? '')
                                     : '${item.filename}${!item.fileExists ? ' (${AppLocalizations.of(context)!.missingFile})' : ''}',
                                 isSelected:
                                     _isSelectionMode &&
@@ -1031,7 +1040,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                                       ),
                                 tags: [
                                   Chip.tertiary(
-                                    item.type.toUpperCase(),
+                                    typeLabel,
                                     iconData: item.type == 'resourcepack'
                                         ? Symbols.palette_rounded
                                         : Symbols.extension_rounded,

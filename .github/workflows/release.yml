@@ -26,7 +26,6 @@ jobs:
         id: get_version
         shell: bash
         run: |
-          # Extracts the clean version tag (e.g., "1.2.3") from the pubspec file
           VERSION=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | cut -d '+' -f 1 | tr -d '\r')
           echo "Detected version: v$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
@@ -35,7 +34,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.1' 
+          flutter-version: '3.44.1'
           cache: true
 
       # 3. CACHE: Pub Dependencies
@@ -64,14 +63,15 @@ jobs:
 
       - name: Run Code Generation
         run: dart run build_runner build --delete-conflicting-outputs
-        
+
       - name: Create .env file
         run: |
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+
       - name: Create sentry.properties file
         run: |
           echo "auth.token=${{ secrets.SENTRY_AUTH_TOKEN }}" >> sentry.properties
-          
+
       # 5. TEST: Run Dart/Flutter Tests
       - name: Run Tests
         run: flutter test
@@ -95,18 +95,19 @@ jobs:
 
       # 9. ARTIFACTS: Rename and Upload to Actions Run
       - name: Rename Output Files
-        shell: bash 
+        shell: bash
         run: |
           cp Output/yelauncher-setup.exe yelauncher-windows-installer.exe
-          find . -name "*.msix" -type f -exec cp {} yelauncher-windows.msix \;
-              
+          # Finds the generated .msix and copies it to the dynamically generated naming format
+          find . -name "*.msix" -type f -exec cp {} "YeLauncher.YeLauncher_${{ steps.get_version.outputs.VERSION }}_X64.msix" \;
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: yelauncher-${{ matrix.platform }}
           path: |
             yelauncher-windows-installer.exe
-            yelauncher-windows.msix
+            YeLauncher.YeLauncher_*_X64.msix
 
   release:
     needs: build
@@ -122,10 +123,22 @@ jobs:
       - name: Create Production Release
         uses: softprops/action-gh-release@v2
         with:
-          # Automatically names the Git tag and release title using the version from the build job
           tag_name: "v${{ needs.build.outputs.app_version }}"
           name: "Release v${{ needs.build.outputs.app_version }}"
           files: |
             yelauncher-windows-installer.exe
-            yelauncher-windows.msix
+            YeLauncher.YeLauncher_${{ needs.build.outputs.app_version }}_X64.msix
           generate_release_notes: true
+
+      # ---------------------------------------------------------
+      # 10. PUBLISH: Microsoft Store (Native MSIX Upload)
+      # ---------------------------------------------------------
+      - name: Setup Microsoft Store CLI
+        uses: microsoft/setup-msstore-cli@v1
+
+      - name: Configure Microsoft Store CLI
+        run: msstore reconfigure --tenantId ${{ secrets.TENANT_ID }} --sellerId ${{ secrets.SELLER_ID }} --clientId ${{ secrets.CLIENT_ID }} --clientSecret ${{ secrets.CLIENT_SECRET }}
+
+      - name: Publish MSIX to Microsoft Store
+        # The CLI parses your MSIX manifest and pushes the file directly to your submission
+        run: msstore publish YeLauncher.YeLauncher_${{ needs.build.outputs.app_version }}_X64.msix

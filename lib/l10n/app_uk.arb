@@ -71,6 +71,7 @@
   "tabDescription": "Опис",
   "tabGallery": "Галерея",
   "tabVersions": "Версії",
+  "tabDependencies": "Залежності",
   "galleryEmpty": "Галерея порожня",
   "versionsNotFound": "Версій не знайдено",
   "selectInstance": "Виберіть екземпляр",
@@ -190,5 +191,23 @@
     }
   },
   "overrideGlobalSetting": "Перевизначити глобальне налаштування",
-  "useGlobalSetting": "Використовувати глобальне налаштування"
+  "useGlobalSetting": "Використовувати глобальне налаштування",
+  "cancelSelection": "Скасувати",
+  "selectContent": "Вибрати",
+  "deselectAll": "Зняти виділення",
+  "sortAZ": "А-Я",
+  "sortZA": "Я-А",
+  "deleteSelectedContent": "Видалити ({count})",
+  "@deleteSelectedContent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noResultsFound": "Нічого не знайдено",
+  "contentTypeMod": "МОД",
+  "contentTypeResourcepack": "ТЕКСТУРИ",
+  "contentTypeDatapack": "ДАТАПАК",
+  "contentTypeModpack": "МОДПАК"
 }

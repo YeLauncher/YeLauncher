@@ -11,6 +11,7 @@ import 'package:yelauncher/ui/core/list_item.dart';
 import 'package:yelauncher/ui/core/step.dart' as core_step;
 import 'package:yelauncher/ui/core/text_field.dart' as core_text_field;
 import 'package:yelauncher/ui/core/themes/colors.dart';
+import 'package:yelauncher/ui/core/floating_list.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/instances/view_models/instance_creation_viewmodel.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
@@ -27,8 +28,8 @@ class InstanceCreationDialog extends StatefulWidget {
 class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  bool _isForgeVersionMenuOpen = false;
-  bool _isFabricVersionMenuOpen = false;
+  final OverlayPortalController _forgeMenuController = OverlayPortalController();
+  final OverlayPortalController _fabricMenuController = OverlayPortalController();
 
   @override
   void initState() {
@@ -47,18 +48,6 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
     _nameController.dispose();
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _toggleForgeVersionMenu() {
-    setState(() {
-      _isForgeVersionMenuOpen = !_isForgeVersionMenuOpen;
-    });
-  }
-
-  void _toggleFabricVersionMenu() {
-    setState(() {
-      _isFabricVersionMenuOpen = !_isFabricVersionMenuOpen;
-    });
   }
 
   @override
@@ -609,14 +598,16 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                       "Recommended",
                       onPressed: () {
                         widget.viewModel.selectForgeVersionSource('recommended');
-                        setState(() => _isForgeVersionMenuOpen = false);
+                        if (_forgeMenuController.isShowing) _forgeMenuController.hide();
+                        setState(() {});
                       },
                     )
                   : Button.surface(
                       "Recommended",
                       onPressed: () {
                         widget.viewModel.selectForgeVersionSource('recommended');
-                        setState(() => _isForgeVersionMenuOpen = false);
+                        if (_forgeMenuController.isShowing) _forgeMenuController.hide();
+                        setState(() {});
                       },
                     ),
             ),
@@ -627,14 +618,16 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                       "Latest",
                       onPressed: () {
                         widget.viewModel.selectForgeVersionSource('latest');
-                        setState(() => _isForgeVersionMenuOpen = false);
+                        if (_forgeMenuController.isShowing) _forgeMenuController.hide();
+                        setState(() {});
                       },
                     )
                   : Button.surface(
                       "Latest",
                       onPressed: () {
                         widget.viewModel.selectForgeVersionSource('latest');
-                        setState(() => _isForgeVersionMenuOpen = false);
+                        if (_forgeMenuController.isShowing) _forgeMenuController.hide();
+                        setState(() {});
                       },
                     ),
             ),
@@ -643,13 +636,18 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               child: isCustom
                   ? Button.primary(
                       "Custom",
-                      onPressed: () => widget.viewModel.selectForgeVersionSource('custom'),
+                      onPressed: () {
+                        widget.viewModel.selectForgeVersionSource('custom');
+                        if (!_forgeMenuController.isShowing) _forgeMenuController.show();
+                        setState(() {});
+                      },
                     )
                   : Button.surface(
                       "Custom",
                       onPressed: () {
                         widget.viewModel.selectForgeVersionSource('custom');
-                        setState(() => _isForgeVersionMenuOpen = true);
+                        if (!_forgeMenuController.isShowing) _forgeMenuController.show();
+                        setState(() {});
                       },
                     ),
             ),
@@ -671,72 +669,48 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             ),
           ),
           const SizedBox(height: 12),
-          GestureDetector(
-            onTap: _toggleForgeVersionMenu,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: BoxDecoration(
-                color: AppColors.dark.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.dark.onSurface.withValues(alpha: 0.12),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      selectedForgeVersion,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppText.defaultTheme.body.copyWith(
-                        color: AppColors.dark.onSurface,
-                      ),
+          FloatingList(
+            controller: _forgeMenuController,
+            onClose: () => setState(() {}),
+            overlayBuilder: (context) => _forgeMenuContent(),
+            targetBuilder: (context) {
+              return GestureDetector(
+                onTap: () {
+                  _forgeMenuController.toggle();
+                  setState(() {});
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.dark.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppColors.dark.onSurface.withValues(alpha: 0.12),
                     ),
                   ),
-                  Icon(
-                    _isForgeVersionMenuOpen
-                        ? Symbols.expand_less_rounded
-                        : Symbols.expand_more_rounded,
-                    color: AppColors.dark.onSurfaceVariant,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          selectedForgeVersion,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppText.defaultTheme.body.copyWith(
+                            color: AppColors.dark.onSurface,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        _forgeMenuController.isShowing
+                          ? Symbols.expand_less_rounded
+                          : Symbols.expand_more_rounded,
+                        color: AppColors.dark.onSurfaceVariant,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
-          if (_isForgeVersionMenuOpen) ...[
-            const SizedBox(height: 8),
-            Container(
-              constraints: const BoxConstraints(maxHeight: 180),
-              decoration: BoxDecoration(
-                color: AppColors.dark.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.dark.onSurface.withValues(alpha: 0.12),
-                ),
-              ),
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: widget.viewModel.forgeVersions.length,
-                separatorBuilder: (context, index) => Container(
-                  height: 1,
-                  color: AppColors.dark.onSurface.withValues(alpha: 0.08),
-                ),
-                itemBuilder: (context, index) {
-                  final version = widget.viewModel.forgeVersions[index];
-                  final isSelected = widget.viewModel.selectedForgeVersion == version.version;
-                  return ListItem.primary(
-                    title: version.version,
-                    subtitle: index == 0 ? 'Newest' : null,
-                    isSelected: isSelected,
-                    onTap: () {
-                      widget.viewModel.selectForgeVersion(version.version);
-                      setState(() => _isForgeVersionMenuOpen = false);
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
         ],
       ],
     );
@@ -774,75 +748,48 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
           ),
         ),
         const SizedBox(height: 12),
-        GestureDetector(
-          onTap: _toggleFabricVersionMenu,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              color: AppColors.dark.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: AppColors.dark.onSurface.withValues(alpha: 0.12),
-              ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    selectedFabricVersion,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.defaultTheme.body.copyWith(
-                      color: AppColors.dark.onSurface,
-                    ),
+        FloatingList(
+          controller: _fabricMenuController,
+          onClose: () => setState(() {}),
+          overlayBuilder: (context) => _fabricMenuContent(),
+          targetBuilder: (context) {
+            return GestureDetector(
+              onTap: () {
+                _fabricMenuController.toggle();
+                setState(() {});
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  color: AppColors.dark.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.dark.onSurface.withValues(alpha: 0.12),
                   ),
                 ),
-                Icon(
-                  _isFabricVersionMenuOpen
-                      ? Symbols.expand_less_rounded
-                      : Symbols.expand_more_rounded,
-                  color: AppColors.dark.onSurfaceVariant,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedFabricVersion,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppText.defaultTheme.body.copyWith(
+                          color: AppColors.dark.onSurface,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      _fabricMenuController.isShowing
+                          ? Symbols.expand_less_rounded
+                          : Symbols.expand_more_rounded,
+                      color: AppColors.dark.onSurfaceVariant,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
-        if (_isFabricVersionMenuOpen) ...[
-          const SizedBox(height: 8),
-          Container(
-            constraints: const BoxConstraints(maxHeight: 180),
-            decoration: BoxDecoration(
-              color: AppColors.dark.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: AppColors.dark.onSurface.withValues(alpha: 0.12),
-              ),
-            ),
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: widget.viewModel.fabricVersions.length,
-              separatorBuilder: (context, index) => Container(
-                height: 1,
-                color: AppColors.dark.onSurface.withValues(alpha: 0.08),
-              ),
-              itemBuilder: (context, index) {
-                final version = widget.viewModel.fabricVersions[index];
-                final isSelected = widget.viewModel.selectedFabricVersion == version.version;
-                String? badgeText;
-                if (version.type == 'stable') badgeText = 'Stable';
-
-                return ListItem.primary(
-                  title: version.version,
-                  chip: badgeText == 'Stable' ? Chip.primary(badgeText!) : null,
-                  isSelected: isSelected,
-                  onTap: () {
-                    widget.viewModel.selectFabricVersion(version.version);
-                    setState(() => _isFabricVersionMenuOpen = false);
-                  },
-                );
-              },
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -883,6 +830,101 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             ],
           ),
         ),
+      ),
+      ),
+    );
+  }
+
+  Widget _forgeMenuContent() {
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 180),
+      decoration: BoxDecoration(
+        color: AppColors.dark.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF000000).withValues(alpha: 0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: ListView.separated(
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: widget.viewModel.forgeVersions.length,
+        separatorBuilder: (context, index) => Container(
+          height: 1,
+          color: AppColors.dark.onSurface.withValues(alpha: 0.08),
+        ),
+        itemBuilder: (context, index) {
+          final version = widget.viewModel.forgeVersions[index];
+          final isSelected = widget.viewModel.selectedForgeVersion == version.version;
+          return ListItem.primary(
+            title: version.version,
+            subtitle: index == 0 ? 'Newest' : null,
+            isSelected: isSelected,
+            onTap: () {
+              widget.viewModel.selectForgeVersion(version.version);
+              if (_forgeMenuController.isShowing) _forgeMenuController.hide();
+              setState(() {});
+            },
+          );
+        },
+      ),
+      ),
+    );
+  }
+
+  Widget _fabricMenuContent() {
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 180),
+      decoration: BoxDecoration(
+        color: AppColors.dark.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.dark.onSurface.withValues(alpha: 0.12),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF000000).withValues(alpha: 0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: ListView.separated(
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: widget.viewModel.fabricVersions.length,
+        separatorBuilder: (context, index) => Container(
+          height: 1,
+          color: AppColors.dark.onSurface.withValues(alpha: 0.08),
+        ),
+        itemBuilder: (context, index) {
+          final version = widget.viewModel.fabricVersions[index];
+          final isSelected = widget.viewModel.selectedFabricVersion == version.version;
+          String? badgeText;
+          if (version.type == 'stable') badgeText = 'Stable';
+
+          return ListItem.primary(
+            title: version.version,
+            chip: badgeText == 'Stable' ? Chip.primary(badgeText!) : null,
+            isSelected: isSelected,
+            onTap: () {
+              widget.viewModel.selectFabricVersion(version.version);
+              if (_fabricMenuController.isShowing) _fabricMenuController.hide();
+              setState(() {});
+            },
+          );
+        },
       ),
       ),
     );
