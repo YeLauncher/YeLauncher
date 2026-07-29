@@ -11,6 +11,7 @@ import 'package:yelauncher/data/services/api/forge_api_client.dart';
 import 'package:yelauncher/data/services/api/fabric_api_client.dart';
 import 'package:yelauncher/data/repositories/mod_loader/fabric_repository_remote.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
@@ -122,6 +123,7 @@ void main() {
       secureStorage: fakeSecureStorage,
       forgeRepository: forgeRepository,
       fabricRepository: fabricRepository,
+      settingsRepository: SettingsRepositoryLocal(storageService: fakeSecureStorage),
     );
   });
 
@@ -216,11 +218,6 @@ void main() {
       debugPrint('Minecraft $version is already installed.');
     }
 
-    debugPrint('Running Minecraft $version instance...');
-    final runResult = await minecraftRepository.run(instance);
-    expect(runResult, isA<Success>());
-    debugPrint('Minecraft $version process started. Waiting for launch...');
-
     bool isLaunched = false;
     final logSubscription = Logger.root.onRecord.listen((record) {
       final msg = record.message.toLowerCase();
@@ -233,6 +230,11 @@ void main() {
         isLaunched = true;
       }
     });
+
+    debugPrint('Running Minecraft $version instance...');
+    final runResult = await minecraftRepository.run(instance);
+    expect(runResult, isA<Success>());
+    debugPrint('Minecraft $version process started. Waiting for launch...');
 
     int waitTime = 0;
     while (!isLaunched && waitTime < 180) {

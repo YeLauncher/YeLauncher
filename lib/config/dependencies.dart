@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:yelauncher/config/environment_config.dart';
 import 'package:yelauncher/data/services/api/content_provider.dart';
 import 'package:yelauncher/data/services/api/modrinth_client.dart';
 import 'package:yelauncher/data/repositories/content/content_repository.dart';
@@ -53,6 +54,7 @@ List<SingleChildWidget> get _sharedProviders {
 
 List<SingleChildWidget> get providersLocal {
   return [
+    Provider.value(value: const EnvironmentConfig(isDevelopment: true)),
     ..._sharedProviders,
     Provider.value(value: LocalDataService()),
     Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
@@ -97,6 +99,7 @@ List<SingleChildWidget> get providersLocal {
         secureStorage: context.read(),
         forgeRepository: context.read(),
         fabricRepository: context.read<FabricRepositoryRemote>(),
+        settingsRepository: context.read(),
       ),
     ),
     Provider<List<ModLoaderRepository>>(
@@ -110,6 +113,7 @@ List<SingleChildWidget> get providersLocal {
 
 List<SingleChildWidget> get providersRemote {
   return [
+    Provider.value(value: const EnvironmentConfig(isDevelopment: false)),
     ..._sharedProviders,
     Provider<JavaRepository>(create: (_) => JavaRepositoryRemote()),
     Provider(create: (context) => DownloadService()),
@@ -153,6 +157,7 @@ List<SingleChildWidget> get providersRemote {
         secureStorage: context.read(),
         forgeRepository: context.read(),
         fabricRepository: context.read<FabricRepositoryRemote>(),
+        settingsRepository: context.read(),
       ),
     ),
     Provider<List<ModLoaderRepository>>(

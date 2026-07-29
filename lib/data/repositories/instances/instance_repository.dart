@@ -5,5 +5,6 @@ abstract class InstanceRepository {
   Future<void> saveInstance(InstanceModel instance);
   Future<void> deleteInstance(String id);
   Future<void> openFolder(InstanceModel instance);
+  Future<void> openLogsFolder(InstanceModel instance);
   Future<void> createInstance(InstanceModel instance);
 }

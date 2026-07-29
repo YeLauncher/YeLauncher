@@ -71,6 +71,7 @@
   "tabDescription": "Опис",
   "tabGallery": "Галерея",
   "tabVersions": "Версії",
+  "tabDependencies": "Залежності",
   "galleryEmpty": "Галерея порожня",
   "versionsNotFound": "Версій не знайдено",
   "selectInstance": "Виберіть екземпляр",
@@ -87,12 +88,16 @@
   },
   "installedContentTitle": "Встановлений контент",
   "contentMissing": "Контент відсутній",
-  "profilesTabTitle": "Профілі",
-  "manageAccountsSubtitle": "Керуйте своїми акаунтами Minecraft",
+  "profilesTabTitle": "Акаунти",
+  "manageAccountsSubtitle": "Керуйте вашими акаунтами Minecraft",
   "noAccountsTitle": "Немає акаунтів",
   "noAccountsSubtitle": "Додайте акаунт для гри в Minecraft",
   "activeBadge": "Активний",
-  "addAccountButton": "Додати акаунт",
+  "addAccountButton": "Додати акаунт Microsoft",
+  "addOfflineAccountButton": "Додати офлайн акаунт",
+  "addOfflineAccountTitle": "Додати офлайн акаунт",
+  "addOfflineAccountSubtitle": "Введіть ім'я для вашого офлайн профілю. Цей акаунт не зможе підключатися до преміум серверів.",
+  "nicknameLabel": "Им'я гравця",
   "selectButton": "Вибрати",
   "minecraftAccountNotExists": "Акаунта Minecraft не існує",
   "authSuccessMessage": "Ви можете закрити це вікно і перейти до лаунчера",
@@ -112,12 +117,97 @@
   "settingsMaxMemory": "Максимальна пам'ять",
   "settingsMaxMemoryDesc": "Максимальний обсяг оперативної пам'яті (у мегабайтах), який може використовувати гра.",
   "settingsMB": "МБ",
-  "settingsCustomJavaPath": "Власний шлях до Java",
-  "settingsCustomJavaPathDesc": "Вкажіть абсолютний шлях до конкретного виконуваного файлу javaw.exe. Залиште пустим, щоб використовувати стандартний лаунчера.",
+  "settingsCustomJavaPath": "Шлях до Java",
+  "settingsCustomJavaPathDesc": "Вкажіть абсолютний шлях до файлу javaw.exe. Залиште порожнім, щоб використовувати стандартний для лаунчера.",
   "settingsJvmArgs": "Аргументи JVM",
-  "settingsJvmArgsDesc": "Розширені аргументи Java, що передаються при запуску. Будьте обережні.",
-  "saveChangesButton": "Зберегти зміни",
+  "settingsJvmArgsDesc": "Додаткові параметри, які передаються віртуальній машині Java при запуску.",
+  "resetToDefaultsButton": "Скинути до стандартних",
+  "defaultHint": "Стандартно: {value}",
+  "@defaultHint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "saveChangesButton": "Зберегти",
   "launcherManaged": "Лаунчер",
   "manualInstalled": "Вручну",
-  "missingFile": "Відсутній файл"
+  "missingFile": "Відсутній файл",
+  "deleteInstanceTitle": "Видалити екземпляр",
+  "deleteInstanceContent": "Ви впевнені, що хочете видалити цей екземпляр? Цю дію неможливо скасувати, вона назавжди видалить усі моди, ресурспаки та збереження.",
+  "deleteButton": "Видалити",
+  "sortLastPlayed": "Останні запущені",
+  "sortNameAsc": "Назва (А-Я)",
+  "sortNameDesc": "Назва (Я-А)",
+  "searchInstances": "Пошук екземплярів...",
+  "nameAlreadyExists": "Екземпляр з такою назвою вже існує",
+  "filterAllVersions": "Усі версії",
+  "filterAllLoaders": "Усі завантажувачі",
+  "filterAllCategories": "Усі категорії",
+  "sortRelevance": "За релевантністю",
+  "sortDownloads": "За завантаженнями",
+  "sortNewest": "Найновіші",
+  "sortUpdated": "Останні оновлені",
+  "categoryAdventure": "Пригоди",
+  "categoryMagic": "Магія",
+  "categoryTechnology": "Технології",
+  "categoryOptimization": "Оптимізація",
+  "categoryUtility": "Утиліти",
+  "categoryDecoration": "Декорації",
+  "categoryWorldgen": "Генерація світу",
+  "showSnapshots": "Снапшоти",
+  "stepAppearance": "Вигляд",
+  "iconLabel": "Іконка",
+  "colorLabel": "Колір",
+  "previewLabel": "Попередній перегляд",
+  "selectedCount": "Вибрано {count}",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectAllButton": "Вибрати всі",
+  "installStepDownloadingJava": "Завантаження Java {version}",
+  "@installStepDownloadingJava": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installStepInstallingClientAndAssets": "Встановлення клієнта та ресурсів",
+  "installStepProcessingForge": "Обробка встановлення Forge...",
+  "installStepProcessingFabric": "Обробка встановлення Fabric...",
+  "inheritsGlobalSetting": "Успадковує глобальне налаштування",
+  "inheritsGlobalSettingDesc": "Наразі успадковує: {value}",
+  "@inheritsGlobalSettingDesc": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "overrideGlobalSetting": "Перевизначити глобальне налаштування",
+  "useGlobalSetting": "Використовувати глобальне налаштування",
+  "cancelSelection": "Скасувати",
+  "selectContent": "Вибрати",
+  "deselectAll": "Зняти виділення",
+  "sortAZ": "А-Я",
+  "sortZA": "Я-А",
+  "deleteSelectedContent": "Видалити ({count})",
+  "@deleteSelectedContent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noResultsFound": "Нічого не знайдено",
+  "contentTypeMod": "МОД",
+  "contentTypeResourcepack": "ТЕКСТУРИ",
+  "contentTypeDatapack": "ДАТАПАК",
+  "contentTypeModpack": "МОДПАК"
 }

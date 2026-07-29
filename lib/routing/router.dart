@@ -58,6 +58,7 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
               builder: (context, state) {
                 final viewModel = ContentScreenViewModel(
                   contentRepository: context.read(),
+                  minecraftRepository: context.read(),
                 );
                 return ContentScreen(viewModel: viewModel);
               },

@@ -3,30 +3,35 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
+import 'dart:ui' as _i2;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:yelauncher/data/repositories/content/content_repository.dart'
-    as _i10;
+    as _i11;
+import 'package:yelauncher/data/repositories/instances/instance_repository.dart'
+    as _i19;
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart'
-    as _i2;
+    as _i3;
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart'
-    as _i13;
-import 'package:yelauncher/data/services/download_service.dart' as _i15;
-import 'package:yelauncher/domain/models/content/content_item.dart' as _i11;
-import 'package:yelauncher/domain/models/content/content_version.dart' as _i12;
-import 'package:yelauncher/domain/models/download/download_model.dart' as _i16;
-import 'package:yelauncher/domain/models/instance/instance_model.dart' as _i8;
-import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart'
-    as _i9;
-import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart'
-    as _i5;
-import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart'
-    as _i7;
-import 'package:yelauncher/domain/models/mod_loader/mod_loader_version_model.dart'
     as _i14;
-import 'package:yelauncher/utilities/result.dart' as _i4;
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart'
+    as _i18;
+import 'package:yelauncher/data/services/download_service.dart' as _i16;
+import 'package:yelauncher/domain/models/content/content_item.dart' as _i12;
+import 'package:yelauncher/domain/models/content/content_version.dart' as _i13;
+import 'package:yelauncher/domain/models/download/download_model.dart' as _i17;
+import 'package:yelauncher/domain/models/instance/instance_model.dart' as _i9;
+import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart'
+    as _i10;
+import 'package:yelauncher/domain/models/minecraft/minecraft_profile_model.dart'
+    as _i6;
+import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart'
+    as _i8;
+import 'package:yelauncher/domain/models/mod_loader/mod_loader_version_model.dart'
+    as _i15;
+import 'package:yelauncher/utilities/result.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -43,111 +48,135 @@ import 'package:yelauncher/utilities/result.dart' as _i4;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
+class _FakeLocale_0 extends _i1.SmartFake implements _i2.Locale {
+  _FakeLocale_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [MinecraftRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMinecraftRepository extends _i1.Mock
-    implements _i2.MinecraftRepository {
+    implements _i3.MinecraftRepository {
   @override
-  _i3.Future<_i4.Result<List<_i5.MinecraftProfileModel>>> getProfiles() =>
+  _i4.Future<_i5.Result<List<_i6.MinecraftProfileModel>>> getProfiles() =>
       (super.noSuchMethod(
             Invocation.method(#getProfiles, []),
             returnValue:
-                _i3.Future<_i4.Result<List<_i5.MinecraftProfileModel>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i5.MinecraftProfileModel>>>(
+                _i4.Future<_i5.Result<List<_i6.MinecraftProfileModel>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i6.MinecraftProfileModel>>>(
                     this,
                     Invocation.method(#getProfiles, []),
                   ),
                 ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<List<_i5.MinecraftProfileModel>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i5.MinecraftProfileModel>>>(
+                _i4.Future<_i5.Result<List<_i6.MinecraftProfileModel>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i6.MinecraftProfileModel>>>(
                     this,
                     Invocation.method(#getProfiles, []),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<List<_i5.MinecraftProfileModel>>>);
+          as _i4.Future<_i5.Result<List<_i6.MinecraftProfileModel>>>);
 
   @override
-  _i3.Future<_i4.Result<_i5.MinecraftProfileModel?>> getSelectedProfile() =>
+  _i4.Future<_i5.Result<_i6.MinecraftProfileModel?>> getSelectedProfile() =>
       (super.noSuchMethod(
             Invocation.method(#getSelectedProfile, []),
             returnValue:
-                _i3.Future<_i4.Result<_i5.MinecraftProfileModel?>>.value(
-                  _i6.dummyValue<_i4.Result<_i5.MinecraftProfileModel?>>(
+                _i4.Future<_i5.Result<_i6.MinecraftProfileModel?>>.value(
+                  _i7.dummyValue<_i5.Result<_i6.MinecraftProfileModel?>>(
                     this,
                     Invocation.method(#getSelectedProfile, []),
                   ),
                 ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<_i5.MinecraftProfileModel?>>.value(
-                  _i6.dummyValue<_i4.Result<_i5.MinecraftProfileModel?>>(
+                _i4.Future<_i5.Result<_i6.MinecraftProfileModel?>>.value(
+                  _i7.dummyValue<_i5.Result<_i6.MinecraftProfileModel?>>(
                     this,
                     Invocation.method(#getSelectedProfile, []),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<_i5.MinecraftProfileModel?>>);
+          as _i4.Future<_i5.Result<_i6.MinecraftProfileModel?>>);
 
   @override
-  _i3.Future<_i4.Result<void>> selectProfile(String? uuid) =>
+  _i4.Future<_i5.Result<void>> selectProfile(String? uuid) =>
       (super.noSuchMethod(
             Invocation.method(#selectProfile, [uuid]),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(#selectProfile, [uuid]),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(#selectProfile, [uuid]),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 
   @override
-  _i3.Future<_i4.Result<void>> removeProfile(String? uuid) =>
+  _i4.Future<_i5.Result<void>> removeProfile(String? uuid) =>
       (super.noSuchMethod(
             Invocation.method(#removeProfile, [uuid]),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(#removeProfile, [uuid]),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(#removeProfile, [uuid]),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 
   @override
-  _i3.Future<_i4.Result<_i5.MinecraftProfileModel>> authenticate() =>
+  _i4.Future<_i5.Result<_i6.MinecraftProfileModel>> authenticate() =>
       (super.noSuchMethod(
             Invocation.method(#authenticate, []),
             returnValue:
-                _i3.Future<_i4.Result<_i5.MinecraftProfileModel>>.value(
-                  _i6.dummyValue<_i4.Result<_i5.MinecraftProfileModel>>(
+                _i4.Future<_i5.Result<_i6.MinecraftProfileModel>>.value(
+                  _i7.dummyValue<_i5.Result<_i6.MinecraftProfileModel>>(
                     this,
                     Invocation.method(#authenticate, []),
                   ),
                 ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<_i5.MinecraftProfileModel>>.value(
-                  _i6.dummyValue<_i4.Result<_i5.MinecraftProfileModel>>(
+                _i4.Future<_i5.Result<_i6.MinecraftProfileModel>>.value(
+                  _i7.dummyValue<_i5.Result<_i6.MinecraftProfileModel>>(
                     this,
                     Invocation.method(#authenticate, []),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<_i5.MinecraftProfileModel>>);
+          as _i4.Future<_i5.Result<_i6.MinecraftProfileModel>>);
+
+  @override
+  _i4.Future<_i5.Result<void>> addOfflineProfile(String? nickname) =>
+      (super.noSuchMethod(
+            Invocation.method(#addOfflineProfile, [nickname]),
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
+                this,
+                Invocation.method(#addOfflineProfile, [nickname]),
+              ),
+            ),
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
+                this,
+                Invocation.method(#addOfflineProfile, [nickname]),
+              ),
+            ),
+          )
+          as _i4.Future<_i5.Result<void>>);
 
   @override
   void cancelAuthentication() => super.noSuchMethod(
@@ -156,29 +185,29 @@ class MockMinecraftRepository extends _i1.Mock
   );
 
   @override
-  _i3.Future<_i4.Result<List<_i7.MinecraftVersionModel>>> getVersions() =>
+  _i4.Future<_i5.Result<List<_i8.MinecraftVersionModel>>> getVersions() =>
       (super.noSuchMethod(
             Invocation.method(#getVersions, []),
             returnValue:
-                _i3.Future<_i4.Result<List<_i7.MinecraftVersionModel>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i7.MinecraftVersionModel>>>(
+                _i4.Future<_i5.Result<List<_i8.MinecraftVersionModel>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i8.MinecraftVersionModel>>>(
                     this,
                     Invocation.method(#getVersions, []),
                   ),
                 ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<List<_i7.MinecraftVersionModel>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i7.MinecraftVersionModel>>>(
+                _i4.Future<_i5.Result<List<_i8.MinecraftVersionModel>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i8.MinecraftVersionModel>>>(
                     this,
                     Invocation.method(#getVersions, []),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<List<_i7.MinecraftVersionModel>>>);
+          as _i4.Future<_i5.Result<List<_i8.MinecraftVersionModel>>>);
 
   @override
-  _i3.Future<_i4.Result<void>> install(
-    _i8.InstanceModel? instance, {
+  _i4.Future<_i5.Result<void>> install(
+    _i9.InstanceModel? instance, {
     void Function(int, int?)? onProgress,
     void Function(String)? onStepChanged,
   }) =>
@@ -188,8 +217,8 @@ class MockMinecraftRepository extends _i1.Mock
               [instance],
               {#onProgress: onProgress, #onStepChanged: onStepChanged},
             ),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #install,
@@ -198,8 +227,8 @@ class MockMinecraftRepository extends _i1.Mock
                 ),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #install,
@@ -209,106 +238,110 @@ class MockMinecraftRepository extends _i1.Mock
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 
   @override
-  _i3.Future<_i4.Result<bool>> isInstalled(_i8.InstanceModel? instance) =>
+  _i4.Future<_i5.Result<bool>> isInstalled(_i9.InstanceModel? instance) =>
       (super.noSuchMethod(
             Invocation.method(#isInstalled, [instance]),
-            returnValue: _i3.Future<_i4.Result<bool>>.value(
-              _i6.dummyValue<_i4.Result<bool>>(
+            returnValue: _i4.Future<_i5.Result<bool>>.value(
+              _i7.dummyValue<_i5.Result<bool>>(
                 this,
                 Invocation.method(#isInstalled, [instance]),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<bool>>.value(
-              _i6.dummyValue<_i4.Result<bool>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<bool>>.value(
+              _i7.dummyValue<_i5.Result<bool>>(
                 this,
                 Invocation.method(#isInstalled, [instance]),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<bool>>);
+          as _i4.Future<_i5.Result<bool>>);
 
   @override
-  _i3.Future<_i4.Result<String>> getJavaVersion(String? id) =>
+  _i4.Future<_i5.Result<String>> getJavaVersion(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getJavaVersion, [id]),
-            returnValue: _i3.Future<_i4.Result<String>>.value(
-              _i6.dummyValue<_i4.Result<String>>(
+            returnValue: _i4.Future<_i5.Result<String>>.value(
+              _i7.dummyValue<_i5.Result<String>>(
                 this,
                 Invocation.method(#getJavaVersion, [id]),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<String>>.value(
-              _i6.dummyValue<_i4.Result<String>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<String>>.value(
+              _i7.dummyValue<_i5.Result<String>>(
                 this,
                 Invocation.method(#getJavaVersion, [id]),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<String>>);
+          as _i4.Future<_i5.Result<String>>);
 
   @override
-  _i3.Future<_i4.Result<_i9.MinecraftProcessModel>> run(
-    _i8.InstanceModel? instance,
+  _i4.Future<_i5.Result<_i10.MinecraftProcessModel>> run(
+    _i9.InstanceModel? instance,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#run, [instance]),
             returnValue:
-                _i3.Future<_i4.Result<_i9.MinecraftProcessModel>>.value(
-                  _i6.dummyValue<_i4.Result<_i9.MinecraftProcessModel>>(
+                _i4.Future<_i5.Result<_i10.MinecraftProcessModel>>.value(
+                  _i7.dummyValue<_i5.Result<_i10.MinecraftProcessModel>>(
                     this,
                     Invocation.method(#run, [instance]),
                   ),
                 ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<_i9.MinecraftProcessModel>>.value(
-                  _i6.dummyValue<_i4.Result<_i9.MinecraftProcessModel>>(
+                _i4.Future<_i5.Result<_i10.MinecraftProcessModel>>.value(
+                  _i7.dummyValue<_i5.Result<_i10.MinecraftProcessModel>>(
                     this,
                     Invocation.method(#run, [instance]),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<_i9.MinecraftProcessModel>>);
+          as _i4.Future<_i5.Result<_i10.MinecraftProcessModel>>);
 
   @override
-  _i3.Future<bool> isAuthenticated() =>
+  _i4.Future<bool> isAuthenticated() =>
       (super.noSuchMethod(
             Invocation.method(#isAuthenticated, []),
-            returnValue: _i3.Future<bool>.value(false),
-            returnValueForMissingStub: _i3.Future<bool>.value(false),
+            returnValue: _i4.Future<bool>.value(false),
+            returnValueForMissingStub: _i4.Future<bool>.value(false),
           )
-          as _i3.Future<bool>);
+          as _i4.Future<bool>);
 
   @override
-  _i3.Future<_i4.Result<void>> logout() =>
+  _i4.Future<_i5.Result<void>> logout() =>
       (super.noSuchMethod(
             Invocation.method(#logout, []),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(#logout, []),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(#logout, []),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 }
 
 /// A class which mocks [ContentRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockContentRepository extends _i1.Mock implements _i10.ContentRepository {
+class MockContentRepository extends _i1.Mock implements _i11.ContentRepository {
   @override
-  _i3.Future<_i4.Result<List<_i11.ContentItem>>> searchContent({
+  _i4.Future<_i5.Result<List<_i12.ContentItem>>> searchContent({
     required String? query,
     required String? projectType,
+    List<String>? versions = const [],
+    List<String>? modLoaders = const [],
+    List<String>? categories = const [],
+    String? sortOrder = 'relevance',
     int? limit = 20,
     int? offset = 0,
   }) =>
@@ -316,88 +349,142 @@ class MockContentRepository extends _i1.Mock implements _i10.ContentRepository {
             Invocation.method(#searchContent, [], {
               #query: query,
               #projectType: projectType,
+              #versions: versions,
+              #modLoaders: modLoaders,
+              #categories: categories,
+              #sortOrder: sortOrder,
               #limit: limit,
               #offset: offset,
             }),
-            returnValue: _i3.Future<_i4.Result<List<_i11.ContentItem>>>.value(
-              _i6.dummyValue<_i4.Result<List<_i11.ContentItem>>>(
+            returnValue: _i4.Future<_i5.Result<List<_i12.ContentItem>>>.value(
+              _i7.dummyValue<_i5.Result<List<_i12.ContentItem>>>(
                 this,
                 Invocation.method(#searchContent, [], {
                   #query: query,
                   #projectType: projectType,
+                  #versions: versions,
+                  #modLoaders: modLoaders,
+                  #categories: categories,
+                  #sortOrder: sortOrder,
                   #limit: limit,
                   #offset: offset,
                 }),
               ),
             ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<List<_i11.ContentItem>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i11.ContentItem>>>(
+                _i4.Future<_i5.Result<List<_i12.ContentItem>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i12.ContentItem>>>(
                     this,
                     Invocation.method(#searchContent, [], {
                       #query: query,
                       #projectType: projectType,
+                      #versions: versions,
+                      #modLoaders: modLoaders,
+                      #categories: categories,
+                      #sortOrder: sortOrder,
                       #limit: limit,
                       #offset: offset,
                     }),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<List<_i11.ContentItem>>>);
+          as _i4.Future<_i5.Result<List<_i12.ContentItem>>>);
 
   @override
-  _i3.Future<_i4.Result<_i11.ContentItem>> getContent(String? id) =>
+  _i4.Future<_i5.Result<_i12.ContentItem>> getContent(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getContent, [id]),
-            returnValue: _i3.Future<_i4.Result<_i11.ContentItem>>.value(
-              _i6.dummyValue<_i4.Result<_i11.ContentItem>>(
+            returnValue: _i4.Future<_i5.Result<_i12.ContentItem>>.value(
+              _i7.dummyValue<_i5.Result<_i12.ContentItem>>(
                 this,
                 Invocation.method(#getContent, [id]),
               ),
             ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<_i11.ContentItem>>.value(
-                  _i6.dummyValue<_i4.Result<_i11.ContentItem>>(
+                _i4.Future<_i5.Result<_i12.ContentItem>>.value(
+                  _i7.dummyValue<_i5.Result<_i12.ContentItem>>(
                     this,
                     Invocation.method(#getContent, [id]),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<_i11.ContentItem>>);
+          as _i4.Future<_i5.Result<_i12.ContentItem>>);
 
   @override
-  _i3.Future<_i4.Result<List<_i12.ContentVersion>>> getVersions(String? id) =>
+  _i4.Future<_i5.Result<List<_i13.ContentVersion>>> getVersions(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getVersions, [id]),
             returnValue:
-                _i3.Future<_i4.Result<List<_i12.ContentVersion>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i12.ContentVersion>>>(
+                _i4.Future<_i5.Result<List<_i13.ContentVersion>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i13.ContentVersion>>>(
                     this,
                     Invocation.method(#getVersions, [id]),
                   ),
                 ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<List<_i12.ContentVersion>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i12.ContentVersion>>>(
+                _i4.Future<_i5.Result<List<_i13.ContentVersion>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i13.ContentVersion>>>(
                     this,
                     Invocation.method(#getVersions, [id]),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<List<_i12.ContentVersion>>>);
+          as _i4.Future<_i5.Result<List<_i13.ContentVersion>>>);
+
+  @override
+  _i4.Future<_i5.Result<_i13.ContentVersion>> getVersion(String? versionId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getVersion, [versionId]),
+            returnValue: _i4.Future<_i5.Result<_i13.ContentVersion>>.value(
+              _i7.dummyValue<_i5.Result<_i13.ContentVersion>>(
+                this,
+                Invocation.method(#getVersion, [versionId]),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i4.Future<_i5.Result<_i13.ContentVersion>>.value(
+                  _i7.dummyValue<_i5.Result<_i13.ContentVersion>>(
+                    this,
+                    Invocation.method(#getVersion, [versionId]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i5.Result<_i13.ContentVersion>>);
+
+  @override
+  _i4.Future<_i5.Result<List<_i12.ContentItem>>> getProjectDependencies(
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getProjectDependencies, [id]),
+            returnValue: _i4.Future<_i5.Result<List<_i12.ContentItem>>>.value(
+              _i7.dummyValue<_i5.Result<List<_i12.ContentItem>>>(
+                this,
+                Invocation.method(#getProjectDependencies, [id]),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i4.Future<_i5.Result<List<_i12.ContentItem>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i12.ContentItem>>>(
+                    this,
+                    Invocation.method(#getProjectDependencies, [id]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i5.Result<List<_i12.ContentItem>>>);
 }
 
 /// A class which mocks [ModLoaderRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockModLoaderRepository extends _i1.Mock
-    implements _i13.ModLoaderRepository {
+    implements _i14.ModLoaderRepository {
   @override
   String get id =>
       (super.noSuchMethod(
             Invocation.getter(#id),
-            returnValue: _i6.dummyValue<String>(this, Invocation.getter(#id)),
-            returnValueForMissingStub: _i6.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(this, Invocation.getter(#id)),
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.getter(#id),
             ),
@@ -408,8 +495,8 @@ class MockModLoaderRepository extends _i1.Mock
   String get name =>
       (super.noSuchMethod(
             Invocation.getter(#name),
-            returnValue: _i6.dummyValue<String>(this, Invocation.getter(#name)),
-            returnValueForMissingStub: _i6.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(this, Invocation.getter(#name)),
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.getter(#name),
             ),
@@ -420,8 +507,8 @@ class MockModLoaderRepository extends _i1.Mock
   String get icon =>
       (super.noSuchMethod(
             Invocation.getter(#icon),
-            returnValue: _i6.dummyValue<String>(this, Invocation.getter(#icon)),
-            returnValueForMissingStub: _i6.dummyValue<String>(
+            returnValue: _i7.dummyValue<String>(this, Invocation.getter(#icon)),
+            returnValueForMissingStub: _i7.dummyValue<String>(
               this,
               Invocation.getter(#icon),
             ),
@@ -429,30 +516,30 @@ class MockModLoaderRepository extends _i1.Mock
           as String);
 
   @override
-  _i3.Future<_i4.Result<List<_i14.ModLoaderVersionModel>>> getVersions(
+  _i4.Future<_i5.Result<List<_i15.ModLoaderVersionModel>>> getVersions(
     String? minecraftVersion,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getVersions, [minecraftVersion]),
             returnValue:
-                _i3.Future<_i4.Result<List<_i14.ModLoaderVersionModel>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i14.ModLoaderVersionModel>>>(
+                _i4.Future<_i5.Result<List<_i15.ModLoaderVersionModel>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i15.ModLoaderVersionModel>>>(
                     this,
                     Invocation.method(#getVersions, [minecraftVersion]),
                   ),
                 ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<List<_i14.ModLoaderVersionModel>>>.value(
-                  _i6.dummyValue<_i4.Result<List<_i14.ModLoaderVersionModel>>>(
+                _i4.Future<_i5.Result<List<_i15.ModLoaderVersionModel>>>.value(
+                  _i7.dummyValue<_i5.Result<List<_i15.ModLoaderVersionModel>>>(
                     this,
                     Invocation.method(#getVersions, [minecraftVersion]),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<List<_i14.ModLoaderVersionModel>>>);
+          as _i4.Future<_i5.Result<List<_i15.ModLoaderVersionModel>>>);
 
   @override
-  _i3.Future<_i4.Result<void>> install(
+  _i4.Future<_i5.Result<void>> install(
     String? id, {
     String? minecraftVersion,
     void Function(int, int?)? onProgress,
@@ -463,8 +550,8 @@ class MockModLoaderRepository extends _i1.Mock
               [id],
               {#minecraftVersion: minecraftVersion, #onProgress: onProgress},
             ),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #install,
@@ -476,8 +563,8 @@ class MockModLoaderRepository extends _i1.Mock
                 ),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #install,
@@ -490,29 +577,29 @@ class MockModLoaderRepository extends _i1.Mock
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 
   @override
-  _i3.Future<_i4.Result<bool>> isInstalled(String? id) =>
+  _i4.Future<_i5.Result<bool>> isInstalled(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#isInstalled, [id]),
-            returnValue: _i3.Future<_i4.Result<bool>>.value(
-              _i6.dummyValue<_i4.Result<bool>>(
+            returnValue: _i4.Future<_i5.Result<bool>>.value(
+              _i7.dummyValue<_i5.Result<bool>>(
                 this,
                 Invocation.method(#isInstalled, [id]),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<bool>>.value(
-              _i6.dummyValue<_i4.Result<bool>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<bool>>.value(
+              _i7.dummyValue<_i5.Result<bool>>(
                 this,
                 Invocation.method(#isInstalled, [id]),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<bool>>);
+          as _i4.Future<_i5.Result<bool>>);
 
   @override
-  _i3.Future<_i4.Result<void>> processInstallation(
+  _i4.Future<_i5.Result<void>> processInstallation(
     String? id,
     String? minecraftVersion, {
     String? javaExecutablePath,
@@ -523,8 +610,8 @@ class MockModLoaderRepository extends _i1.Mock
               [id, minecraftVersion],
               {#javaExecutablePath: javaExecutablePath},
             ),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #processInstallation,
@@ -533,8 +620,8 @@ class MockModLoaderRepository extends _i1.Mock
                 ),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #processInstallation,
@@ -544,42 +631,42 @@ class MockModLoaderRepository extends _i1.Mock
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 
   @override
-  _i3.Future<_i4.Result<List<String>>> getLibrariesPath(String? id) =>
+  _i4.Future<_i5.Result<List<String>>> getLibrariesPath(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getLibrariesPath, [id]),
-            returnValue: _i3.Future<_i4.Result<List<String>>>.value(
-              _i6.dummyValue<_i4.Result<List<String>>>(
+            returnValue: _i4.Future<_i5.Result<List<String>>>.value(
+              _i7.dummyValue<_i5.Result<List<String>>>(
                 this,
                 Invocation.method(#getLibrariesPath, [id]),
               ),
             ),
             returnValueForMissingStub:
-                _i3.Future<_i4.Result<List<String>>>.value(
-                  _i6.dummyValue<_i4.Result<List<String>>>(
+                _i4.Future<_i5.Result<List<String>>>.value(
+                  _i7.dummyValue<_i5.Result<List<String>>>(
                     this,
                     Invocation.method(#getLibrariesPath, [id]),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<List<String>>>);
+          as _i4.Future<_i5.Result<List<String>>>);
 }
 
 /// A class which mocks [DownloadService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
+class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
   @override
-  _i3.Future<_i4.Result<void>> download(
-    _i16.DownloadModel? model, {
+  _i4.Future<_i5.Result<void>> download(
+    _i17.DownloadModel? model, {
     void Function(int, int?)? onProgress,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#download, [model], {#onProgress: onProgress}),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #download,
@@ -588,8 +675,8 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
                 ),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #download,
@@ -599,30 +686,30 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 
   @override
-  _i3.Future<_i4.Result<bool>> isDownloaded(_i16.DownloadModel? model) =>
+  _i4.Future<_i5.Result<bool>> isDownloaded(_i17.DownloadModel? model) =>
       (super.noSuchMethod(
             Invocation.method(#isDownloaded, [model]),
-            returnValue: _i3.Future<_i4.Result<bool>>.value(
-              _i6.dummyValue<_i4.Result<bool>>(
+            returnValue: _i4.Future<_i5.Result<bool>>.value(
+              _i7.dummyValue<_i5.Result<bool>>(
                 this,
                 Invocation.method(#isDownloaded, [model]),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<bool>>.value(
-              _i6.dummyValue<_i4.Result<bool>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<bool>>.value(
+              _i7.dummyValue<_i5.Result<bool>>(
                 this,
                 Invocation.method(#isDownloaded, [model]),
               ),
             ),
           )
-          as _i3.Future<_i4.Result<bool>>);
+          as _i4.Future<_i5.Result<bool>>);
 
   @override
-  _i3.Future<_i4.Result<void>> downloadIfMissing(
-    _i16.DownloadModel? model, {
+  _i4.Future<_i5.Result<void>> downloadIfMissing(
+    _i17.DownloadModel? model, {
     void Function(int, int?)? onProgress,
   }) =>
       (super.noSuchMethod(
@@ -631,8 +718,8 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
               [model],
               {#onProgress: onProgress},
             ),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #downloadIfMissing,
@@ -641,8 +728,8 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
                 ),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #downloadIfMissing,
@@ -652,11 +739,11 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
 
   @override
-  _i3.Future<_i4.Result<void>> downloadAll(
-    List<_i16.DownloadModel>? models, {
+  _i4.Future<_i5.Result<void>> downloadAll(
+    List<_i17.DownloadModel>? models, {
     void Function(int, int?)? onProgress,
   }) =>
       (super.noSuchMethod(
@@ -665,8 +752,8 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
               [models],
               {#onProgress: onProgress},
             ),
-            returnValue: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValue: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #downloadAll,
@@ -675,8 +762,8 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
                 ),
               ),
             ),
-            returnValueForMissingStub: _i3.Future<_i4.Result<void>>.value(
-              _i6.dummyValue<_i4.Result<void>>(
+            returnValueForMissingStub: _i4.Future<_i5.Result<void>>.value(
+              _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #downloadAll,
@@ -686,5 +773,217 @@ class MockDownloadService extends _i1.Mock implements _i15.DownloadService {
               ),
             ),
           )
-          as _i3.Future<_i4.Result<void>>);
+          as _i4.Future<_i5.Result<void>>);
+}
+
+/// A class which mocks [SettingsRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSettingsRepository extends _i1.Mock
+    implements _i18.SettingsRepository {
+  @override
+  _i2.Locale get currentLocale =>
+      (super.noSuchMethod(
+            Invocation.getter(#currentLocale),
+            returnValue: _FakeLocale_0(this, Invocation.getter(#currentLocale)),
+            returnValueForMissingStub: _FakeLocale_0(
+              this,
+              Invocation.getter(#currentLocale),
+            ),
+          )
+          as _i2.Locale);
+
+  @override
+  int get javaMemory =>
+      (super.noSuchMethod(
+            Invocation.getter(#javaMemory),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
+
+  @override
+  int get windowWidth =>
+      (super.noSuchMethod(
+            Invocation.getter(#windowWidth),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
+
+  @override
+  int get windowHeight =>
+      (super.noSuchMethod(
+            Invocation.getter(#windowHeight),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
+
+  @override
+  String get customJavaPath =>
+      (super.noSuchMethod(
+            Invocation.getter(#customJavaPath),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#customJavaPath),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#customJavaPath),
+            ),
+          )
+          as String);
+
+  @override
+  String get jvmArguments =>
+      (super.noSuchMethod(
+            Invocation.getter(#jvmArguments),
+            returnValue: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#jvmArguments),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<String>(
+              this,
+              Invocation.getter(#jvmArguments),
+            ),
+          )
+          as String);
+
+  @override
+  bool get hasListeners =>
+      (super.noSuchMethod(
+            Invocation.getter(#hasListeners),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
+
+  @override
+  _i4.Future<void> setLocale(_i2.Locale? locale) =>
+      (super.noSuchMethod(
+            Invocation.method(#setLocale, [locale]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> setMinecraftSettings({
+    required int? javaMemory,
+    required int? windowWidth,
+    required int? windowHeight,
+    required String? customJavaPath,
+    required String? jvmArguments,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#setMinecraftSettings, [], {
+              #javaMemory: javaMemory,
+              #windowWidth: windowWidth,
+              #windowHeight: windowHeight,
+              #customJavaPath: customJavaPath,
+              #jvmArguments: jvmArguments,
+            }),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> init() =>
+      (super.noSuchMethod(
+            Invocation.method(#init, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  void addListener(_i2.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#addListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeListener(_i2.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#removeListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void notifyListeners() => super.noSuchMethod(
+    Invocation.method(#notifyListeners, []),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [InstanceRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockInstanceRepository extends _i1.Mock
+    implements _i19.InstanceRepository {
+  @override
+  _i4.Future<List<_i9.InstanceModel>> getInstances() =>
+      (super.noSuchMethod(
+            Invocation.method(#getInstances, []),
+            returnValue: _i4.Future<List<_i9.InstanceModel>>.value(
+              <_i9.InstanceModel>[],
+            ),
+            returnValueForMissingStub:
+                _i4.Future<List<_i9.InstanceModel>>.value(
+                  <_i9.InstanceModel>[],
+                ),
+          )
+          as _i4.Future<List<_i9.InstanceModel>>);
+
+  @override
+  _i4.Future<void> saveInstance(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveInstance, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> deleteInstance(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteInstance, [id]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> openFolder(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#openFolder, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> openLogsFolder(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#openLogsFolder, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> createInstance(_i9.InstanceModel? instance) =>
+      (super.noSuchMethod(
+            Invocation.method(#createInstance, [instance]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }

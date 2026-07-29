@@ -16,6 +16,7 @@ InstalledContentModel _$InstalledContentModelFromJson(
   type: json['type'] as String,
   author: json['author'] as String? ?? 'Unknown Author',
   version: json['version'] as String? ?? 'Unknown Version',
+  iconUrl: json['icon_url'] as String?,
 );
 
 Map<String, dynamic> _$InstalledContentModelToJson(
@@ -28,4 +29,5 @@ Map<String, dynamic> _$InstalledContentModelToJson(
   'type': instance.type,
   'author': instance.author,
   'version': instance.version,
+  'icon_url': instance.iconUrl,
 };

@@ -78,10 +78,14 @@ class _ButtonState extends State<Button> {
                         ),
                       )
                     : const SizedBox.shrink(),
-                Text(
-                  widget.label,
-                  style: AppText.defaultTheme.label.copyWith(
-                    color: widget.textColor,
+                Flexible(
+                  child: Text(
+                    widget.label,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: AppText.defaultTheme.label.copyWith(
+                      color: widget.textColor,
+                    ),
                   ),
                 ),
               ],

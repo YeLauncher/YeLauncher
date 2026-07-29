@@ -17,6 +17,8 @@ class ListItem extends StatelessWidget {
     required this.selectedColor,
     this.chip,
     this.subtitle,
+    this.leadingWidget,
+    this.tags,
   });
 
   final String title;
@@ -24,6 +26,8 @@ class ListItem extends StatelessWidget {
   final Chip? chip;
   final IconData? trailingIcon;
   final Widget? trailingWidget;
+  final Widget? leadingWidget;
+  final List<Widget>? tags;
   final Color selectedColor;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -34,6 +38,8 @@ class ListItem extends StatelessWidget {
     this.chip,
     this.trailingIcon,
     this.trailingWidget,
+    this.leadingWidget,
+    this.tags,
     required this.isSelected,
     this.onTap,
     super.key,
@@ -45,6 +51,8 @@ class ListItem extends StatelessWidget {
     this.chip,
     this.trailingIcon,
     this.trailingWidget,
+    this.leadingWidget,
+    this.tags,
     required this.isSelected,
     this.onTap,
     super.key,
@@ -69,6 +77,10 @@ class ListItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            if (leadingWidget != null) ...[
+              leadingWidget!,
+              const SizedBox(width: 16),
+            ],
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -89,11 +101,21 @@ class ListItem extends StatelessWidget {
                       color: AppColors.dark.onSurfaceVariant,
                     ),
                   ),
+                  if (tags != null && tags!.isNotEmpty)
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: tags!,
+                    ),
                 ],
               ),
             ),
             const SizedBox(width: 16),
-            ?chip,
+            if (chip != null) ...[
+              chip!,
+              if (trailingWidget != null || (trailingIcon != null && isSelected))
+                const SizedBox(width: 16),
+            ],
             if (trailingIcon != null && isSelected)
               Icon(trailingIcon, size: 24, color: selectedColor, weight: 600),
             ?trailingWidget,

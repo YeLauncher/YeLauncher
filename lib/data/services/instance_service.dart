@@ -255,6 +255,26 @@ class InstanceService {
     }
   }
 
+  /// Opens the logs folder of the instance
+  Future<void> openLogsFolder(InstanceModel instance) async {
+    final appData = await getApplicationSupportDirectory();
+    final logsDir = Directory(p.join(appData.path, 'instances', instance.id, 'logs'));
+    
+    if (!await logsDir.exists()) {
+      await logsDir.create(recursive: true);
+    }
+    
+    _log.info('Opening logs folder: \${logsDir.path}');
+    
+    if (Platform.isWindows) {
+      await Process.start('explorer', [logsDir.path]);
+    } else if (Platform.isMacOS) {
+      await Process.start('open', [logsDir.path]);
+    } else if (Platform.isLinux) {
+      await Process.start('xdg-open', [logsDir.path]);
+    }
+  }
+
   /// Evaluates Mojang-style OS rules.
   bool _isAllowed(List<RuleApiModel>? rules) {
     if (rules == null || rules.isEmpty) return true;

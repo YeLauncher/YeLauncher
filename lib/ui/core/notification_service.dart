@@ -1,11 +1,11 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:yelauncher/routing/router.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class NotificationService {
-  static void showNotification(String message, {bool isError = false}) {
+  static void showNotification(String message, {bool isError = false, Widget? action, Duration? duration}) {
     final overlayState = rootNavigatorKey.currentState?.overlay;
     if (overlayState == null) return;
 
@@ -27,35 +27,42 @@ class NotificationService {
                 ),
               );
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isError ? AppColors.dark.error : AppColors.dark.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x40000000),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 12,
-                children: [
-                  Icon(
-                    isError ? Symbols.error_rounded : Symbols.info_rounded,
-                    color: isError ? AppColors.dark.surface : AppColors.dark.onSurface,
-                  ),
-                  Text(
-                    message,
-                    style: AppText.defaultTheme.body.copyWith(
-                      color: isError ? AppColors.dark.surface : AppColors.dark.onSurface,
-                      decoration: TextDecoration.none,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: isError ? AppColors.dark.error : AppColors.dark.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x40000000),
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 12,
+                  children: [
+                    Icon(
+                      isError ? Symbols.error_rounded : Symbols.info_rounded,
+                      color: isError ? AppColors.dark.surface : AppColors.dark.onSurface,
+                    ),
+                    Text(
+                      message,
+                      style: AppText.defaultTheme.body.copyWith(
+                        color: isError ? AppColors.dark.surface : AppColors.dark.onSurface,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    if (action != null) ...[
+                      const SizedBox(width: 8),
+                      action,
+                    ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -65,8 +72,10 @@ class NotificationService {
 
     overlayState.insert(overlayEntry);
 
-    Future.delayed(const Duration(seconds: 4), () {
-      overlayEntry.remove();
+    Future.delayed(duration ?? const Duration(seconds: 4), () {
+      if (overlayEntry.mounted) {
+        overlayEntry.remove();
+      }
     });
   }
 }

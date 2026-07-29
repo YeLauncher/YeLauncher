@@ -71,6 +71,7 @@
   "tabDescription": "Description",
   "tabGallery": "Gallery",
   "tabVersions": "Versions",
+  "tabDependencies": "Dependencies",
   "galleryEmpty": "Gallery is empty",
   "versionsNotFound": "Versions not found",
   "selectInstance": "Select Instance",
@@ -87,12 +88,16 @@
   },
   "installedContentTitle": "Installed Content",
   "contentMissing": "No content installed",
-  "profilesTabTitle": "Profiles",
+  "profilesTabTitle": "Accounts",
   "manageAccountsSubtitle": "Manage your Minecraft accounts",
+  "addAccountButton": "Add Microsoft Account",
+  "addOfflineAccountButton": "Add Offline Account",
+  "addOfflineAccountTitle": "Add Offline Account",
+  "addOfflineAccountSubtitle": "Enter a nickname for your offline profile. This account will not be able to join premium servers.",
+  "nicknameLabel": "Nickname",
   "noAccountsTitle": "No Accounts",
   "noAccountsSubtitle": "Add an account to play Minecraft",
   "activeBadge": "Active",
-  "addAccountButton": "Add Account",
   "selectButton": "Select",
   "minecraftAccountNotExists": "Minecraft account does not exist",
   "authSuccessMessage": "You can close this window and go to the launcher",
@@ -115,9 +120,94 @@
   "settingsCustomJavaPath": "Custom Java Path",
   "settingsCustomJavaPathDesc": "Provide an absolute path to a specific javaw.exe executable. Leave blank to use the launcher default.",
   "settingsJvmArgs": "JVM Arguments",
-  "settingsJvmArgsDesc": "Advanced Java arguments passed at startup. Proceed with caution.",
+  "settingsJvmArgsDesc": "Advanced parameters passed to the Java Virtual Machine.",
+  "resetToDefaultsButton": "Reset to Defaults",
+  "defaultHint": "Default: {value}",
+  "@defaultHint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "saveChangesButton": "Save Changes",
   "launcherManaged": "Launcher",
   "manualInstalled": "Manual",
-  "missingFile": "Missing File"
+  "missingFile": "Missing File",
+  "deleteInstanceTitle": "Delete Instance",
+  "deleteInstanceContent": "Are you sure you want to delete this instance? This action cannot be undone and will permanently delete all mods, resourcepacks, and save data.",
+  "deleteButton": "Delete",
+  "sortLastPlayed": "Last Played",
+  "sortNameAsc": "Name (A-Z)",
+  "sortNameDesc": "Name (Z-A)",
+  "searchInstances": "Search instances...",
+  "nameAlreadyExists": "An instance with this name already exists",
+  "filterAllVersions": "All Versions",
+  "filterAllLoaders": "All Loaders",
+  "filterAllCategories": "All Categories",
+  "sortRelevance": "Relevance",
+  "sortDownloads": "Downloads",
+  "sortNewest": "Newest",
+  "sortUpdated": "Updated",
+  "categoryAdventure": "Adventure",
+  "categoryMagic": "Magic",
+  "categoryTechnology": "Technology",
+  "categoryOptimization": "Optimization",
+  "categoryUtility": "Utility",
+  "categoryDecoration": "Decoration",
+  "categoryWorldgen": "World Generation",
+  "showSnapshots": "Snapshots",
+  "stepAppearance": "Appearance",
+  "iconLabel": "Icon",
+  "colorLabel": "Color",
+  "previewLabel": "Preview",
+  "selectedCount": "{count} Selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectAllButton": "Select All",
+  "installStepDownloadingJava": "Downloading Java {version}",
+  "@installStepDownloadingJava": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "installStepInstallingClientAndAssets": "Installation client & assets",
+  "installStepProcessingForge": "Processing Forge installation...",
+  "installStepProcessingFabric": "Processing Fabric installation...",
+  "inheritsGlobalSetting": "Inherits global setting",
+  "inheritsGlobalSettingDesc": "Currently inherits: {value}",
+  "@inheritsGlobalSettingDesc": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "overrideGlobalSetting": "Override global setting",
+  "useGlobalSetting": "Use global setting",
+  "cancelSelection": "Cancel",
+  "selectContent": "Select",
+  "deselectAll": "Deselect All",
+  "sortAZ": "A-Z",
+  "sortZA": "Z-A",
+  "deleteSelectedContent": "Delete ({count})",
+  "@deleteSelectedContent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noResultsFound": "No results found",
+  "contentTypeMod": "MOD",
+  "contentTypeResourcepack": "RESOURCE PACK",
+  "contentTypeDatapack": "DATA PACK",
+  "contentTypeModpack": "MODPACK"
 }

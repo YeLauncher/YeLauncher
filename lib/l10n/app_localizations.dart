@@ -440,6 +440,12 @@ abstract class AppLocalizations {
   /// **'Versions'**
   String get tabVersions;
 
+  /// No description provided for @tabDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Dependencies'**
+  String get tabDependencies;
+
   /// No description provided for @galleryEmpty.
   ///
   /// In en, this message translates to:
@@ -497,7 +503,7 @@ abstract class AppLocalizations {
   /// No description provided for @profilesTabTitle.
   ///
   /// In en, this message translates to:
-  /// **'Profiles'**
+  /// **'Accounts'**
   String get profilesTabTitle;
 
   /// No description provided for @manageAccountsSubtitle.
@@ -505,6 +511,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage your Minecraft accounts'**
   String get manageAccountsSubtitle;
+
+  /// No description provided for @addAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Microsoft Account'**
+  String get addAccountButton;
+
+  /// No description provided for @addOfflineAccountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Offline Account'**
+  String get addOfflineAccountButton;
+
+  /// No description provided for @addOfflineAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Offline Account'**
+  String get addOfflineAccountTitle;
+
+  /// No description provided for @addOfflineAccountSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a nickname for your offline profile. This account will not be able to join premium servers.'**
+  String get addOfflineAccountSubtitle;
+
+  /// No description provided for @nicknameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname'**
+  String get nicknameLabel;
 
   /// No description provided for @noAccountsTitle.
   ///
@@ -523,12 +559,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Active'**
   String get activeBadge;
-
-  /// No description provided for @addAccountButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Account'**
-  String get addAccountButton;
 
   /// No description provided for @selectButton.
   ///
@@ -665,8 +695,20 @@ abstract class AppLocalizations {
   /// No description provided for @settingsJvmArgsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Advanced Java arguments passed at startup. Proceed with caution.'**
+  /// **'Advanced parameters passed to the Java Virtual Machine.'**
   String get settingsJvmArgsDesc;
+
+  /// No description provided for @resetToDefaultsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Defaults'**
+  String get resetToDefaultsButton;
+
+  /// No description provided for @defaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Default: {value}'**
+  String defaultHint(String value);
 
   /// No description provided for @saveChangesButton.
   ///
@@ -691,6 +733,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Missing File'**
   String get missingFile;
+
+  /// No description provided for @deleteInstanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Instance'**
+  String get deleteInstanceTitle;
+
+  /// No description provided for @deleteInstanceContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this instance? This action cannot be undone and will permanently delete all mods, resourcepacks, and save data.'**
+  String get deleteInstanceContent;
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
+  /// No description provided for @sortLastPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Played'**
+  String get sortLastPlayed;
+
+  /// No description provided for @sortNameAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (A-Z)'**
+  String get sortNameAsc;
+
+  /// No description provided for @sortNameDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Z-A)'**
+  String get sortNameDesc;
+
+  /// No description provided for @searchInstances.
+  ///
+  /// In en, this message translates to:
+  /// **'Search instances...'**
+  String get searchInstances;
+
+  /// No description provided for @nameAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'An instance with this name already exists'**
+  String get nameAlreadyExists;
+
+  /// No description provided for @filterAllVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'All Versions'**
+  String get filterAllVersions;
+
+  /// No description provided for @filterAllLoaders.
+  ///
+  /// In en, this message translates to:
+  /// **'All Loaders'**
+  String get filterAllLoaders;
+
+  /// No description provided for @filterAllCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get filterAllCategories;
+
+  /// No description provided for @sortRelevance.
+  ///
+  /// In en, this message translates to:
+  /// **'Relevance'**
+  String get sortRelevance;
+
+  /// No description provided for @sortDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get sortDownloads;
+
+  /// No description provided for @sortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest'**
+  String get sortNewest;
+
+  /// No description provided for @sortUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get sortUpdated;
+
+  /// No description provided for @categoryAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure'**
+  String get categoryAdventure;
+
+  /// No description provided for @categoryMagic.
+  ///
+  /// In en, this message translates to:
+  /// **'Magic'**
+  String get categoryMagic;
+
+  /// No description provided for @categoryTechnology.
+  ///
+  /// In en, this message translates to:
+  /// **'Technology'**
+  String get categoryTechnology;
+
+  /// No description provided for @categoryOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimization'**
+  String get categoryOptimization;
+
+  /// No description provided for @categoryUtility.
+  ///
+  /// In en, this message translates to:
+  /// **'Utility'**
+  String get categoryUtility;
+
+  /// No description provided for @categoryDecoration.
+  ///
+  /// In en, this message translates to:
+  /// **'Decoration'**
+  String get categoryDecoration;
+
+  /// No description provided for @categoryWorldgen.
+  ///
+  /// In en, this message translates to:
+  /// **'World Generation'**
+  String get categoryWorldgen;
+
+  /// No description provided for @showSnapshots.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshots'**
+  String get showSnapshots;
+
+  /// No description provided for @stepAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get stepAppearance;
+
+  /// No description provided for @iconLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get iconLabel;
+
+  /// No description provided for @colorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get colorLabel;
+
+  /// No description provided for @previewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get previewLabel;
+
+  /// No description provided for @selectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Selected'**
+  String selectedCount(int count);
+
+  /// No description provided for @selectAllButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAllButton;
+
+  /// No description provided for @installStepDownloadingJava.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading Java {version}'**
+  String installStepDownloadingJava(String version);
+
+  /// No description provided for @installStepInstallingClientAndAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation client & assets'**
+  String get installStepInstallingClientAndAssets;
+
+  /// No description provided for @installStepProcessingForge.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing Forge installation...'**
+  String get installStepProcessingForge;
+
+  /// No description provided for @installStepProcessingFabric.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing Fabric installation...'**
+  String get installStepProcessingFabric;
+
+  /// No description provided for @inheritsGlobalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Inherits global setting'**
+  String get inheritsGlobalSetting;
+
+  /// No description provided for @inheritsGlobalSettingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently inherits: {value}'**
+  String inheritsGlobalSettingDesc(String value);
+
+  /// No description provided for @overrideGlobalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Override global setting'**
+  String get overrideGlobalSetting;
+
+  /// No description provided for @useGlobalSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Use global setting'**
+  String get useGlobalSetting;
+
+  /// No description provided for @cancelSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelSelection;
+
+  /// No description provided for @selectContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get selectContent;
+
+  /// No description provided for @deselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get deselectAll;
+
+  /// No description provided for @sortAZ.
+  ///
+  /// In en, this message translates to:
+  /// **'A-Z'**
+  String get sortAZ;
+
+  /// No description provided for @sortZA.
+  ///
+  /// In en, this message translates to:
+  /// **'Z-A'**
+  String get sortZA;
+
+  /// No description provided for @deleteSelectedContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete ({count})'**
+  String deleteSelectedContent(int count);
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @contentTypeMod.
+  ///
+  /// In en, this message translates to:
+  /// **'MOD'**
+  String get contentTypeMod;
+
+  /// No description provided for @contentTypeResourcepack.
+  ///
+  /// In en, this message translates to:
+  /// **'RESOURCE PACK'**
+  String get contentTypeResourcepack;
+
+  /// No description provided for @contentTypeDatapack.
+  ///
+  /// In en, this message translates to:
+  /// **'DATA PACK'**
+  String get contentTypeDatapack;
+
+  /// No description provided for @contentTypeModpack.
+  ///
+  /// In en, this message translates to:
+  /// **'MODPACK'**
+  String get contentTypeModpack;
 }
 
 class _AppLocalizationsDelegate

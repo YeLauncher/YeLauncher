@@ -11,6 +11,7 @@ class InstalledContentModel {
   final String type;
   final String author;
   final String version;
+  final String? iconUrl;
 
   const InstalledContentModel({
     required this.projectId,
@@ -20,6 +21,7 @@ class InstalledContentModel {
     required this.type,
     this.author = 'Unknown Author',
     this.version = 'Unknown Version',
+    this.iconUrl,
   });
 
   factory InstalledContentModel.fromJson(Map<String, dynamic> json) =>
@@ -35,6 +37,7 @@ class InstalledContentModel {
     String? type,
     String? author,
     String? version,
+    String? iconUrl,
   }) {
     return InstalledContentModel(
       projectId: projectId ?? this.projectId,
@@ -44,6 +47,7 @@ class InstalledContentModel {
       type: type ?? this.type,
       author: author ?? this.author,
       version: version ?? this.version,
+      iconUrl: iconUrl ?? this.iconUrl,
     );
   }
 }

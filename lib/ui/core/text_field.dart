@@ -2,19 +2,30 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class TextField extends StatefulWidget {
   final TextEditingController controller;
   final double width;
   final String? labelText;
+  final String? hintText;
   final String? errorText;
+  final IconData? suffixIcon;
+  final VoidCallback? onSuffixPressed;
+  final IconData? prefixIcon;
+  final bool isSearchField;
 
   const TextField({
     super.key,
     required this.controller,
     this.width = 300,
     this.labelText,
+    this.hintText,
     this.errorText,
+    this.suffixIcon,
+    this.onSuffixPressed,
+    this.prefixIcon,
+    this.isSearchField = false,
   });
 
   @override
@@ -78,38 +89,92 @@ class _TextFieldState extends State<TextField>
                 borderRadius: BorderRadius.circular(12),
               ),
               duration: const Duration(milliseconds: 150),
-              child: Stack(
-                alignment: Alignment.centerLeft,
+              child: Row(
                 children: [
-                  if (widget.labelText != null)
-                    ValueListenableBuilder(
-                      valueListenable: widget.controller,
-                      builder: (context, value, child) {
-                        if (value.text.isNotEmpty) {
-                          return const SizedBox.shrink();
-                        }
-                        return Text(
-                          widget.labelText!,
+                  if (widget.prefixIcon != null || widget.isSearchField) ...[
+                    Icon(
+                      widget.prefixIcon ?? Symbols.search_rounded,
+                      color: AppColors.dark.onSurfaceVariant,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.centerLeft,
+                      children: [
+                        if (widget.labelText != null || widget.hintText != null)
+                          ValueListenableBuilder(
+                            valueListenable: widget.controller,
+                            builder: (context, value, child) {
+                               if (value.text.isNotEmpty) {
+                                return const SizedBox.shrink();
+                              }
+                              return Text(
+                                widget.hintText ?? widget.labelText!,
+                                style: AppText.defaultTheme.bodySmall.copyWith(
+                                  color: AppColors.dark.onSurfaceVariant.withValues(alpha: widget.hintText != null ? 0.5 : 1.0),
+                                ),
+                              );
+                            },
+                          ),
+                        EditableText(
+                          key: editableTextKey,
+                          enableInteractiveSelection: true,
+                          selectAllOnFocus: false,
+                          rendererIgnoresPointer: true,
+                          controller: widget.controller,
+                          focusNode: _focusNode,
                           style: AppText.defaultTheme.bodySmall.copyWith(
-                            color: AppColors.dark.onSurfaceVariant,
+                            color: AppColors.dark.onSurface,
+                          ),
+                          cursorColor: _cursorColor,
+                          selectionColor: AppColors.dark.secondary,
+                          backgroundCursorColor: AppColors.dark.primary,
+                          onTapOutside: (_) => _focusNode.unfocus(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: widget.controller,
+                    builder: (context, value, child) {
+                      final hasText = value.text.isNotEmpty;
+                      if (widget.isSearchField && hasText) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () {
+                                widget.controller.clear();
+                              },
+                              child: Icon(
+                                Symbols.close_rounded,
+                                color: AppColors.dark.onSurfaceVariant,
+                                size: 20,
+                              ),
+                            ),
                           ),
                         );
-                      },
-                    ),
-                  EditableText(
-                    key: editableTextKey,
-                    enableInteractiveSelection: true,
-                    selectAllOnFocus: false,
-                    rendererIgnoresPointer: true,
-                    controller: widget.controller,
-                    focusNode: _focusNode,
-                    style: AppText.defaultTheme.bodySmall.copyWith(
-                      color: AppColors.dark.onSurface,
-                    ),
-                    cursorColor: _cursorColor,
-                    selectionColor: AppColors.dark.secondary,
-                    backgroundCursorColor: AppColors.dark.primary,
-                    onTapOutside: (_) => _focusNode.unfocus(),
+                      } else if (widget.suffixIcon != null) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: widget.onSuffixPressed,
+                              child: Icon(
+                                widget.suffixIcon,
+                                color: AppColors.dark.onSurfaceVariant,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ],
               ),

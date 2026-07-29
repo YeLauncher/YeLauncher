@@ -30,6 +30,8 @@ InstanceModel _$InstanceModelFromJson(Map<String, dynamic> json) =>
       windowHeight: (json['windowHeight'] as num?)?.toInt(),
       customJavaPath: json['customJavaPath'] as String?,
       jvmArguments: json['jvmArguments'] as String?,
+      icon: json['icon'] as String?,
+      color: json['color'] as String?,
     );
 
 Map<String, dynamic> _$InstanceModelToJson(InstanceModel instance) =>
@@ -47,4 +49,6 @@ Map<String, dynamic> _$InstanceModelToJson(InstanceModel instance) =>
       'windowHeight': instance.windowHeight,
       'customJavaPath': instance.customJavaPath,
       'jvmArguments': instance.jvmArguments,
+      'icon': instance.icon,
+      'color': instance.color,
     };

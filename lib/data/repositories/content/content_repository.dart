@@ -18,10 +18,17 @@ class ContentRepository {
   Future<Result<List<ContentItem>>> searchContent({
     required String query,
     required String projectType,
+    List<String> versions = const [],
+    List<String> modLoaders = const [],
+    List<String> categories = const [],
+    String sortOrder = 'relevance',
     int limit = 20,
     int offset = 0,
   }) async {
-    final cacheKey = '${query}_${projectType}_${limit}_$offset';
+    final vStr = versions.join(',');
+    final lStr = modLoaders.join(',');
+    final cStr = categories.join(',');
+    final cacheKey = '${query}_${projectType}_${vStr}_${lStr}_${cStr}_${sortOrder}_${limit}_$offset';
     if (_searchCache.containsKey(cacheKey)) {
       _log.fine('Returning cached search results for query: $query');
       return Result.success(_searchCache[cacheKey]!);
@@ -32,6 +39,10 @@ class ContentRepository {
     final result = await _provider.searchContent(
       query: query,
       projectType: projectType,
+      versions: versions,
+      modLoaders: modLoaders,
+      categories: categories,
+      sortOrder: sortOrder,
       limit: limit,
       offset: offset,
     );
@@ -74,6 +85,28 @@ class ContentRepository {
       _versionsCache[id] = result.value;
     }
 
+    return result;
+  }
+
+  Future<Result<ContentVersion>> getVersion(String versionId) async {
+    // Check if we have this version in our versions cache
+    for (final versions in _versionsCache.values) {
+      for (final version in versions) {
+        if (version.id == versionId) {
+          _log.fine('Returning cached version for id: $versionId');
+          return Result.success(version);
+        }
+      }
+    }
+
+    _log.info('Fetching version for id: $versionId');
+    final result = await _provider.getVersion(versionId);
+    return result;
+  }
+
+  Future<Result<List<ContentItem>>> getProjectDependencies(String id) async {
+    _log.info('Fetching project dependencies for id: $id');
+    final result = await _provider.getProjectDependencies(id);
     return result;
   }
 }
