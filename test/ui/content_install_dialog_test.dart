@@ -111,9 +111,9 @@ void main() {
     final oldJarFile = File(p.join(modDir.path, oldVersionJarName));
     oldJarFile.writeAsStringSync('old jar content');
 
-    when(mockInstanceRepository.getInstances()).thenAnswer((_) async => [existingInstance]);
-    when(mockInstanceRepository.saveInstance(any)).thenAnswer((_) async => const Result.success(null));
-    
+    when(mockInstanceRepository.getInstances())
+        .thenAnswer((_) async => [existingInstance]);
+    when(mockInstanceRepository.saveInstance(any)).thenAnswer((_) async {});
     provideDummy<Result<void>>(const Result<void>.success(null));
     when(mockDownloadService.downloadIfMissing(any))
         .thenAnswer((_) async => const Result.success(null));
