@@ -102,7 +102,6 @@ class InstanceScreenViewModel extends ChangeNotifier {
   InstanceScreenViewModel({required InstanceRepository instanceRepository})
     : _instanceRepository = instanceRepository {
     loadInstances = Command0(_loadInstances);
-    loadInstances.execute();
   }
 
   Future<Result<void>> _loadInstances() async {
