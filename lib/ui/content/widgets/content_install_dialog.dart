@@ -136,11 +136,10 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
   @override
   Widget build(BuildContext context) {
     final compatibleInstances = widget.viewModel.getCompatibleInstances(widget.version);
-    
     bool isAlreadyInstalled = false;
     if (selectedInstance != null) {
       isAlreadyInstalled = selectedInstance!.installedContent.any(
-        (content) => content.projectId == widget.viewModel.item.id
+        (content) => content.projectId == widget.viewModel.item.id && content.versionId == widget.version.id
       );
     }
 
@@ -175,31 +174,36 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.viewModel.item.iconUrl ?? "",
-                      width: 64,
-                      height: 64,
-                      fit: BoxFit.cover,
-                progressIndicatorBuilder:
-                    (context, url, downloadProgress) => Skeletonizer(
-                  enabled: true,
-                  containersColor: AppColors.dark.surfaceContainerHigh,
-                  effect: ShimmerEffect(
-                    baseColor: AppColors.dark.surfaceContainerHighest,
-                    highlightColor: AppColors.dark.surfaceContainerHighest,
-                  ),
-                  child: Container(
-                    width: 64,
-                    height: 64,
-                    color: AppColors.dark.surfaceContainerHighest,
-                  ),
-                ),
-                    errorWidget: (context, url, error) => Icon(
-                      Symbols.broken_image_rounded,
-                      size: 48,
-                      color: AppColors.dark.surfaceContainerHighest,
-                    ),
-                  ),
+                    child: (widget.viewModel.item.iconUrl?.isEmpty ?? true)
+                        ? Icon(
+                            Symbols.broken_image_rounded,
+                            size: 48,
+                            color: AppColors.dark.surfaceContainerHighest,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: widget.viewModel.item.iconUrl!,
+                            width: 64,
+                            height: 64,
+                            fit: BoxFit.cover,
+                            progressIndicatorBuilder: (context, url, downloadProgress) => Skeletonizer(
+                              enabled: true,
+                              containersColor: AppColors.dark.surfaceContainerHigh,
+                              effect: ShimmerEffect(
+                                baseColor: AppColors.dark.surfaceContainerHighest,
+                                highlightColor: AppColors.dark.surfaceContainerHighest,
+                              ),
+                              child: Container(
+                                width: 64,
+                                height: 64,
+                                color: AppColors.dark.surfaceContainerHighest,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Icon(
+                              Symbols.broken_image_rounded,
+                              size: 48,
+                              color: AppColors.dark.surfaceContainerHighest,
+                            ),
+                          ),
                 ),
               const SizedBox(width: 16),
               Expanded(
@@ -358,7 +362,6 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
           if (await disabledOldFile.exists()) {
             await disabledOldFile.delete();
           }
-          
           newInstalledContent.removeAt(existingIndex);
         }
 

@@ -40,12 +40,16 @@ void main() {
   late Directory tempDir;
 
   setUp(() async {
+    print('setUp started');
     mockInstanceRepository = MockInstanceRepository();
     mockDownloadService = MockDownloadService();
     mockContentRepository = MockContentRepository();
     
+    print('creating temp dir');
     tempDir = await Directory.systemTemp.createTemp('yelauncher_test_');
+    print('setting path provider instance');
     PathProviderPlatform.instance = MockPathProviderPlatform(tempDir.path);
+    print('setUp finished');
   });
 
   tearDown(() async {
@@ -103,13 +107,15 @@ void main() {
     
     // Create the old jar file on disk
     final modDir = Directory(p.join(tempDir.path, 'instances', instanceId, 'mods'));
-    await modDir.create(recursive: true);
+    modDir.createSync(recursive: true);
     final oldJarFile = File(p.join(modDir.path, oldVersionJarName));
-    await oldJarFile.writeAsString('old jar content');
+    oldJarFile.writeAsStringSync('old jar content');
 
     when(mockInstanceRepository.getInstances()).thenAnswer((_) async => [existingInstance]);
+    when(mockInstanceRepository.saveInstance(any)).thenAnswer((_) async => const Result.success(null));
     
-    when(mockDownloadService.downloadIfMissing(any, onProgress: anyNamed('onProgress')))
+    provideDummy<Result<void>>(const Result<void>.success(null));
+    when(mockDownloadService.downloadIfMissing(any))
         .thenAnswer((_) async => const Result.success(null));
 
     // Create view model and new version
@@ -152,8 +158,11 @@ void main() {
     await tester.tap(find.text('Test Instance'));
     await tester.pump();
 
-    // Click Install
-    await tester.tap(find.text('Install'));
+    // Click Install and wait for real async I/O to complete
+    await tester.runAsync(() async {
+      await tester.tap(find.text('Install'));
+      await Future.delayed(const Duration(milliseconds: 500));
+    });
     await tester.pump();
 
     // Verify instance was saved with new content
@@ -166,6 +175,6 @@ void main() {
     expect(savedInstance.installedContent.first.filename, newVersionJarName);
     
     // Verify old jar was deleted
-    expect(await oldJarFile.exists(), isFalse);
+    expect(oldJarFile.existsSync(), isFalse);
   });
 }
