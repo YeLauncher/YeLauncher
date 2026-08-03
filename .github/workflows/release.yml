@@ -133,6 +133,9 @@ jobs:
       # ---------------------------------------------------------
       # 10. PUBLISH: Microsoft Store (Native MSIX Upload)
       # ---------------------------------------------------------
+      - name: Install libsecret
+        run: sudo apt-get update && sudo apt-get install -y libsecret-1-0
+
       - name: Setup Microsoft Store CLI
         uses: microsoft/setup-msstore-cli@v1
 
