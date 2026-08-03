@@ -186,6 +186,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tabVersions => 'Версії';
 
   @override
+  String get tabDependencies => 'Залежності';
+
+  @override
   String get galleryEmpty => 'Галерея порожня';
 
   @override
@@ -216,10 +219,26 @@ class AppLocalizationsUk extends AppLocalizations {
   String get contentMissing => 'Контент відсутній';
 
   @override
-  String get profilesTabTitle => 'Профілі';
+  String get profilesTabTitle => 'Акаунти';
 
   @override
-  String get manageAccountsSubtitle => 'Керуйте своїми акаунтами Minecraft';
+  String get manageAccountsSubtitle => 'Керуйте вашими акаунтами Minecraft';
+
+  @override
+  String get addAccountButton => 'Додати акаунт Microsoft';
+
+  @override
+  String get addOfflineAccountButton => 'Додати офлайн акаунт';
+
+  @override
+  String get addOfflineAccountTitle => 'Додати офлайн акаунт';
+
+  @override
+  String get addOfflineAccountSubtitle =>
+      'Введіть ім\'я для вашого офлайн профілю. Цей акаунт не зможе підключатися до преміум серверів.';
+
+  @override
+  String get nicknameLabel => 'Им\'я гравця';
 
   @override
   String get noAccountsTitle => 'Немає акаунтів';
@@ -229,9 +248,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get activeBadge => 'Активний';
-
-  @override
-  String get addAccountButton => 'Додати акаунт';
 
   @override
   String get selectButton => 'Вибрати';
@@ -255,4 +271,231 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get closeButton => 'Закрити';
+
+  @override
+  String get alreadyInstalled => 'Вже встановлено';
+
+  @override
+  String get settingsGeneralTitle => 'Загальні';
+
+  @override
+  String get settingsInstanceNameDesc =>
+      'Відображувана назва для цього екземпляра Minecraft.';
+
+  @override
+  String get settingsMinecraftTitle => 'Налаштування Minecraft';
+
+  @override
+  String get settingsWindowResolution => 'Роздільна здатність вікна';
+
+  @override
+  String get settingsWindowResolutionDesc =>
+      'Встановіть власну роздільну здатність для вікна гри. Залиште пустим для стандартної.';
+
+  @override
+  String get settingsWidth => 'Ширина';
+
+  @override
+  String get settingsHeight => 'Висота';
+
+  @override
+  String get settingsJavaEnvironment => 'Середовище Java';
+
+  @override
+  String get settingsMaxMemory => 'Максимальна пам\'ять';
+
+  @override
+  String get settingsMaxMemoryDesc =>
+      'Максимальний обсяг оперативної пам\'яті (у мегабайтах), який може використовувати гра.';
+
+  @override
+  String get settingsMB => 'МБ';
+
+  @override
+  String get settingsCustomJavaPath => 'Шлях до Java';
+
+  @override
+  String get settingsCustomJavaPathDesc =>
+      'Вкажіть абсолютний шлях до файлу javaw.exe. Залиште порожнім, щоб використовувати стандартний для лаунчера.';
+
+  @override
+  String get settingsJvmArgs => 'Аргументи JVM';
+
+  @override
+  String get settingsJvmArgsDesc =>
+      'Додаткові параметри, які передаються віртуальній машині Java при запуску.';
+
+  @override
+  String get resetToDefaultsButton => 'Скинути до стандартних';
+
+  @override
+  String defaultHint(String value) {
+    return 'Стандартно: $value';
+  }
+
+  @override
+  String get saveChangesButton => 'Зберегти';
+
+  @override
+  String get launcherManaged => 'Лаунчер';
+
+  @override
+  String get manualInstalled => 'Вручну';
+
+  @override
+  String get missingFile => 'Відсутній файл';
+
+  @override
+  String get deleteInstanceTitle => 'Видалити екземпляр';
+
+  @override
+  String get deleteInstanceContent =>
+      'Ви впевнені, що хочете видалити цей екземпляр? Цю дію неможливо скасувати, вона назавжди видалить усі моди, ресурспаки та збереження.';
+
+  @override
+  String get deleteButton => 'Видалити';
+
+  @override
+  String get sortLastPlayed => 'Останні запущені';
+
+  @override
+  String get sortNameAsc => 'Назва (А-Я)';
+
+  @override
+  String get sortNameDesc => 'Назва (Я-А)';
+
+  @override
+  String get searchInstances => 'Пошук екземплярів...';
+
+  @override
+  String get nameAlreadyExists => 'Екземпляр з такою назвою вже існує';
+
+  @override
+  String get filterAllVersions => 'Усі версії';
+
+  @override
+  String get filterAllLoaders => 'Усі завантажувачі';
+
+  @override
+  String get filterAllCategories => 'Усі категорії';
+
+  @override
+  String get sortRelevance => 'За релевантністю';
+
+  @override
+  String get sortDownloads => 'За завантаженнями';
+
+  @override
+  String get sortNewest => 'Найновіші';
+
+  @override
+  String get sortUpdated => 'Останні оновлені';
+
+  @override
+  String get categoryAdventure => 'Пригоди';
+
+  @override
+  String get categoryMagic => 'Магія';
+
+  @override
+  String get categoryTechnology => 'Технології';
+
+  @override
+  String get categoryOptimization => 'Оптимізація';
+
+  @override
+  String get categoryUtility => 'Утиліти';
+
+  @override
+  String get categoryDecoration => 'Декорації';
+
+  @override
+  String get categoryWorldgen => 'Генерація світу';
+
+  @override
+  String get showSnapshots => 'Снапшоти';
+
+  @override
+  String get stepAppearance => 'Вигляд';
+
+  @override
+  String get iconLabel => 'Іконка';
+
+  @override
+  String get colorLabel => 'Колір';
+
+  @override
+  String get previewLabel => 'Попередній перегляд';
+
+  @override
+  String selectedCount(int count) {
+    return 'Вибрано $count';
+  }
+
+  @override
+  String get selectAllButton => 'Вибрати всі';
+
+  @override
+  String installStepDownloadingJava(String version) {
+    return 'Завантаження Java $version';
+  }
+
+  @override
+  String get installStepInstallingClientAndAssets =>
+      'Встановлення клієнта та ресурсів';
+
+  @override
+  String get installStepProcessingForge => 'Обробка встановлення Forge...';
+
+  @override
+  String get installStepProcessingFabric => 'Обробка встановлення Fabric...';
+
+  @override
+  String get inheritsGlobalSetting => 'Успадковує глобальне налаштування';
+
+  @override
+  String inheritsGlobalSettingDesc(String value) {
+    return 'Наразі успадковує: $value';
+  }
+
+  @override
+  String get overrideGlobalSetting => 'Перевизначити глобальне налаштування';
+
+  @override
+  String get useGlobalSetting => 'Використовувати глобальне налаштування';
+
+  @override
+  String get cancelSelection => 'Скасувати';
+
+  @override
+  String get selectContent => 'Вибрати';
+
+  @override
+  String get deselectAll => 'Зняти виділення';
+
+  @override
+  String get sortAZ => 'А-Я';
+
+  @override
+  String get sortZA => 'Я-А';
+
+  @override
+  String deleteSelectedContent(int count) {
+    return 'Видалити ($count)';
+  }
+
+  @override
+  String get noResultsFound => 'Нічого не знайдено';
+
+  @override
+  String get contentTypeMod => 'МОД';
+
+  @override
+  String get contentTypeResourcepack => 'ТЕКСТУРИ';
+
+  @override
+  String get contentTypeDatapack => 'ДАТАПАК';
+
+  @override
+  String get contentTypeModpack => 'МОДПАК';
 }

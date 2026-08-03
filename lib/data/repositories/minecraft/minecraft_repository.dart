@@ -11,6 +11,7 @@ abstract class MinecraftRepository {
   Future<Result<void>> selectProfile(String uuid);
   Future<Result<void>> removeProfile(String uuid);
   Future<Result<MinecraftProfileModel>> authenticate();
+  Future<Result<void>> addOfflineProfile(String nickname);
   void cancelAuthentication();
   Future<Result<List<MinecraftVersionModel>>> getVersions();
   Future<Result<void>> install(

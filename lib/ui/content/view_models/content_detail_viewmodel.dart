@@ -5,8 +5,10 @@ import 'package:yelauncher/domain/models/content/content_item.dart';
 import 'package:yelauncher/domain/models/content/content_version.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
 import 'package:yelauncher/utilities/result.dart';
+import 'package:logging/logging.dart';
 
 class ContentDetailViewModel extends ChangeNotifier {
+  final _log = Logger('ContentDetailViewModel');
   final ContentRepository _contentRepository;
   final InstanceRepository _instanceRepository;
   final ContentItem item;
@@ -22,6 +24,7 @@ class ContentDetailViewModel extends ChangeNotifier {
   bool isLoading = true;
   List<ContentVersion> versions = [];
   List<InstanceModel> instances = [];
+  List<ContentItem> dependencies = [];
 
   Future<void> loadDetails() async {
     isLoading = true;
@@ -38,6 +41,11 @@ class ContentDetailViewModel extends ChangeNotifier {
       versions = result.value;
     }
     
+    final depsResult = await _contentRepository.getProjectDependencies(item.id);
+    if (depsResult is Success<List<ContentItem>>) {
+      dependencies = depsResult.value;
+    }
+
     final instancesResult = await _instanceRepository.getInstances();
     instances = instancesResult;
 
@@ -46,16 +54,19 @@ class ContentDetailViewModel extends ChangeNotifier {
   }
 
   List<InstanceModel> getCompatibleInstances(ContentVersion version) {
+    _log.info('getCompatibleInstances: instances=${instances.length}, gameVersions=${version.gameVersions}');
     if (item.projectType == 'modpack') {
       return [];
     }
 
     return instances.where((inst) {
+      _log.info('Checking instance: ${inst.name} (${inst.minecraftVersion}, ${inst.modLoader})');
       if (!version.gameVersions.contains(inst.minecraftVersion)) return false;
       
       if (item.projectType == 'mod') {
         final loaderLower = inst.modLoader.toLowerCase();
         if (loaderLower.isEmpty || loaderLower == 'none' || loaderLower == 'vanilla') {
+          _log.info('Rejecting instance: ${inst.name} because it is vanilla');
           return false;
         }
 

@@ -19,8 +19,32 @@ class InstanceCreationViewModel extends ChangeNotifier {
   int currentStep = 0;
   String instanceName = "";
   String searchQuery = "";
+  bool showSnapshots = false;
   MinecraftVersionModel? selectedVersion;
   String selectedModLoader = 'vanilla';
+  
+  static const List<String> availableIcons = [
+    'inventory_2_rounded',
+    'swords_rounded',
+    'eco_rounded',
+    'home_rounded',
+    'star_rounded',
+    'sports_esports_rounded',
+    'public_rounded',
+  ];
+
+  static const List<String> availableColors = [
+    '#3D5A80',
+    '#EE6C4D',
+    '#81B29A',
+    '#9B5DE5',
+    '#293241',
+  ];
+
+  String selectedIcon = availableIcons.first;
+  String selectedColor = availableColors.first;
+  
+  final List<String> _existingInstanceNames;
 
   List<ModLoaderRepository> availableModLoaders = [];
   final Map<String, String> _modLoaderLatestVersion = {};
@@ -35,22 +59,39 @@ class InstanceCreationViewModel extends ChangeNotifier {
 
   final _log = Logger('InstanceCreationViewModel');
 
-  late final Command0 loadVersions;
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_isDisposed) {
+      super.notifyListeners();
+    }
+  }
+
+  late final Command0<void> loadVersions;
   late final Command1<void, String> loadModLoaders;
 
   InstanceCreationViewModel({
     required MinecraftRepository minecraftRepository,
     required List<ModLoaderRepository> modLoaderRepositories,
     required InstanceRepository instanceRepository,
+    required List<String> existingInstanceNames,
   }) : _minecraftRepository = minecraftRepository,
        _modLoaderRepositories = modLoaderRepositories,
-       _instanceRepository = instanceRepository {
+       _instanceRepository = instanceRepository,
+       _existingInstanceNames = existingInstanceNames.map((n) => n.toLowerCase()).toList() {
     loadVersions = Command0(_loadVersions);
     loadModLoaders = Command1(_loadModLoaders);
   }
 
   void nextStep() {
-    if (currentStep < 2) {
+    if (currentStep < 3) {
       currentStep++;
       notifyListeners();
     }
@@ -73,11 +114,58 @@ class InstanceCreationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void selectIcon(String icon) {
+    selectedIcon = icon;
+    notifyListeners();
+  }
+
+  void selectColor(String color) {
+    selectedColor = color;
+    notifyListeners();
+  }
+
+  String? get nameError {
+    if (instanceName.trim().isEmpty) return null;
+    if (_existingInstanceNames.contains(instanceName.trim().toLowerCase())) {
+      return 'nameAlreadyExists'; // Will be mapped to l10n in dialog
+    }
+    return null;
+  }
+
+  bool get canProceedToNextStep {
+    if (currentStep == 0) {
+      return instanceName.trim().isNotEmpty && nameError == null;
+    }
+    if (currentStep == 1) {
+      // Customization step: always can proceed
+      return true;
+    }
+    if (currentStep == 2) {
+      return selectedVersion != null;
+    }
+    return true;
+  }
+
   List<MinecraftVersionModel> get filteredVersions {
-    if (searchQuery.isEmpty) return versions;
-    return versions
-        .where((v) => v.id.toLowerCase().contains(searchQuery.toLowerCase()))
-        .toList();
+    Iterable<MinecraftVersionModel> filtered = versions;
+    
+    if (!showSnapshots) {
+      filtered = filtered.where((v) => v.type == 'release');
+    }
+    
+    if (searchQuery.isNotEmpty) {
+      filtered = filtered.where((v) => v.id.toLowerCase().contains(searchQuery.toLowerCase()));
+    }
+    
+    return filtered.toList();
+  }
+
+  void toggleShowSnapshots(bool value) {
+    showSnapshots = value;
+    if (selectedVersion != null && !showSnapshots && selectedVersion!.type != 'release') {
+      selectedVersion = null; // Unselect if it was a snapshot and we hid them
+    }
+    notifyListeners();
   }
 
   void selectVersion(MinecraftVersionModel version) {
@@ -210,6 +298,8 @@ class InstanceCreationViewModel extends ChangeNotifier {
       modLoader: selectedModLoader,
       modLoaderVersion: mlVersion,
       isInstalled: false,
+      icon: selectedIcon,
+      color: selectedColor,
     );
 
     await _instanceRepository.createInstance(newInstance);

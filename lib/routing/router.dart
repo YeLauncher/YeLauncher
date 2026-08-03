@@ -20,6 +20,7 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: Routes.splash,
+  observers: [HeroController()],
   routes: [
     GoRoute(
       path: Routes.splash,
@@ -57,6 +58,7 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
               builder: (context, state) {
                 final viewModel = ContentScreenViewModel(
                   contentRepository: context.read(),
+                  minecraftRepository: context.read(),
                 );
                 return ContentScreen(viewModel: viewModel);
               },

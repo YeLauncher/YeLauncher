@@ -45,7 +45,7 @@ class UpdateService {
   String? _getAssetUrl(List assets) {
     String suffix = '';
     if (Platform.isWindows) {
-      suffix = '.msix';
+      suffix = 'yelauncher-windows-installer.exe';
     } else if (Platform.isLinux) {
       suffix = '.AppImage';
     } else if (Platform.isMacOS) {
@@ -100,8 +100,13 @@ class UpdateService {
   Future<void> installUpdate(File file) async {
     try {
       if (Platform.isWindows) {
-        // Open the file with the default associated program (App Installer for .msix)
-        await Process.run('explorer.exe', [file.path]);
+        final installDir = p.dirname(Platform.resolvedExecutable);
+        // Launch the Inno Setup / executable installer detached so the launcher can exit
+        await Process.start(
+          file.path,
+          ['/SILENT', '/DIR=$installDir'], // Optional flag for Inno Setup to run without prompts
+          mode: ProcessStartMode.detached,
+        );
         exit(0);
       } else if (Platform.isLinux) {
         // Make executable and run

@@ -186,6 +186,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabVersions => 'Versions';
 
   @override
+  String get tabDependencies => 'Dependencies';
+
+  @override
   String get galleryEmpty => 'Gallery is empty';
 
   @override
@@ -216,10 +219,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contentMissing => 'No content installed';
 
   @override
-  String get profilesTabTitle => 'Profiles';
+  String get profilesTabTitle => 'Accounts';
 
   @override
   String get manageAccountsSubtitle => 'Manage your Minecraft accounts';
+
+  @override
+  String get addAccountButton => 'Add Microsoft Account';
+
+  @override
+  String get addOfflineAccountButton => 'Add Offline Account';
+
+  @override
+  String get addOfflineAccountTitle => 'Add Offline Account';
+
+  @override
+  String get addOfflineAccountSubtitle =>
+      'Enter a nickname for your offline profile. This account will not be able to join premium servers.';
+
+  @override
+  String get nicknameLabel => 'Nickname';
 
   @override
   String get noAccountsTitle => 'No Accounts';
@@ -229,9 +248,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get activeBadge => 'Active';
-
-  @override
-  String get addAccountButton => 'Add Account';
 
   @override
   String get selectButton => 'Select';
@@ -255,4 +271,231 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closeButton => 'Close';
+
+  @override
+  String get alreadyInstalled => 'Already Installed';
+
+  @override
+  String get settingsGeneralTitle => 'General';
+
+  @override
+  String get settingsInstanceNameDesc =>
+      'The display name for this Minecraft instance.';
+
+  @override
+  String get settingsMinecraftTitle => 'Minecraft Settings';
+
+  @override
+  String get settingsWindowResolution => 'Window Resolution';
+
+  @override
+  String get settingsWindowResolutionDesc =>
+      'Set a custom resolution for the game window. Leave blank for default.';
+
+  @override
+  String get settingsWidth => 'Width';
+
+  @override
+  String get settingsHeight => 'Height';
+
+  @override
+  String get settingsJavaEnvironment => 'Java Environment';
+
+  @override
+  String get settingsMaxMemory => 'Maximum Memory';
+
+  @override
+  String get settingsMaxMemoryDesc =>
+      'The maximum amount of RAM (in megabytes) the game can use.';
+
+  @override
+  String get settingsMB => 'MB';
+
+  @override
+  String get settingsCustomJavaPath => 'Custom Java Path';
+
+  @override
+  String get settingsCustomJavaPathDesc =>
+      'Provide an absolute path to a specific javaw.exe executable. Leave blank to use the launcher default.';
+
+  @override
+  String get settingsJvmArgs => 'JVM Arguments';
+
+  @override
+  String get settingsJvmArgsDesc =>
+      'Advanced parameters passed to the Java Virtual Machine.';
+
+  @override
+  String get resetToDefaultsButton => 'Reset to Defaults';
+
+  @override
+  String defaultHint(String value) {
+    return 'Default: $value';
+  }
+
+  @override
+  String get saveChangesButton => 'Save Changes';
+
+  @override
+  String get launcherManaged => 'Launcher';
+
+  @override
+  String get manualInstalled => 'Manual';
+
+  @override
+  String get missingFile => 'Missing File';
+
+  @override
+  String get deleteInstanceTitle => 'Delete Instance';
+
+  @override
+  String get deleteInstanceContent =>
+      'Are you sure you want to delete this instance? This action cannot be undone and will permanently delete all mods, resourcepacks, and save data.';
+
+  @override
+  String get deleteButton => 'Delete';
+
+  @override
+  String get sortLastPlayed => 'Last Played';
+
+  @override
+  String get sortNameAsc => 'Name (A-Z)';
+
+  @override
+  String get sortNameDesc => 'Name (Z-A)';
+
+  @override
+  String get searchInstances => 'Search instances...';
+
+  @override
+  String get nameAlreadyExists => 'An instance with this name already exists';
+
+  @override
+  String get filterAllVersions => 'All Versions';
+
+  @override
+  String get filterAllLoaders => 'All Loaders';
+
+  @override
+  String get filterAllCategories => 'All Categories';
+
+  @override
+  String get sortRelevance => 'Relevance';
+
+  @override
+  String get sortDownloads => 'Downloads';
+
+  @override
+  String get sortNewest => 'Newest';
+
+  @override
+  String get sortUpdated => 'Updated';
+
+  @override
+  String get categoryAdventure => 'Adventure';
+
+  @override
+  String get categoryMagic => 'Magic';
+
+  @override
+  String get categoryTechnology => 'Technology';
+
+  @override
+  String get categoryOptimization => 'Optimization';
+
+  @override
+  String get categoryUtility => 'Utility';
+
+  @override
+  String get categoryDecoration => 'Decoration';
+
+  @override
+  String get categoryWorldgen => 'World Generation';
+
+  @override
+  String get showSnapshots => 'Snapshots';
+
+  @override
+  String get stepAppearance => 'Appearance';
+
+  @override
+  String get iconLabel => 'Icon';
+
+  @override
+  String get colorLabel => 'Color';
+
+  @override
+  String get previewLabel => 'Preview';
+
+  @override
+  String selectedCount(int count) {
+    return '$count Selected';
+  }
+
+  @override
+  String get selectAllButton => 'Select All';
+
+  @override
+  String installStepDownloadingJava(String version) {
+    return 'Downloading Java $version';
+  }
+
+  @override
+  String get installStepInstallingClientAndAssets =>
+      'Installation client & assets';
+
+  @override
+  String get installStepProcessingForge => 'Processing Forge installation...';
+
+  @override
+  String get installStepProcessingFabric => 'Processing Fabric installation...';
+
+  @override
+  String get inheritsGlobalSetting => 'Inherits global setting';
+
+  @override
+  String inheritsGlobalSettingDesc(String value) {
+    return 'Currently inherits: $value';
+  }
+
+  @override
+  String get overrideGlobalSetting => 'Override global setting';
+
+  @override
+  String get useGlobalSetting => 'Use global setting';
+
+  @override
+  String get cancelSelection => 'Cancel';
+
+  @override
+  String get selectContent => 'Select';
+
+  @override
+  String get deselectAll => 'Deselect All';
+
+  @override
+  String get sortAZ => 'A-Z';
+
+  @override
+  String get sortZA => 'Z-A';
+
+  @override
+  String deleteSelectedContent(int count) {
+    return 'Delete ($count)';
+  }
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get contentTypeMod => 'MOD';
+
+  @override
+  String get contentTypeResourcepack => 'RESOURCE PACK';
+
+  @override
+  String get contentTypeDatapack => 'DATA PACK';
+
+  @override
+  String get contentTypeModpack => 'MODPACK';
 }

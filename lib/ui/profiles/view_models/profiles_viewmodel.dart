@@ -17,6 +17,7 @@ class ProfilesViewModel extends ChangeNotifier {
   late final Command0 authenticate;
   late final Command1<void, String> selectProfile;
   late final Command1<void, String> removeProfile;
+  late final Command1<void, String> addOfflineProfile;
 
   ProfilesViewModel({required MinecraftRepository minecraftRepository})
       : _minecraftRepository = minecraftRepository {
@@ -24,6 +25,7 @@ class ProfilesViewModel extends ChangeNotifier {
     authenticate = Command0(_authenticate);
     selectProfile = Command1<void, String>(_selectProfile);
     removeProfile = Command1<void, String>(_removeProfile);
+    addOfflineProfile = Command1<void, String>(_addOfflineProfile);
   }
 
   Future<Result<void>> _loadProfiles() async {
@@ -70,6 +72,14 @@ class ProfilesViewModel extends ChangeNotifier {
 
   Future<Result<void>> _removeProfile(String uuid) async {
     final result = await _minecraftRepository.removeProfile(uuid);
+    if (result is Success<void>) {
+      await _loadProfiles();
+    }
+    return result;
+  }
+
+  Future<Result<void>> _addOfflineProfile(String nickname) async {
+    final result = await _minecraftRepository.addOfflineProfile(nickname);
     if (result is Success<void>) {
       await _loadProfiles();
     }

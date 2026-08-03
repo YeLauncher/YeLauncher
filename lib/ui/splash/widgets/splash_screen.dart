@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide CircularProgressIndicator;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:yelauncher/routing/routes.dart';
@@ -42,23 +43,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Using a simple icon/logo placeholder
-            Container(
+            SvgPicture.asset(
+              'assets/logo.svg',
               width: 120,
               height: 120,
-              decoration: BoxDecoration(
-                color: AppColors.dark.primaryContainer,
-                borderRadius: BorderRadius.circular(32),
-              ),
-              child: Center(
-                child: Text(
-                  'YL',
-                  style: AppText.defaultTheme.titleLarge.copyWith(
-                    color: AppColors.dark.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
             ),
             const SizedBox(height: 48),
             SizedBox(

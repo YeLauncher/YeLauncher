@@ -52,37 +52,44 @@ class _ButtonState extends State<Button> {
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
-        child: AnimatedContainer(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 12,
-          ),
-          decoration: BoxDecoration(
-            color: _backgroundColor,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          duration: const Duration(milliseconds: 150),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              widget.iconData != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Icon(
-                        widget.iconData,
-                        color: widget.textColor,
-                        size: AppText.defaultTheme.label.fontSize,
-                        weight: 600,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              Text(
-                widget.label,
-                style: AppText.defaultTheme.label.copyWith(
-                  color: widget.textColor,
+        child: Opacity(
+          opacity: widget.onPressed == null ? 0.5 : 1.0,
+          child: AnimatedContainer(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 12,
+            ),
+            decoration: BoxDecoration(
+              color: _backgroundColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(milliseconds: 150),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                widget.iconData != null
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(
+                          widget.iconData,
+                          color: widget.textColor,
+                          size: AppText.defaultTheme.label.fontSize,
+                          weight: 600,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                Flexible(
+                  child: Text(
+                    widget.label,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: AppText.defaultTheme.label.copyWith(
+                      color: widget.textColor,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -90,6 +97,9 @@ class _ButtonState extends State<Button> {
   }
 
   Color get _backgroundColor {
+    if (widget.onPressed == null) {
+      return widget.backgroundColor;
+    }
     if (_isPressed) {
       return Color.alphaBlend(
         widget.textColor.withValues(alpha: 0.12),

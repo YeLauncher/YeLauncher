@@ -8,6 +8,7 @@ import 'package:yelauncher/data/repositories/java/java_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/forge_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
 import 'package:yelauncher/data/services/api/microsoft_api_client.dart';
 import 'package:yelauncher/data/services/api/models/minecraft_profile_api_model.dart';
@@ -37,6 +38,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
   final SecureStorageService _secureStorage;
   final ForgeRepository _forgeRepository;
   final ModLoaderRepository _fabricRepository;
+  final SettingsRepository _settingsRepository;
 
   MinecraftRepositoryRemote({
     required MinecraftApiClient apiClient,
@@ -47,6 +49,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
     required SecureStorageService secureStorage,
     required ForgeRepository forgeRepository,
     required ModLoaderRepository fabricRepository,
+    required SettingsRepository settingsRepository,
   }) : _apiClient = apiClient,
        _minecraftService = minecraftService,
        _downloadService = downloadService,
@@ -54,7 +57,8 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
        _javaRepository = javaRepository,
         _secureStorage = secureStorage,
         _forgeRepository = forgeRepository,
-        _fabricRepository = fabricRepository;
+        _fabricRepository = fabricRepository,
+        _settingsRepository = settingsRepository;
 
   @override
   Future<Result<List<MinecraftVersionModel>>> getVersions() async {
@@ -230,6 +234,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
           }
 
           _log.info('Install finished successfully for ${instance.id}');
+          await _fileService.createDirectory('instances/${instance.id}');
           return const Result.success(null);
         }, (error) async => Result.failure(error));
     } on Exception catch (e) {
@@ -438,6 +443,43 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               'Using profile ${profile.nickname} for ${instance.minecraftVersion}',
             );
 
+            if (instance.javaMemory != null) {
+              jvmArguments.add('-Xmx${instance.javaMemory}m');
+            } else {
+              jvmArguments.add('-Xmx${_settingsRepository.javaMemory}m');
+            }
+
+            final jvmArgs = instance.jvmArguments ?? _settingsRepository.jvmArguments;
+            if (jvmArgs.isNotEmpty) {
+              jvmArguments.addAll(jvmArgs.split(' '));
+            }
+
+            final width = instance.windowWidth ?? _settingsRepository.windowWidth;
+            final height = instance.windowHeight ?? _settingsRepository.windowHeight;
+            
+            bool hasWidth = false;
+            bool hasHeight = false;
+
+            for (int i = 0; i < gameArguments.length; i++) {
+              if (gameArguments[i] == '--width') hasWidth = true;
+              if (gameArguments[i] == '--height') hasHeight = true;
+              
+              gameArguments[i] = gameArguments[i]
+                  .replaceAll('\${resolution_width}', width.toString())
+                  .replaceAll('\${resolution_height}', height.toString());
+            }
+
+            if (!hasWidth) {
+              gameArguments.addAll(['--width', width.toString()]);
+            }
+            if (!hasHeight) {
+              gameArguments.addAll(['--height', height.toString()]);
+            }
+
+            final customJavaPath = instance.customJavaPath?.isNotEmpty == true 
+                ? instance.customJavaPath 
+                : (_settingsRepository.customJavaPath.isNotEmpty ? _settingsRepository.customJavaPath : null);
+
             var model = MinecraftRunModel(
               libraryDirectory: await _fileService.getLibraryDirectory(),
               libraryPaths: libraryPaths,
@@ -449,9 +491,7 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
               gameDirectory: await _fileService.getGameDirectory(instance.id),
               nativesDirectory: await _fileService.getNativesDirectory(instance.id),
               clientJarPath: clientJarPath,
-              javaExecutablePath: await _getJavaExecutablePathAbs(
-                int.tryParse(requirements.javaVersion) ?? 17,
-              ),
+              javaExecutablePath: customJavaPath ?? await _getJavaExecutablePathAbs(int.tryParse(requirements.javaVersion) ?? 17),
               assetIndex: requirements.assetIndex.id,
               minecraftVersion: minecraftVersion,
               profile: profile,
@@ -799,8 +839,27 @@ class MinecraftRepositoryRemote implements MinecraftRepository {
       return Result.failure(Exception('authenticate failed: $e'));
     }
   }
+  @override
+  Future<Result<void>> addOfflineProfile(String nickname) async {
+    try {
+      final profile = MinecraftProfileModel(
+        nickname: nickname,
+        uuid: 'offline-${DateTime.now().millisecondsSinceEpoch}',
+        accessToken: 'offline',
+        userType: 'offline',
+      );
 
+      final profiles = await _secureStorage.getProfiles();
+      profiles.add(profile);
+      await _secureStorage.saveProfiles(profiles);
+      await _secureStorage.saveSelectedProfileId(profile.uuid);
 
+      return const Result.success(null);
+    } catch (e) {
+      _log.severe('addOfflineProfile error: $e');
+      return Result.failure(Exception('addOfflineProfile failed: $e'));
+    }
+  }
 
   @override
   Future<Result<List<MinecraftProfileModel>>> getProfiles() async {

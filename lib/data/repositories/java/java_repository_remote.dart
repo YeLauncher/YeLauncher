@@ -42,6 +42,9 @@ class JavaRepositoryRemote implements JavaRepository {
     try {
       final javaDir = await _getJavaDir(version);
       if (!await javaDir.exists()) return Result.success(false);
+      
+      final successFile = File(p.join(javaDir.path, '.success'));
+      if (!await successFile.exists()) return Result.success(false);
 
       final execPath = await _findExecutable(javaDir);
       return Result.success(execPath != null);
@@ -57,6 +60,12 @@ class JavaRepositoryRemote implements JavaRepository {
       if (!await javaDir.exists()) {
         return Result.failure(Exception('Java $version is not installed.'));
       }
+      
+      final successFile = File(p.join(javaDir.path, '.success'));
+      if (!await successFile.exists()) {
+        return Result.failure(Exception('Java $version installation is incomplete.'));
+      }
+      
       final execPath = await _findExecutable(javaDir);
       if (execPath == null) {
         return Result.failure(Exception('Java $version executable not found in $javaDir'));
@@ -138,6 +147,7 @@ class JavaRepositoryRemote implements JavaRepository {
         }
       });
 
+      await File(p.join(javaDirPath, '.success')).writeAsString('ok');
       _log.info('Successfully installed Java $version');
       return Result.success(null);
     } catch (e) {

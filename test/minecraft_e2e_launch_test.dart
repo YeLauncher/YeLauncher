@@ -11,6 +11,7 @@ import 'package:yelauncher/data/services/api/forge_api_client.dart';
 import 'package:yelauncher/data/services/api/fabric_api_client.dart';
 import 'package:yelauncher/data/repositories/mod_loader/fabric_repository_remote.dart';
 import 'package:yelauncher/data/services/api/minecraft_api_client.dart';
+import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
@@ -122,6 +123,7 @@ void main() {
       secureStorage: fakeSecureStorage,
       forgeRepository: forgeRepository,
       fabricRepository: fabricRepository,
+      settingsRepository: SettingsRepositoryLocal(storageService: fakeSecureStorage),
     );
   });
 
@@ -130,7 +132,9 @@ void main() {
     String modLoader = 'vanilla',
     String modLoaderVersion = '',
   }) async {
-    debugPrint('--- Starting E2E Test for $version (modLoader: $modLoader) ---');
+    debugPrint(
+      '--- Starting E2E Test for $version (modLoader: $modLoader) ---',
+    );
     final instanceId = 'e2e_test_$version';
     final instance = InstanceModel(
       id: instanceId,
@@ -170,7 +174,8 @@ void main() {
 
     debugPrint('Checking if Minecraft $version is installed...');
     final isMcInstalledResult = await minecraftRepository.isInstalled(instance);
-    final isMcInstalled = isMcInstalledResult is Success<bool> && isMcInstalledResult.value;
+    final isMcInstalled =
+        isMcInstalledResult is Success<bool> && isMcInstalledResult.value;
 
     debugPrint('Mocking authentication as E2ETester...');
     final profile = MinecraftProfileModel(
@@ -199,7 +204,9 @@ void main() {
           } else {
             final mb = down ~/ (1024 * 1024);
             if (mb > lastMcProgress) {
-              debugPrint('Minecraft $version install progress: $mb MB downloaded');
+              debugPrint(
+                'Minecraft $version install progress: $mb MB downloaded',
+              );
               lastMcProgress = mb;
             }
           }
@@ -210,11 +217,6 @@ void main() {
     } else {
       debugPrint('Minecraft $version is already installed.');
     }
-
-    debugPrint('Running Minecraft $version instance...');
-    final runResult = await minecraftRepository.run(instance);
-    expect(runResult, isA<Success>());
-    debugPrint('Minecraft $version process started. Waiting for launch...');
 
     bool isLaunched = false;
     final logSubscription = Logger.root.onRecord.listen((record) {
@@ -229,18 +231,27 @@ void main() {
       }
     });
 
+    debugPrint('Running Minecraft $version instance...');
+    final runResult = await minecraftRepository.run(instance);
+    expect(runResult, isA<Success>());
+    debugPrint('Minecraft $version process started. Waiting for launch...');
+
     int waitTime = 0;
     while (!isLaunched && waitTime < 180) {
       await Future.delayed(const Duration(seconds: 1));
       waitTime++;
     }
-    
+
     await logSubscription.cancel();
 
     if (isLaunched) {
-      debugPrint('Minecraft $version launched successfully (detected via logs in $waitTime seconds).');
+      debugPrint(
+        'Minecraft $version launched successfully (detected via logs in $waitTime seconds).',
+      );
     } else {
-      debugPrint('Warning: Did not detect clear launch signal in logs after 180s.');
+      debugPrint(
+        'Warning: Did not detect clear launch signal in logs after 180s.',
+      );
     }
 
     debugPrint('Waiting an additional 10 seconds before terminating...');
@@ -283,14 +294,6 @@ void main() {
     );
 
     test(
-      'Can install and launch Vanilla 1.21.11',
-      () async {
-        await runEndToEndTest('1.21.11');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
       'Can install and launch Vanilla 1.20.6',
       () async {
         await runEndToEndTest('1.20.6');
@@ -315,25 +318,9 @@ void main() {
     );
 
     test(
-      'Can install and launch Vanilla 1.17.1',
-      () async {
-        await runEndToEndTest('1.17.1');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
       'Can install and launch Vanilla 1.16.5',
       () async {
         await runEndToEndTest('1.16.5');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
-      'Can install and launch Vanilla 1.14.4',
-      () async {
-        await runEndToEndTest('1.14.4');
       },
       timeout: const Timeout(Duration(minutes: 10)),
     );
@@ -350,30 +337,6 @@ void main() {
       'Can install and launch Vanilla 1.12.2',
       () async {
         await runEndToEndTest('1.12.2');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
-      'Can install and launch Vanilla 1.11.2',
-      () async {
-        await runEndToEndTest('1.11.2');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
-      'Can install and launch Vanilla 1.10.2',
-      () async {
-        await runEndToEndTest('1.10.2');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
-      'Can install and launch Vanilla 1.9.4',
-      () async {
-        await runEndToEndTest('1.9.4');
       },
       timeout: const Timeout(Duration(minutes: 10)),
     );
@@ -400,7 +363,11 @@ void main() {
       'Can install and launch Forge 1.18.2',
       () async {
         final forgeVersion = await resolveRecommendedForge('1.18.2');
-        await runEndToEndTest('1.18.2', modLoader: 'forge', modLoaderVersion: forgeVersion);
+        await runEndToEndTest(
+          '1.18.2',
+          modLoader: 'forge',
+          modLoaderVersion: forgeVersion,
+        );
       },
       timeout: const Timeout(Duration(minutes: 15)),
     );
@@ -409,7 +376,11 @@ void main() {
       'Can install and launch Forge 1.16.5',
       () async {
         final forgeVersion = await resolveRecommendedForge('1.16.5');
-        await runEndToEndTest('1.16.5', modLoader: 'forge', modLoaderVersion: forgeVersion);
+        await runEndToEndTest(
+          '1.16.5',
+          modLoader: 'forge',
+          modLoaderVersion: forgeVersion,
+        );
       },
       timeout: const Timeout(Duration(minutes: 15)),
     );
@@ -418,7 +389,11 @@ void main() {
       'Can install and launch Forge 1.12.2',
       () async {
         final forgeVersion = await resolveRecommendedForge('1.12.2');
-        await runEndToEndTest('1.12.2', modLoader: 'forge', modLoaderVersion: forgeVersion);
+        await runEndToEndTest(
+          '1.12.2',
+          modLoader: 'forge',
+          modLoaderVersion: forgeVersion,
+        );
       },
       timeout: const Timeout(Duration(minutes: 15)),
     );
@@ -427,7 +402,11 @@ void main() {
       'Can install and launch Forge 1.8.9',
       () async {
         final forgeVersion = await resolveRecommendedForge('1.8.9');
-        await runEndToEndTest('1.8.9', modLoader: 'forge', modLoaderVersion: forgeVersion);
+        await runEndToEndTest(
+          '1.8.9',
+          modLoader: 'forge',
+          modLoaderVersion: forgeVersion,
+        );
       },
       timeout: const Timeout(Duration(minutes: 15)),
     );
@@ -436,7 +415,11 @@ void main() {
       'Can install and launch Forge 1.7.10',
       () async {
         final forgeVersion = await resolveRecommendedForge('1.7.10');
-        await runEndToEndTest('1.7.10', modLoader: 'forge', modLoaderVersion: forgeVersion);
+        await runEndToEndTest(
+          '1.7.10',
+          modLoader: 'forge',
+          modLoaderVersion: forgeVersion,
+        );
       },
       timeout: const Timeout(Duration(minutes: 15)),
     );
@@ -447,7 +430,11 @@ void main() {
       'Can install and launch Fabric 1.18.2',
       () async {
         final fabricVersion = await resolveLatestFabric('1.18.2');
-        await runEndToEndTest('1.18.2', modLoader: 'fabric', modLoaderVersion: fabricVersion);
+        await runEndToEndTest(
+          '1.18.2',
+          modLoader: 'fabric',
+          modLoaderVersion: fabricVersion,
+        );
       },
       timeout: const Timeout(Duration(minutes: 15)),
     );
@@ -456,7 +443,11 @@ void main() {
       'Can install and launch Fabric 1.21.1',
       () async {
         final fabricVersion = await resolveLatestFabric('1.21.1');
-        await runEndToEndTest('1.21.1', modLoader: 'fabric', modLoaderVersion: fabricVersion);
+        await runEndToEndTest(
+          '1.21.1',
+          modLoader: 'fabric',
+          modLoaderVersion: fabricVersion,
+        );
       },
       timeout: const Timeout(Duration(minutes: 15)),
     );

@@ -12,16 +12,27 @@ import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  Logger.root.level = Level.FINE; // Set the logging level to capture all logs
-  Logger.root.onRecord.listen((record) {
-    debugPrint(
-      '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}',
-    );
-  });
   SentryWidgetsFlutterBinding.ensureInitialized();
+  
+  final appDir = await getApplicationSupportDirectory();
+  final logFile = File(p.join(appDir.path, 'yelauncher.log'));
+  if (await logFile.exists() && await logFile.length() > 5 * 1024 * 1024) {
+    await logFile.delete();
+  }
+  final logSink = logFile.openWrite(mode: FileMode.append);
+
+  Logger.root.level = Level.FINE;
+  Logger.root.onRecord.listen((record) {
+    final msg = '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}';
+    debugPrint(msg);
+    logSink.writeln(msg);
+  });
 
   await windowManager.ensureInitialized();
 

@@ -20,13 +20,33 @@ class ModrinthClient implements ContentProvider {
   Future<Result<List<ContentItem>>> searchContent({
     required String query,
     required String projectType,
+    List<String> versions = const [],
+    List<String> modLoaders = const [],
+    List<String> categories = const [],
+    String sortOrder = 'relevance',
     int limit = 20,
     int offset = 0,
   }) async {
     try {
+      final List<String> facets = [];
+      facets.add('["project_type:$projectType"]');
+      if (versions.isNotEmpty) {
+        final versionFacets = versions.map((v) => '"versions:$v"').join(',');
+        facets.add('[$versionFacets]');
+      }
+      if (modLoaders.isNotEmpty) {
+        final loaderFacets = modLoaders.map((l) => '"categories:$l"').join(',');
+        facets.add('[$loaderFacets]');
+      }
+      if (categories.isNotEmpty) {
+        final categoryFacets = categories.map((c) => '"categories:$c"').join(',');
+        facets.add('[$categoryFacets]');
+      }
+
       final uri = Uri.parse('$_baseUrl/search').replace(queryParameters: {
         if (query.isNotEmpty) 'query': query,
-        'facets': '[["project_type:$projectType"]]',
+        'facets': '[${facets.join(",")}]',
+        'index': sortOrder,
         'limit': limit.toString(),
         'offset': offset.toString(),
       });
@@ -79,6 +99,43 @@ class ModrinthClient implements ContentProvider {
     } catch (e, st) {
       _log.severe('Get versions failed', e, st);
       return Failure(Exception('Get versions failed: $e'));
+    }
+  }
+
+  @override
+  Future<Result<ContentVersion>> getVersion(String versionId) async {
+    try {
+      final uri = Uri.parse('$_baseUrl/version/$versionId');
+      final response = await _httpClient.get(uri, headers: _headers);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return Success(ContentVersion.fromJson(json));
+      } else {
+        return Failure(Exception('Failed to get version: ${response.statusCode}'));
+      }
+    } catch (e, st) {
+      _log.severe('Get version failed', e, st);
+      return Failure(Exception('Get version failed: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<ContentItem>>> getProjectDependencies(String id) async {
+    try {
+      final uri = Uri.parse('$_baseUrl/project/$id/dependencies');
+      final response = await _httpClient.get(uri, headers: _headers);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        final projects = json['projects'] as List;
+        return Success(projects.map((e) => ContentItem.fromJson(e)).toList());
+      } else {
+        return Failure(Exception('Failed to get dependencies: ${response.statusCode}'));
+      }
+    } catch (e, st) {
+      _log.severe('Get dependencies failed', e, st);
+      return Failure(Exception('Get dependencies failed: $e'));
     }
   }
 }

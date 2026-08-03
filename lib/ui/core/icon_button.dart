@@ -51,7 +51,7 @@ class _IconButtonState extends State<IconButton> {
           duration: const Duration(milliseconds: 150),
           child: Icon(
             widget.iconData,
-            color: AppColors.dark.onSurface,
+            color: widget.iconColor,
             size: 24,
           ),
         ),
