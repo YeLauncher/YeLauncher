@@ -85,6 +85,9 @@ class MinecraftService {
       if (!await logDir.exists()) {
         await logDir.create(recursive: true);
       }
+      final logFile = File(p.join(logDir.path, 'latest.log'));
+      final sink = logFile.openWrite(mode: FileMode.append);
+      
       sink.writeln('--- Launching Minecraft ---');
       sink.writeln('Args count: ${finalArgs.length}');
       final stdoutStream = process.stdout.asBroadcastStream();
