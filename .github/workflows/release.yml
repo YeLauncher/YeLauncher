@@ -133,11 +133,15 @@ jobs:
       # ---------------------------------------------------------
       # 10. PUBLISH: Microsoft Store (Native MSIX Upload)
       # ---------------------------------------------------------
-      - name: Setup Microsoft Store CLI
-        uses: microsoft/setup-msstore-cli@v1
+      - name: Configure Microsoft Store CLI 
+        uses: microsoft/microsoft-store-apppublisher@v1.1
 
-      - name: Configure Microsoft Store CLI
-        run: msstore reconfigure --tenantId ${{ secrets.TENANT_ID }} --sellerId ${{ secrets.SELLER_ID }} --clientId ${{ secrets.CLIENT_ID }} --clientSecret ${{ secrets.CLIENT_SECRET }}
+      - name: Reconfigure store credentials 
+        run: msstore reconfigure ` 
+              --tenantId ${{ secrets.TENANT_ID }} ` 
+              --sellerId ${{ secrets.SELLER_ID }} ` 
+              --clientId ${{ secrets.CLIENT_ID }} ` 
+              --clientSecret ${{ secrets.CLIENT_SECRET }} 
 
       - name: Publish MSIX to Microsoft Store
         # The CLI parses your MSIX manifest and pushes the file directly to your submission
