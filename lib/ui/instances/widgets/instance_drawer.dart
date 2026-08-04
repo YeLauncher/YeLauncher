@@ -910,6 +910,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                                 case 'resourcepack': typeLabel = AppLocalizations.of(context)!.contentTypeResourcepack; break;
                                 case 'datapack': typeLabel = AppLocalizations.of(context)!.contentTypeDatapack; break;
                                 case 'modpack': typeLabel = AppLocalizations.of(context)!.contentTypeModpack; break;
+                                case 'shader': typeLabel = AppLocalizations.of(context)!.contentTypeShader; break;
                                 default: typeLabel = item.type.toUpperCase();
                               }
 

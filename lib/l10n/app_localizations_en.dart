@@ -169,6 +169,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabModpacks => 'Modpacks';
 
   @override
+  String get tabShaders => 'Shaders';
+
+  @override
   String get addButton => 'Add';
 
   @override
@@ -498,4 +501,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contentTypeModpack => 'MODPACK';
+
+  @override
+  String get contentTypeShader => 'SHADER';
 }

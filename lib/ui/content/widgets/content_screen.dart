@@ -57,12 +57,13 @@ class _ContentScreenState extends State<ContentScreen> {
     'resourcepack',
     'datapack',
     'modpack',
+    'shader',
   ];
   int _selectedTabIndex = 0;
 
   List<String> _getTabLabels(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return [l10n.tabMods, l10n.tabResourcepacks, l10n.tabDatapacks, l10n.tabModpacks];
+    return [l10n.tabMods, l10n.tabResourcepacks, l10n.tabDatapacks, l10n.tabModpacks, l10n.tabShaders];
   }
 
   @override

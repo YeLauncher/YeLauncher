@@ -59,6 +59,7 @@
   "tabResourcepacks": "Resourcepacks",
   "tabDatapacks": "Datapacks",
   "tabModpacks": "Modpacks",
+  "tabShaders": "Shaders",
   "addButton": "Add",
   "byAuthor": "by {author}",
   "@byAuthor": {
@@ -209,5 +210,6 @@
   "contentTypeMod": "MOD",
   "contentTypeResourcepack": "RESOURCE PACK",
   "contentTypeDatapack": "DATA PACK",
-  "contentTypeModpack": "MODPACK"
+  "contentTypeModpack": "MODPACK",
+  "contentTypeShader": "SHADER"
 }

@@ -410,6 +410,12 @@ abstract class AppLocalizations {
   /// **'Modpacks'**
   String get tabModpacks;
 
+  /// No description provided for @tabShaders.
+  ///
+  /// In en, this message translates to:
+  /// **'Shaders'**
+  String get tabShaders;
+
   /// No description provided for @addButton.
   ///
   /// In en, this message translates to:
@@ -1021,6 +1027,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'MODPACK'**
   String get contentTypeModpack;
+
+  /// No description provided for @contentTypeShader.
+  ///
+  /// In en, this message translates to:
+  /// **'SHADER'**
+  String get contentTypeShader;
 }
 
 class _AppLocalizationsDelegate

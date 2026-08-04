@@ -169,6 +169,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tabModpacks => 'Модпаки';
 
   @override
+  String get tabShaders => 'Шейдери';
+
+  @override
   String get addButton => 'Додати';
 
   @override
@@ -498,4 +501,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get contentTypeModpack => 'МОДПАК';
+
+  @override
+  String get contentTypeShader => 'ШЕЙДЕР';
 }
