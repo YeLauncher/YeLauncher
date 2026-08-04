@@ -145,4 +145,4 @@ jobs:
 
       - name: Publish MSIX to Microsoft Store
         # The CLI parses your MSIX manifest and pushes the file directly to your submission
-        run: msstore publish YeLauncher.YeLauncher_${{ needs.build.outputs.app_version }}_X64.msix
+        run: msstore publish YeLauncher.YeLauncher_${{ needs.build.outputs.app_version }}_X64.msix --appId ${{ secrets.STORE_ID }}
