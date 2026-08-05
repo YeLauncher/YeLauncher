@@ -1057,6 +1057,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear selection'**
   String get clearSelection;
+
+  /// No description provided for @requiredDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Required Dependencies'**
+  String get requiredDependencies;
+
+  /// No description provided for @optionalDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional Dependencies'**
+  String get optionalDependencies;
+
+  /// No description provided for @noDependenciesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'No dependencies required'**
+  String get noDependenciesRequired;
+
+  /// No description provided for @installRequiredDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Install required dependencies'**
+  String get installRequiredDependencies;
+
+  /// No description provided for @installRequiredDependenciesTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Will download:\n{dependencies}'**
+  String installRequiredDependenciesTooltip(Object dependencies);
 }
 
 class _AppLocalizationsDelegate

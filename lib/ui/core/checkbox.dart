@@ -7,13 +7,21 @@ class CoreCheckbox extends StatefulWidget {
   final bool value;
   final ValueChanged<bool?> onChanged;
   final String label;
+  final bool isSecondary;
 
   const CoreCheckbox({
     super.key,
     required this.value,
     required this.onChanged,
     required this.label,
-  });
+  }) : isSecondary = false;
+
+  const CoreCheckbox.secondary({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    required this.label,
+  }) : isSecondary = true;
 
   @override
   State<CoreCheckbox> createState() => _CoreCheckboxState();
@@ -24,6 +32,9 @@ class _CoreCheckboxState extends State<CoreCheckbox> {
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = widget.isSecondary ? AppColors.dark.secondary : AppColors.dark.primary;
+    final onActiveColor = widget.isSecondary ? AppColors.dark.onSecondary : AppColors.dark.onPrimary;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -41,14 +52,14 @@ class _CoreCheckboxState extends State<CoreCheckbox> {
               height: 20,
               decoration: BoxDecoration(
                 color: widget.value
-                    ? AppColors.dark.primary
+                    ? activeColor
                     : _isHovered
                         ? AppColors.dark.onSurface.withValues(alpha: 0.1)
                         : const Color(0x00000000),
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
                   color: widget.value
-                      ? AppColors.dark.primary
+                      ? activeColor
                       : AppColors.dark.onSurfaceVariant,
                   width: 2,
                 ),
@@ -57,15 +68,18 @@ class _CoreCheckboxState extends State<CoreCheckbox> {
                   ? Icon(
                       Symbols.check_rounded,
                       size: 16,
-                      color: AppColors.dark.onPrimary,
+                      color: onActiveColor,
                     )
                   : null,
             ),
             const SizedBox(width: 8),
-            Text(
-              widget.label,
-              style: AppText.defaultTheme.labelLarge.copyWith(
-                color: widget.value ? AppColors.dark.onSurface : AppColors.dark.onSurfaceVariant,
+            Flexible(
+              child: Text(
+                widget.label,
+                style: AppText.defaultTheme.labelLarge.copyWith(
+                  color: widget.value ? AppColors.dark.onSurface : AppColors.dark.onSurfaceVariant,
+                ),
+                softWrap: true,
               ),
             ),
           ],
@@ -74,3 +88,4 @@ class _CoreCheckboxState extends State<CoreCheckbox> {
     );
   }
 }
+

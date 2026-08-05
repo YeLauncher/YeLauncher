@@ -591,8 +591,6 @@ class Tooltip extends StatelessWidget {
               ),
               child: Text(
                 message,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),

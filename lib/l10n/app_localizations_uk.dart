@@ -520,4 +520,21 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get clearSelection => 'Очистити вибір';
+
+  @override
+  String get requiredDependencies => 'Обов\'язкові залежності';
+
+  @override
+  String get optionalDependencies => 'Опціональні залежності';
+
+  @override
+  String get noDependenciesRequired => 'Залежності не потрібні';
+
+  @override
+  String get installRequiredDependencies => 'Встановити необхідні залежності';
+
+  @override
+  String installRequiredDependenciesTooltip(Object dependencies) {
+    return 'Буде завантажено:\n$dependencies';
+  }
 }

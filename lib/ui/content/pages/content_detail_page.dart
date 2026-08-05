@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:yelauncher/ui/core/checkbox.dart';
 import 'package:yelauncher/ui/core/chip.dart';
 import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
+import 'package:yelauncher/ui/core/icon_button.dart';
 
 import 'package:yelauncher/ui/core/multi_select_dropdown.dart';
 import 'package:yelauncher/ui/core/tabs.dart';
@@ -69,6 +70,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
   int _selectedTabIndex = 0;
   final List<String> _selectedGameVersions = [];
   bool _showSnapshots = false;
+  bool _installRequiredDependencies = true;
 
   String? _getLoaderIcon(String loader) {
     final lower = loader.toLowerCase();
@@ -83,7 +85,10 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
 
     final stylingRepository = context.read<InstanceStylingRepository>();
 
-    final bgColor = stylingRepository.getColor(instanceColor, fallback: AppColors.dark.primaryContainer);
+    final bgColor = stylingRepository.getColor(
+      instanceColor,
+      fallback: AppColors.dark.primaryContainer,
+    );
     final iconColor = instanceColor != null
         ? const Color(0xFFFFFFFF)
         : AppColors.dark.primary;
@@ -95,7 +100,11 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
         color: bgColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Icon(stylingRepository.getIconData(instanceIcon), color: iconColor, size: 20),
+      child: Icon(
+        stylingRepository.getIconData(instanceIcon),
+        color: iconColor,
+        size: 20,
+      ),
     );
   }
 
@@ -323,8 +332,10 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
       await downloadAndInstall(widget.viewModel.item, mainVersionToInstall);
 
       // Install all resolved dependencies
-      for (final dep in resolvedDependencies) {
-        await downloadAndInstall(dep.item, dep.version);
+      if (_installRequiredDependencies) {
+        for (final dep in resolvedDependencies) {
+          await downloadAndInstall(dep.item, dep.version);
+        }
       }
 
       final updatedInstance = currentInstance.copyWith(
@@ -458,19 +469,9 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
       padding: const EdgeInsets.all(24.0),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => context.pop(),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.dark.surfaceContainerHigh,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Symbols.arrow_back_rounded,
-                color: AppColors.dark.onSurface,
-              ),
-            ),
+          IconButton.surface(
+            iconData: Symbols.arrow_back_rounded,
+            onPressed: () => context.pop(),
           ),
           const SizedBox(width: 16),
           Text(
@@ -669,11 +670,8 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
             iconData: Symbols.gamepad_rounded,
           ),
         if (item.loaders != null)
-          for (final loader in item.loaders!) 
-            Chip.surface(
-              loader, 
-              svgIcon: _getLoaderIcon(loader),
-            ),
+          for (final loader in item.loaders!)
+            Chip.surface(loader, svgIcon: _getLoaderIcon(loader)),
       ],
     );
   }
@@ -899,16 +897,11 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                 isSelected: isSelected,
                 tags: [
                   ...version.gameVersions.map(
-                    (gv) => Chip.primary(
-                      gv,
-                      iconData: Symbols.gamepad_rounded,
-                    ),
+                    (gv) => Chip.primary(gv, iconData: Symbols.gamepad_rounded),
                   ),
                   ...version.loaders.map(
-                    (loader) => Chip.surface(
-                      loader,
-                      svgIcon: _getLoaderIcon(loader),
-                    ),
+                    (loader) =>
+                        Chip.surface(loader, svgIcon: _getLoaderIcon(loader)),
                   ),
                 ],
                 onTap: () {
@@ -950,7 +943,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
     if (widget.viewModel.dependencies.isEmpty) {
       return Center(
         child: Text(
-          'No dependencies required',
+          AppLocalizations.of(context)!.noDependenciesRequired,
           style: AppText.defaultTheme.bodyLarge.copyWith(
             color: AppColors.dark.onSurfaceVariant,
           ),
@@ -958,56 +951,97 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
       );
     }
 
-    return ListView.builder(
-      itemCount: widget.viewModel.dependencies.length,
-      itemBuilder: (context, index) {
-        final dep = widget.viewModel.dependencies[index];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.dark.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              if (dep.iconUrl != null) ...[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(
-                    imageUrl: dep.iconUrl!,
-                    width: 40,
-                    height: 40,
-                    errorWidget: (context, url, error) =>
-                        const SizedBox(width: 40, height: 40),
-                  ),
-                ),
-                const SizedBox(width: 16),
-              ],
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dep.title,
-                      style: AppText.defaultTheme.titleLarge.copyWith(
-                        color: AppColors.dark.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      dep.projectType,
-                      style: AppText.defaultTheme.bodyMedium.copyWith(
-                        color: AppColors.dark.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
+    final versionToUse =
+        widget.targetVersion ??
+        (widget.viewModel.versions.isNotEmpty
+            ? widget.viewModel.versions.first
+            : null);
+
+    final requiredDeps = <ContentItem>[];
+    final optionalDeps = <ContentItem>[];
+
+    if (versionToUse?.dependencies != null) {
+      for (final depItem in widget.viewModel.dependencies) {
+        final depLink = versionToUse!.dependencies!
+            .where((d) => d.projectId == depItem.id)
+            .firstOrNull;
+        if (depLink != null) {
+          if (depLink.dependencyType == 'required') {
+            requiredDeps.add(depItem);
+          } else {
+            optionalDeps.add(depItem);
+          }
+        } else {
+          optionalDeps.add(depItem);
+        }
+      }
+    } else {
+      optionalDeps.addAll(widget.viewModel.dependencies);
+    }
+
+    Widget buildSection(String title, List<ContentItem> items) {
+      if (items.isEmpty) return const SizedBox.shrink();
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12, top: 8),
+            child: Text(
+              title,
+              style: AppText.defaultTheme.titleMedium.copyWith(
+                color: AppColors.dark.onSurface,
+                fontWeight: FontWeight.w600,
               ),
-            ],
+            ),
           ),
-        );
-      },
+          ...items.map(
+            (dep) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: ListItem.secondary(
+                title: dep.title,
+                subtitle: dep.projectType,
+                leadingWidget: dep.iconUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: CachedNetworkImage(
+                          imageUrl: dep.iconUrl!,
+                          width: 32,
+                          height: 32,
+                          errorWidget: (context, url, error) =>
+                              const SizedBox(width: 32, height: 32),
+                        ),
+                      )
+                    : const SizedBox(width: 32, height: 32),
+                isSelected: false,
+                trailingWidget: Icon(
+                  Symbols.chevron_right_rounded,
+                  color: AppColors.dark.onSurfaceVariant,
+                ),
+                onTap: () {
+                  context.push(
+                    '${Routes.content}/${dep.id}',
+                    extra: {'item': dep},
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      );
+    }
+
+    return ListView(
+      children: [
+        buildSection(
+          AppLocalizations.of(context)!.requiredDependencies,
+          requiredDeps,
+        ),
+        buildSection(
+          AppLocalizations.of(context)!.optionalDependencies,
+          optionalDeps,
+        ),
+      ],
     );
   }
 
@@ -1142,55 +1176,89 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                   const SizedBox(height: 16),
                 ],
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (isInstalling) ...[
-                      Tooltip(
-                        message:
-                            _currentTotalBytes != null &&
-                                _currentTotalBytes! > 0
-                            ? AppLocalizations.of(context)!.downloadProgress(
-                                (_currentDownloadedBytes / 1048576)
-                                    .toStringAsFixed(2),
-                                (_currentTotalBytes! / 1048576).toStringAsFixed(
-                                  2,
+                    if (resolvedDependencies.isNotEmpty)
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Tooltip(
+                            message: AppLocalizations.of(context)!
+                                .installRequiredDependenciesTooltip(
+                                  resolvedDependencies
+                                      .map((e) => '- ${e.item.title}')
+                                      .join('\n'),
                                 ),
-                              )
-                            : AppLocalizations.of(
+                            child: CoreCheckbox.secondary(
+                              value: _installRequiredDependencies,
+                              onChanged: (val) {
+                                setState(() {
+                                  _installRequiredDependencies = val ?? true;
+                                });
+                              },
+                              label: AppLocalizations.of(
                                 context,
-                              )!.downloadProgressUnknownTotal(
-                                (_currentDownloadedBytes / 1048576)
-                                    .toStringAsFixed(2),
-                              ),
-                        child: CircularProgressIndicator.primary(
-                          size: 24,
-                          value:
-                              _currentTotalBytes != null &&
-                                  _currentTotalBytes! > 0
-                              ? (_currentDownloadedBytes / _currentTotalBytes!)
-                                    .clamp(0.0, 1.0)
-                              : null,
+                              )!.installRequiredDependencies,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                    ],
-                    Button.surface(
-                      AppLocalizations.of(context)!.cancel,
-                      onPressed: () => context.pop(),
-                    ),
-                    const SizedBox(width: 12),
-                    Button.primary(
-                      isInstalling
-                          ? AppLocalizations.of(context)!.installingStatus
-                          : isAlreadyInstalled
-                          ? AppLocalizations.of(context)!.alreadyInstalled
-                          : AppLocalizations.of(context)!.installButton,
-                      onPressed:
-                          selectedInstance == null ||
-                              isInstalling ||
-                              isAlreadyInstalled
-                          ? null
-                          : _install,
+                      )
+                    else
+                      const Spacer(),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isInstalling) ...[
+                          Tooltip(
+                            message:
+                                _currentTotalBytes != null &&
+                                    _currentTotalBytes! > 0
+                                ? AppLocalizations.of(
+                                    context,
+                                  )!.downloadProgress(
+                                    (_currentDownloadedBytes / 1048576)
+                                        .toStringAsFixed(2),
+                                    (_currentTotalBytes! / 1048576)
+                                        .toStringAsFixed(2),
+                                  )
+                                : AppLocalizations.of(
+                                    context,
+                                  )!.downloadProgressUnknownTotal(
+                                    (_currentDownloadedBytes / 1048576)
+                                        .toStringAsFixed(2),
+                                  ),
+                            child: CircularProgressIndicator.primary(
+                              size: 24,
+                              value:
+                                  _currentTotalBytes != null &&
+                                      _currentTotalBytes! > 0
+                                  ? (_currentDownloadedBytes /
+                                            _currentTotalBytes!)
+                                        .clamp(0.0, 1.0)
+                                  : null,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                        ],
+                        Button.surface(
+                          AppLocalizations.of(context)!.cancel,
+                          onPressed: () => context.pop(),
+                        ),
+                        const SizedBox(width: 12),
+                        Button.primary(
+                          isInstalling
+                              ? AppLocalizations.of(context)!.installingStatus
+                              : isAlreadyInstalled
+                              ? AppLocalizations.of(context)!.alreadyInstalled
+                              : AppLocalizations.of(context)!.installButton,
+                          onPressed:
+                              selectedInstance == null ||
+                                  isInstalling ||
+                                  isAlreadyInstalled
+                              ? null
+                              : _install,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -1202,4 +1270,3 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
     );
   }
 }
-

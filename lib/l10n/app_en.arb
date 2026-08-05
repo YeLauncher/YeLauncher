@@ -226,5 +226,10 @@
       "downloaded": { "type": "String" }
     }
   },
-  "clearSelection": "Clear selection"
+  "clearSelection": "Clear selection",
+  "requiredDependencies": "Required Dependencies",
+  "optionalDependencies": "Optional Dependencies",
+  "noDependenciesRequired": "No dependencies required",
+  "installRequiredDependencies": "Install required dependencies",
+  "installRequiredDependenciesTooltip": "Will download:\n{dependencies}"
 }

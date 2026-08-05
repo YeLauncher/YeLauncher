@@ -215,5 +215,10 @@
   "minecraftVersions": "Версії Minecraft",
   "downloadProgress": "{downloaded} МБ / {total} МБ",
   "downloadProgressUnknownTotal": "{downloaded} МБ",
-  "clearSelection": "Очистити вибір"
+  "clearSelection": "Очистити вибір",
+  "requiredDependencies": "Обов'язкові залежності",
+  "optionalDependencies": "Опціональні залежності",
+  "noDependenciesRequired": "Залежності не потрібні",
+  "installRequiredDependencies": "Встановити необхідні залежності",
+  "installRequiredDependenciesTooltip": "Буде завантажено:\n{dependencies}"
 }

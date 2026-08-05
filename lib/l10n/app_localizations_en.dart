@@ -520,4 +520,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clearSelection => 'Clear selection';
+
+  @override
+  String get requiredDependencies => 'Required Dependencies';
+
+  @override
+  String get optionalDependencies => 'Optional Dependencies';
+
+  @override
+  String get noDependenciesRequired => 'No dependencies required';
+
+  @override
+  String get installRequiredDependencies => 'Install required dependencies';
+
+  @override
+  String installRequiredDependenciesTooltip(Object dependencies) {
+    return 'Will download:\n$dependencies';
+  }
 }

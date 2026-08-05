@@ -92,9 +92,9 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   void _showInstallDialog(BuildContext context, ContentItem item) async {
-    // Just push to the detail page with the ID.
+    // Use go instead of push to update the declarative base location
     if (context.mounted) {
-      context.push('${Routes.content}/${item.id}', extra: {
+      context.go('${Routes.content}/${item.id}', extra: {
         'item': item,
         'targetVersion': null,
       });
