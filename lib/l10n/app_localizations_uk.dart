@@ -504,4 +504,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get contentTypeShader => 'ШЕЙДЕР';
+
+  @override
+  String get minecraftVersions => 'Версії Minecraft';
 }

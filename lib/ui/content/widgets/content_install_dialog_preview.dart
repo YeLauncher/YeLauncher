@@ -46,6 +46,7 @@ Widget contentInstallDialogPreview() {
     projectId: 'mock_mod_id',
     name: '1.0.0',
     versionNumber: '1.0.0',
+    versionType: 'release',
     gameVersions: ['1.20.1'],
     loaders: ['fabric', 'forge'],
     files: [
@@ -120,6 +121,7 @@ Widget contentInstallDialogEmptyPreview() {
     projectId: 'mock_mod_id',
     name: '1.0.0',
     versionNumber: '1.0.0',
+    versionType: 'release',
     gameVersions: ['1.16.5'], // No compatible instances
     loaders: ['fabric'],
     files: [],

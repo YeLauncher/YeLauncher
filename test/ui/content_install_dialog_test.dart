@@ -132,6 +132,7 @@ void main() {
       projectId: projectId,
       name: 'Test Mod 2.0',
       versionNumber: '2.0',
+      versionType: 'release',
       gameVersions: ['1.20.1'],
       loaders: ['forge'],
       dependencies: [],

@@ -1033,6 +1033,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SHADER'**
   String get contentTypeShader;
+
+  /// No description provided for @minecraftVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'Minecraft Versions'**
+  String get minecraftVersions;
 }
 
 class _AppLocalizationsDelegate

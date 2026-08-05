@@ -211,5 +211,6 @@
   "contentTypeResourcepack": "RESOURCE PACK",
   "contentTypeDatapack": "DATA PACK",
   "contentTypeModpack": "MODPACK",
-  "contentTypeShader": "SHADER"
+  "contentTypeShader": "SHADER",
+  "minecraftVersions": "Minecraft Versions"
 }

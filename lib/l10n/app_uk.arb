@@ -211,5 +211,6 @@
   "contentTypeResourcepack": "ТЕКСТУРИ",
   "contentTypeDatapack": "ДАТАПАК",
   "contentTypeModpack": "МОДПАК",
-  "contentTypeShader": "ШЕЙДЕР"
+  "contentTypeShader": "ШЕЙДЕР",
+  "minecraftVersions": "Версії Minecraft"
 }

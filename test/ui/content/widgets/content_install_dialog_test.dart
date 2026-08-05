@@ -49,6 +49,7 @@ void main() {
     projectId: 'test_project',
     name: 'Test Version',
     versionNumber: '1.0.0',
+    versionType: 'release',
     gameVersions: ['1.20.1'],
     loaders: ['fabric'],
     files: [

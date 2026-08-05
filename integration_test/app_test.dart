@@ -112,6 +112,7 @@ void main() {
           projectId: 'fabric-api',
           name: 'Fabric API 0.14.21',
           versionNumber: '0.14.21',
+          versionType: 'release',
           gameVersions: ['1.20.1'],
           loaders: ['fabric'],
           files: [],

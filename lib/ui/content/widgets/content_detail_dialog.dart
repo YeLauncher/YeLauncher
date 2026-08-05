@@ -11,6 +11,8 @@ import 'package:yelauncher/ui/core/icon_button.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
+import 'package:yelauncher/ui/core/multi_select_dropdown.dart';
+import 'package:yelauncher/ui/core/checkbox.dart';
 
 class ContentDetailDialog extends StatefulWidget {
   final ContentDetailViewModel viewModel;
@@ -23,6 +25,8 @@ class ContentDetailDialog extends StatefulWidget {
 
 class _ContentDetailDialogState extends State<ContentDetailDialog> {
   int _selectedTabIndex = 0;
+  final List<String> _selectedGameVersions = [];
+  bool _showSnapshots = false;
 
   List<String> _getTabLabels(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -233,12 +237,58 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
         ),
       );
     }
-    return ListView.separated(
-      itemCount: vm.versions.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) {
-        final version = vm.versions[index];
-        return Container(
+    
+    final allGameVersions = vm.versions.expand((v) => v.gameVersions).toSet().toList()..sort((a, b) => b.compareTo(a));
+    var filteredVersions = _selectedGameVersions.isEmpty
+        ? vm.versions
+        : vm.versions.where((v) => v.gameVersions.any((gv) => _selectedGameVersions.contains(gv))).toList();
+        
+    if (!_showSnapshots) {
+      filteredVersions = filteredVersions.where((v) => v.versionType == 'release').toList();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: MultiSelectDropdown<String>(
+                values: _selectedGameVersions,
+                items: allGameVersions.map((v) => MultiSelectDropdownItem(value: v, label: v)).toList(),
+                onToggle: (val) {
+                  setState(() {
+                    if (_selectedGameVersions.contains(val)) {
+                      _selectedGameVersions.remove(val);
+                    } else {
+                      _selectedGameVersions.add(val);
+                    }
+                  });
+                },
+                emptyLabel: AppLocalizations.of(context)!.minecraftVersions,
+                iconData: Symbols.filter_alt_rounded,
+              ),
+            ),
+            const SizedBox(width: 16),
+            CoreCheckbox(
+              value: _showSnapshots,
+              onChanged: (val) {
+                setState(() {
+                  _showSnapshots = val ?? false;
+                });
+              },
+              label: AppLocalizations.of(context)!.showSnapshots,
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: ListView.separated(
+            itemCount: filteredVersions.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 8),
+            itemBuilder: (context, index) {
+              final version = filteredVersions[index];
+              return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: AppColors.dark.surfaceContainerHighest,
@@ -352,11 +402,14 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
                 },
                 iconData: Symbols.download_rounded,
               ),
-            ],
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
-        );
-      },
-    );
+        ],
+      );
   }
 
   void _showInstallDialog(BuildContext context, ContentVersion version) {

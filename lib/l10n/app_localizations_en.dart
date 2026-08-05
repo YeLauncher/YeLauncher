@@ -504,4 +504,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contentTypeShader => 'SHADER';
+
+  @override
+  String get minecraftVersions => 'Minecraft Versions';
 }
