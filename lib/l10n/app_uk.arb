@@ -212,5 +212,7 @@
   "contentTypeDatapack": "ДАТАПАК",
   "contentTypeModpack": "МОДПАК",
   "contentTypeShader": "ШЕЙДЕР",
-  "minecraftVersions": "Версії Minecraft"
+  "minecraftVersions": "Версії Minecraft",
+  "downloadProgress": "{downloaded} МБ / {total} МБ",
+  "downloadProgressUnknownTotal": "{downloaded} МБ"
 }

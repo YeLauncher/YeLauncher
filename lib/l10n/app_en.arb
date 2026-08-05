@@ -212,5 +212,18 @@
   "contentTypeDatapack": "DATA PACK",
   "contentTypeModpack": "MODPACK",
   "contentTypeShader": "SHADER",
-  "minecraftVersions": "Minecraft Versions"
+  "minecraftVersions": "Minecraft Versions",
+  "downloadProgress": "{downloaded} MB / {total} MB",
+  "@downloadProgress": {
+    "placeholders": {
+      "downloaded": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "downloadProgressUnknownTotal": "{downloaded} MB",
+  "@downloadProgressUnknownTotal": {
+    "placeholders": {
+      "downloaded": { "type": "String" }
+    }
+  }
 }

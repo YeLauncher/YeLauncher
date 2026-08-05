@@ -25,6 +25,7 @@ import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
+import 'package:yelauncher/ui/core/tooltip.dart';
 import 'package:logging/logging.dart';
 
 class ContentInstallDialog extends StatefulWidget {
@@ -45,6 +46,9 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
   InstanceModel? selectedInstance;
   bool isInstalling = false;
   String? errorMessage;
+  
+  int _currentDownloadedBytes = 0;
+  int? _currentTotalBytes;
   
   final _log = Logger('ContentInstallDialog');
   List<ResolvedDependency> resolvedDependencies = [];
@@ -315,6 +319,25 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              if (isInstalling) ...[
+                Tooltip(
+                  message: _currentTotalBytes != null && _currentTotalBytes! > 0
+                      ? AppLocalizations.of(context)!.downloadProgress(
+                          (_currentDownloadedBytes / 1048576).toStringAsFixed(2),
+                          (_currentTotalBytes! / 1048576).toStringAsFixed(2),
+                        )
+                      : AppLocalizations.of(context)!.downloadProgressUnknownTotal(
+                          (_currentDownloadedBytes / 1048576).toStringAsFixed(2),
+                        ),
+                  child: CircularProgressIndicator.primary(
+                    size: 24,
+                    value: _currentTotalBytes != null && _currentTotalBytes! > 0
+                        ? (_currentDownloadedBytes / _currentTotalBytes!).clamp(0.0, 1.0)
+                        : null,
+                  ),
+                ),
+                const SizedBox(width: 16),
+              ],
               Button.secondary(
                 AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.of(context).pop(),
@@ -384,6 +407,14 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
 
         await downloadService.downloadIfMissing(
           DownloadModel(url: url, path: relativePath, sha1: ''),
+          onProgress: (downloaded, total) {
+            if (mounted) {
+              setState(() {
+                _currentDownloadedBytes = downloaded;
+                _currentTotalBytes = total;
+              });
+            }
+          },
         );
 
         // Remove existing installed content if present
@@ -443,6 +474,8 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
       if (mounted) {
         setState(() {
           isInstalling = false;
+          _currentDownloadedBytes = 0;
+          _currentTotalBytes = null;
         });
       }
     }

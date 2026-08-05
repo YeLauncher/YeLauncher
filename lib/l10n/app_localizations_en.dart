@@ -507,4 +507,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get minecraftVersions => 'Minecraft Versions';
+
+  @override
+  String downloadProgress(String downloaded, String total) {
+    return '$downloaded MB / $total MB';
+  }
+
+  @override
+  String downloadProgressUnknownTotal(String downloaded) {
+    return '$downloaded MB';
+  }
 }

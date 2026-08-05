@@ -1039,6 +1039,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Minecraft Versions'**
   String get minecraftVersions;
+
+  /// No description provided for @downloadProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{downloaded} MB / {total} MB'**
+  String downloadProgress(String downloaded, String total);
+
+  /// No description provided for @downloadProgressUnknownTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{downloaded} MB'**
+  String downloadProgressUnknownTotal(String downloaded);
 }
 
 class _AppLocalizationsDelegate
