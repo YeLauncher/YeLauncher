@@ -88,13 +88,13 @@ class Card extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: AppText.defaultTheme.titleSmall.copyWith(
+                      style: AppText.defaultTheme.titleLarge.copyWith(
                         color: AppColors.dark.onSurface,
                       ),
                     ),
                     Text(
                       subtitle ?? "",
-                      style: AppText.defaultTheme.caption.copyWith(
+                      style: AppText.defaultTheme.labelSmall.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
                     ),
@@ -107,7 +107,7 @@ class Card extends StatelessWidget {
           // Description Text
           Text(
             description,
-            style: AppText.defaultTheme.bodySmall.copyWith(
+            style: AppText.defaultTheme.bodyMedium.copyWith(
               color: AppColors.dark.onSurface,
             ),
             maxLines: 5,

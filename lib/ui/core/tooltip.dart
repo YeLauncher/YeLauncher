@@ -586,7 +586,7 @@ class Tooltip extends StatelessWidget {
               ],
             ),
             child: DefaultTextStyle(
-              style: AppText.defaultTheme.caption.copyWith(
+              style: AppText.defaultTheme.labelSmall.copyWith(
                 color: AppColors.dark.inverseOnSurface,
               ),
               child: Text(

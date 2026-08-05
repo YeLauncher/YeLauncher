@@ -347,7 +347,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                 Expanded(
                   child: Text(
                     widget.instance.name,
-                    style: AppText.defaultTheme.titleSmall.copyWith(
+                    style: AppText.defaultTheme.headlineMedium.copyWith(
                       color: AppColors.dark.onSurface,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -457,7 +457,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                               ),
                               Text(
                                 'x',
-                                style: AppText.defaultTheme.titleSmall.copyWith(
+                                style: AppText.defaultTheme.titleLarge.copyWith(
                                   color: AppColors.dark.onSurfaceVariant,
                                 ),
                               ),
@@ -479,7 +479,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                                 l10n.inheritsGlobalSettingDesc(
                                   '${settingsRepo.windowWidth}x${settingsRepo.windowHeight}',
                                 ),
-                                style: AppText.defaultTheme.caption.copyWith(
+                                style: AppText.defaultTheme.labelSmall.copyWith(
                                   color: AppColors.dark.onSurfaceVariant
                                       .withValues(alpha: 0.7),
                                 ),
@@ -567,13 +567,13 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
         backgroundColor: AppColors.dark.surfaceContainerHigh,
         title: Text(
           AppLocalizations.of(context)!.deleteInstanceTitle,
-          style: AppText.defaultTheme.titleSmall.copyWith(
+          style: AppText.defaultTheme.headlineMedium.copyWith(
             color: AppColors.dark.onSurface,
           ),
         ),
         content: Text(
           AppLocalizations.of(context)!.deleteInstanceContent,
-          style: AppText.defaultTheme.body.copyWith(
+          style: AppText.defaultTheme.bodyLarge.copyWith(
             color: AppColors.dark.onSurfaceVariant,
           ),
         ),
@@ -617,14 +617,14 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
             children: [
               Text(
                 title,
-                style: AppText.defaultTheme.labelLarge.copyWith(
+                style: AppText.defaultTheme.titleMedium.copyWith(
                   color: AppColors.dark.onSurface,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 description,
-                style: AppText.defaultTheme.bodySmall.copyWith(
+                style: AppText.defaultTheme.bodyMedium.copyWith(
                   color: AppColors.dark.onSurfaceVariant,
                   height: 1.5,
                 ),
@@ -663,7 +663,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: AppText.defaultTheme.titleSmall.copyWith(
+                  style: AppText.defaultTheme.headlineSmall.copyWith(
                     color: AppColors.dark.onSurface,
                   ),
                 ),
@@ -703,7 +703,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
             l10n.inheritsGlobalSettingDesc(
               '${settingsRepo.javaMemory} ${l10n.settingsMB}',
             ),
-            style: AppText.defaultTheme.bodySmall.copyWith(
+            style: AppText.defaultTheme.bodyMedium.copyWith(
               color: AppColors.dark.onSurfaceVariant.withValues(alpha: 0.7),
             ),
           ),
@@ -719,7 +719,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
               },
               child: Text(
                 l10n.overrideGlobalSetting,
-                style: AppText.defaultTheme.labelLarge.copyWith(
+                style: AppText.defaultTheme.titleMedium.copyWith(
                   color: AppColors.dark.primary,
                 ),
               ),
@@ -756,7 +756,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
             },
             child: Text(
               l10n.useGlobalSetting,
-              style: AppText.defaultTheme.labelLarge.copyWith(
+              style: AppText.defaultTheme.titleMedium.copyWith(
                 color: AppColors.dark.secondary,
               ),
             ),
@@ -788,7 +788,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
             ),
             Text(
               AppLocalizations.of(context)!.contentMissing,
-              style: AppText.defaultTheme.titleSmall.copyWith(
+              style: AppText.defaultTheme.headlineMedium.copyWith(
                 color: AppColors.dark.onSurfaceVariant,
               ),
             ),
@@ -893,7 +893,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
                         ? Center(
                             child: Text(
                               AppLocalizations.of(context)!.noResultsFound,
-                              style: AppText.defaultTheme.titleSmall.copyWith(
+                              style: AppText.defaultTheme.headlineMedium.copyWith(
                                 color: AppColors.dark.onSurfaceVariant,
                               ),
                             ),

@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: [
                     Text(
                       statusMessage,
-                      style: AppText.defaultTheme.titleSmall.copyWith(
+                      style: AppText.defaultTheme.titleLarge.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
                     ),

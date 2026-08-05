@@ -7,19 +7,34 @@ import 'package:yelauncher/domain/models/instance/instance_model.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:logging/logging.dart';
 
+import 'package:yelauncher/routing/breadcrumb_service.dart';
+
 class ContentDetailViewModel extends ChangeNotifier {
   final _log = Logger('ContentDetailViewModel');
   final ContentRepository _contentRepository;
   final InstanceRepository _instanceRepository;
-  final ContentItem item;
+  final BreadcrumbService _breadcrumbService;
+  
+  final String id;
+  ContentItem? _item;
   ContentItem? fullItem;
 
+  ContentItem get item => _item ?? ContentItem(id: id, slug: id, title: 'Loading...', description: '', projectType: 'mod');
+
   ContentDetailViewModel({
-    required this.item,
+    required this.id,
+    ContentItem? initialItem,
     required ContentRepository contentRepository,
     required InstanceRepository instanceRepository,
+    required BreadcrumbService breadcrumbService,
   })  : _contentRepository = contentRepository,
-        _instanceRepository = instanceRepository;
+        _instanceRepository = instanceRepository,
+        _breadcrumbService = breadcrumbService,
+        _item = initialItem {
+    if (_item != null) {
+      _breadcrumbService.registerTitle(id, _item!.title);
+    }
+  }
 
   bool isLoading = true;
   List<ContentVersion> versions = [];
@@ -27,21 +42,20 @@ class ContentDetailViewModel extends ChangeNotifier {
   List<ContentItem> dependencies = [];
 
   Future<void> loadDetails() async {
-    isLoading = true;
-    notifyListeners();
-
     // Fetch full project details to get gallery, downloads, etc.
-    final itemResult = await _contentRepository.getContent(item.id);
+    final itemResult = await _contentRepository.getContent(id);
     if (itemResult is Success<ContentItem>) {
       fullItem = itemResult.value;
+      _item ??= fullItem;
+      _breadcrumbService.registerTitle(id, fullItem!.title);
     }
 
-    final result = await _contentRepository.getVersions(item.id);
+    final result = await _contentRepository.getVersions(id);
     if (result is Success<List<ContentVersion>>) {
       versions = result.value;
     }
     
-    final depsResult = await _contentRepository.getProjectDependencies(item.id);
+    final depsResult = await _contentRepository.getProjectDependencies(id);
     if (depsResult is Success<List<ContentItem>>) {
       dependencies = depsResult.value;
     }

@@ -64,7 +64,7 @@ class _CoreCheckboxState extends State<CoreCheckbox> {
             const SizedBox(width: 8),
             Text(
               widget.label,
-              style: AppText.defaultTheme.label.copyWith(
+              style: AppText.defaultTheme.labelLarge.copyWith(
                 color: widget.value ? AppColors.dark.onSurface : AppColors.dark.onSurfaceVariant,
               ),
             ),

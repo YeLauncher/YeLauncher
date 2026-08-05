@@ -52,13 +52,13 @@ class _InstanceCardState extends State<InstanceCard> {
             backgroundColor: AppColors.dark.surfaceContainerHigh,
             title: Text(
               AppLocalizations.of(context)!.authenticationRequiredTitle,
-              style: AppText.defaultTheme.titleSmall.copyWith(
+              style: AppText.defaultTheme.titleLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
             content: Text(
               AppLocalizations.of(context)!.authenticationRequiredDescription,
-              style: AppText.defaultTheme.body.copyWith(
+              style: AppText.defaultTheme.bodyLarge.copyWith(
                 color: AppColors.dark.onSurfaceVariant,
               ),
             ),
@@ -84,13 +84,13 @@ class _InstanceCardState extends State<InstanceCard> {
             backgroundColor: AppColors.dark.surfaceContainerHigh,
             title: Text(
               'Error',
-              style: AppText.defaultTheme.titleSmall.copyWith(
+              style: AppText.defaultTheme.titleLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
             content: Text(
               AppLocalizations.of(context)!.errorWithParam(errorStr),
-              style: AppText.defaultTheme.body.copyWith(
+              style: AppText.defaultTheme.bodyLarge.copyWith(
                 color: AppColors.dark.onSurfaceVariant,
               ),
             ),
@@ -318,14 +318,14 @@ class _InstanceCardState extends State<InstanceCard> {
                   const SizedBox(height: 8),
                   Text(
                     widget.viewModel.instance.name,
-                    style: AppText.defaultTheme.titleLarge.copyWith(
+                    style: AppText.defaultTheme.headlineLarge.copyWith(
                       color: AppColors.dark.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     "${widget.viewModel.instance.minecraftVersion} • ${widget.viewModel.instance.modLoaderVersion}",
-                    style: AppText.defaultTheme.body.copyWith(
+                    style: AppText.defaultTheme.bodyLarge.copyWith(
                       color: AppColors.dark.onSurfaceVariant,
                     ),
                   ),
@@ -401,7 +401,7 @@ class _InstanceCardState extends State<InstanceCard> {
                     const Spacer(),
                     Text(
                       widget.viewModel.instance.name,
-                      style: AppText.defaultTheme.titleSmall.copyWith(
+                      style: AppText.defaultTheme.titleLarge.copyWith(
                         color: AppColors.dark.onSurface,
                       ),
                       maxLines: 1,
@@ -410,7 +410,7 @@ class _InstanceCardState extends State<InstanceCard> {
                     const SizedBox(height: 4),
                     Text(
                       widget.viewModel.instance.minecraftVersion,
-                      style: AppText.defaultTheme.bodySmall.copyWith(
+                      style: AppText.defaultTheme.bodyMedium.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
                     ),

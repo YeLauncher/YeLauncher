@@ -28,9 +28,11 @@ import 'package:yelauncher/data/services/minecraft_service.dart';
 import 'package:yelauncher/data/services/update_service.dart';
 import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
+import 'package:yelauncher/routing/breadcrumb_service.dart';
 
 List<SingleChildWidget> get _sharedProviders {
   return [
+    ChangeNotifierProvider(create: (_) => BreadcrumbService()),
     Provider(create: (_) => InstanceStylingRepository()),
     Provider(create: (_) => FileService()),
     Provider(create: (_) => MinecraftService()),

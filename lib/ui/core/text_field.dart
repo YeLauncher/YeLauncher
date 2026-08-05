@@ -112,7 +112,7 @@ class _TextFieldState extends State<TextField>
                               }
                               return Text(
                                 widget.hintText ?? widget.labelText!,
-                                style: AppText.defaultTheme.bodySmall.copyWith(
+                                style: AppText.defaultTheme.bodyMedium.copyWith(
                                   color: AppColors.dark.onSurfaceVariant.withValues(alpha: widget.hintText != null ? 0.5 : 1.0),
                                 ),
                               );
@@ -125,7 +125,7 @@ class _TextFieldState extends State<TextField>
                           rendererIgnoresPointer: true,
                           controller: widget.controller,
                           focusNode: _focusNode,
-                          style: AppText.defaultTheme.bodySmall.copyWith(
+                          style: AppText.defaultTheme.bodyMedium.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
                           cursorColor: _cursorColor,
@@ -186,7 +186,7 @@ class _TextFieldState extends State<TextField>
             padding: EdgeInsetsGeometry.only(left: 4),
             child: Text(
               widget.errorText!,
-              style: AppText.defaultTheme.caption.copyWith(
+              style: AppText.defaultTheme.labelSmall.copyWith(
                 color: AppColors.dark.error,
               ),
             ),

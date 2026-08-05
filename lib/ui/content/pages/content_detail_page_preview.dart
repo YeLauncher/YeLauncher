@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:provider/provider.dart';
+import 'package:yelauncher/routing/breadcrumb_service.dart';
 import 'package:yelauncher/ui/content/pages/content_detail_page.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/domain/models/content/content_item.dart';
@@ -59,7 +60,9 @@ Widget contentInstallDialogPreview() {
   );
 
   final viewModel = ContentDetailViewModel(
-    item: item,
+    id: item.id,
+    initialItem: item,
+    breadcrumbService: BreadcrumbService(),
     contentRepository: _FakeContentRepo(),
     instanceRepository: _FakeInstanceRepo(),
   );
@@ -128,7 +131,9 @@ Widget contentInstallDialogEmptyPreview() {
   );
 
   final viewModel = ContentDetailViewModel(
-    item: item,
+    id: item.id,
+    initialItem: item,
+    breadcrumbService: BreadcrumbService(),
     contentRepository: _FakeContentRepo(),
     instanceRepository: _FakeInstanceRepo(),
   );

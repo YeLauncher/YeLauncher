@@ -5,5 +5,4 @@ abstract final class Routes {
   static const String instances = '/instances';
   static const String content = '/content';
   static const String settings = '/settings';
-  static const String contentDetail = '/content-detail';
 }

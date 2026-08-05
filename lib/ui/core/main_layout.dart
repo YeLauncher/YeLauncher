@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/navigation_button.dart';
+import 'package:yelauncher/ui/core/custom_title_bar.dart';
 
 class MainLayout extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -13,42 +14,49 @@ class MainLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.dark.surface,
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-            color: AppColors.dark.surfaceContainerLow,
-            child: Column(
-              spacing: 8,
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
+          const CustomTitleBar(),
+          Expanded(
+            child: Row(
               children: [
-                NavigationButton.primary(
-                  key: const ValueKey('nav_instances'),
-                  iconData: Symbols.sports_esports_rounded,
-                  isSelected: navigationShell.currentIndex == 0,
-                  onPressed: () => navigationShell.goBranch(0),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                  color: AppColors.dark.surfaceContainerLow,
+                  child: Column(
+                    spacing: 8,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      NavigationButton.primary(
+                        key: const ValueKey('nav_instances'),
+                        iconData: Symbols.sports_esports_rounded,
+                        isSelected: navigationShell.currentIndex == 0,
+                        onPressed: () => navigationShell.goBranch(0),
+                      ),
+                      NavigationButton.primary(
+                        key: const ValueKey('nav_content'),
+                        iconData: Symbols.extension_rounded,
+                        isSelected: navigationShell.currentIndex == 1,
+                        onPressed: () => navigationShell.goBranch(1),
+                      ),
+                      NavigationButton.primary(
+                        iconData: Symbols.person_rounded,
+                        isSelected: navigationShell.currentIndex == 2,
+                        onPressed: () => navigationShell.goBranch(2),
+                      ),
+                      NavigationButton.primary(
+                        iconData: Symbols.settings_rounded,
+                        isSelected: navigationShell.currentIndex == 3,
+                        onPressed: () => navigationShell.goBranch(3),
+                      ),
+                    ],
+                  ),
                 ),
-                NavigationButton.primary(
-                  key: const ValueKey('nav_content'),
-                  iconData: Symbols.extension_rounded,
-                  isSelected: navigationShell.currentIndex == 1,
-                  onPressed: () => navigationShell.goBranch(1),
-                ),
-                NavigationButton.primary(
-                  iconData: Symbols.person_rounded,
-                  isSelected: navigationShell.currentIndex == 2,
-                  onPressed: () => navigationShell.goBranch(2),
-                ),
-                NavigationButton.primary(
-                  iconData: Symbols.settings_rounded,
-                  isSelected: navigationShell.currentIndex == 3,
-                  onPressed: () => navigationShell.goBranch(3),
-                ),
+                Expanded(child: navigationShell),
               ],
             ),
           ),
-          Expanded(child: navigationShell),
         ],
       ),
     );

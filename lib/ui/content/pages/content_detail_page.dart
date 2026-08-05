@@ -475,7 +475,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
           const SizedBox(width: 16),
           Text(
             AppLocalizations.of(context)!.installButton,
-            style: AppText.defaultTheme.titleLarge.copyWith(
+            style: AppText.defaultTheme.headlineMedium.copyWith(
               color: AppColors.dark.onSurface,
             ),
           ),
@@ -558,7 +558,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                   children: [
                     Text(
                       widget.viewModel.item.title,
-                      style: AppText.defaultTheme.titleLarge.copyWith(
+                      style: AppText.defaultTheme.headlineLarge.copyWith(
                         color: AppColors.dark.onSurface,
                         fontWeight: FontWeight.w700,
                       ),
@@ -706,31 +706,31 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
           MarkdownBody(
             data: item.body ?? item.description,
             styleSheet: MarkdownStyleSheet(
-              p: AppText.defaultTheme.body.copyWith(
+              p: AppText.defaultTheme.bodyLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
-              h1: AppText.defaultTheme.titleLarge.copyWith(
+              h1: AppText.defaultTheme.headlineLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
-              h2: AppText.defaultTheme.title.copyWith(
+              h2: AppText.defaultTheme.headlineMedium.copyWith(
                 color: AppColors.dark.onSurface,
               ),
-              h3: AppText.defaultTheme.titleSmall.copyWith(
+              h3: AppText.defaultTheme.titleLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
-              h4: AppText.defaultTheme.labelLarge.copyWith(
+              h4: AppText.defaultTheme.titleMedium.copyWith(
                 color: AppColors.dark.onSurface,
               ),
-              h5: AppText.defaultTheme.label.copyWith(
+              h5: AppText.defaultTheme.labelLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
-              h6: AppText.defaultTheme.caption.copyWith(
+              h6: AppText.defaultTheme.labelSmall.copyWith(
                 color: AppColors.dark.onSurfaceVariant,
               ),
-              listBullet: AppText.defaultTheme.body.copyWith(
+              listBullet: AppText.defaultTheme.bodyLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
-              a: AppText.defaultTheme.body.copyWith(
+              a: AppText.defaultTheme.bodyLarge.copyWith(
                 color: AppColors.dark.primaryContainer,
               ),
             ),
@@ -875,9 +875,9 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                 iconData: Symbols.close_rounded,
                 onPressed: () {
                   context.replace(
-                    Routes.contentDetail,
+                    '${Routes.content}/${widget.viewModel.item.id}',
                     extra: {
-                      'viewModel': widget.viewModel,
+                      'item': widget.viewModel.item,
                       'targetVersion': null,
                     },
                   );
@@ -913,9 +913,9 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                 ],
                 onTap: () {
                   context.replace(
-                    Routes.contentDetail,
+                    '${Routes.content}/${widget.viewModel.item.id}',
                     extra: {
-                      'viewModel': widget.viewModel,
+                      'item': widget.viewModel.item,
                       'targetVersion': isSelected ? null : version,
                     },
                   );
@@ -951,7 +951,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
       return Center(
         child: Text(
           'No dependencies required',
-          style: AppText.defaultTheme.body.copyWith(
+          style: AppText.defaultTheme.bodyLarge.copyWith(
             color: AppColors.dark.onSurfaceVariant,
           ),
         ),
@@ -990,14 +990,14 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                   children: [
                     Text(
                       dep.title,
-                      style: AppText.defaultTheme.titleSmall.copyWith(
+                      style: AppText.defaultTheme.titleLarge.copyWith(
                         color: AppColors.dark.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       dep.projectType,
-                      style: AppText.defaultTheme.bodySmall.copyWith(
+                      style: AppText.defaultTheme.bodyMedium.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
                     ),
@@ -1032,14 +1032,14 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
               children: [
                 Text(
                   AppLocalizations.of(context)!.selectInstance,
-                  style: AppText.defaultTheme.titleLarge.copyWith(
+                  style: AppText.defaultTheme.headlineMedium.copyWith(
                     color: AppColors.dark.onSurface,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   AppLocalizations.of(context)!.selectInstanceSubtitle,
-                  style: AppText.defaultTheme.body.copyWith(
+                  style: AppText.defaultTheme.bodyLarge.copyWith(
                     color: AppColors.dark.onSurfaceVariant,
                   ),
                 ),
@@ -1075,7 +1075,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                 ? Center(
                     child: Text(
                       AppLocalizations.of(context)!.noCompatibleInstances,
-                      style: AppText.defaultTheme.body.copyWith(
+                      style: AppText.defaultTheme.bodyLarge.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
                     ),
@@ -1135,7 +1135,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                 if (errorMessage != null) ...[
                   Text(
                     errorMessage!,
-                    style: AppText.defaultTheme.body.copyWith(
+                    style: AppText.defaultTheme.bodyLarge.copyWith(
                       color: AppColors.dark.error,
                     ),
                   ),

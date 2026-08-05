@@ -13,6 +13,7 @@ import 'package:yelauncher/domain/models/content/content_version.dart';
 import 'package:yelauncher/domain/models/instance/installed_content_model.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
+import 'package:yelauncher/routing/breadcrumb_service.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/ui/content/pages/content_detail_page.dart';
 import 'package:yelauncher/utilities/result.dart';
@@ -159,11 +160,16 @@ void main() {
     );
 
     final viewModel = ContentDetailViewModel(
-      item: item,
+      id: item.id,
+      initialItem: item,
+      breadcrumbService: BreadcrumbService(),
       contentRepository: mockContentRepository,
       instanceRepository: mockInstanceRepository,
     );
     viewModel.instances = [existingInstance];
+    viewModel.isLoading = false;
+    viewModel.fullItem = item;
+    viewModel.versions = [newVersion];
 
     tester.view.physicalSize = const Size(1200, 800);
     tester.view.devicePixelRatio = 1.0;

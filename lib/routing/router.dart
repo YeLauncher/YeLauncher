@@ -17,6 +17,7 @@ import 'package:yelauncher/ui/splash/widgets/splash_screen.dart';
 import 'package:yelauncher/domain/models/content/content_version.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/ui/content/pages/content_detail_page.dart';
+import 'package:yelauncher/domain/models/content/content_item.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -35,25 +36,6 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
         return SplashScreen(viewModel: viewModel);
       },
     ),
-    GoRoute(
-      path: Routes.contentDetail,
-      pageBuilder: (context, state) {
-        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
-        return CustomTransitionPage(
-          key: state.pageKey,
-          child: ContentDetailPage(
-            viewModel: extra['viewModel'] as ContentDetailViewModel,
-            targetVersion: extra['targetVersion'] as ContentVersion?,
-          ),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
-              child: child,
-            );
-          },
-        );
-      },
-    ),
     // Login route removed
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -65,10 +47,14 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
             GoRoute(
               path: Routes.instances,
               builder: (context, state) {
-                final viewModel = InstanceScreenViewModel(
-                  instanceRepository: context.read(),
+                return ChangeNotifierProvider(
+                  create: (context) => InstanceScreenViewModel(
+                    instanceRepository: context.read(),
+                  ),
+                  child: Consumer<InstanceScreenViewModel>(
+                    builder: (context, viewModel, _) => InstancesScreen(viewModel: viewModel),
+                  ),
                 );
-                return InstancesScreen(viewModel: viewModel);
               },
             ),
           ],
@@ -78,12 +64,52 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
             GoRoute(
               path: Routes.content,
               builder: (context, state) {
-                final viewModel = ContentScreenViewModel(
-                  contentRepository: context.read(),
-                  minecraftRepository: context.read(),
+                return ChangeNotifierProvider(
+                  create: (context) => ContentScreenViewModel(
+                    contentRepository: context.read(),
+                    minecraftRepository: context.read(),
+                  ),
+                  child: Consumer<ContentScreenViewModel>(
+                    builder: (context, viewModel, _) => ContentScreen(viewModel: viewModel),
+                  ),
                 );
-                return ContentScreen(viewModel: viewModel);
               },
+              routes: [
+                GoRoute(
+                  path: ':id',
+                  pageBuilder: (context, state) {
+                    final id = state.pathParameters['id']!;
+                    final extra = state.extra as Map<String, dynamic>?;
+                    final item = extra?['item'] as ContentItem?;
+                    final targetVersion = extra?['targetVersion'] as ContentVersion?;
+
+                    return CustomTransitionPage(
+                      key: state.pageKey,
+                      child: ChangeNotifierProvider(
+                        create: (context) => ContentDetailViewModel(
+                          id: id,
+                          initialItem: item,
+                          contentRepository: context.read(),
+                          instanceRepository: context.read(),
+                          breadcrumbService: context.read(),
+                        )..loadDetails(),
+                        child: Consumer<ContentDetailViewModel>(
+                          builder: (context, viewModel, _) => ContentDetailPage(
+                            viewModel: viewModel,
+                            targetVersion: targetVersion,
+                          ),
+                        ),
+                      ),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(
+                          opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+                          child: child,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -92,10 +118,14 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
             GoRoute(
               path: Routes.profiles,
               builder: (context, state) {
-                final viewModel = ProfilesViewModel(
-                  minecraftRepository: context.read(),
+                return ChangeNotifierProvider(
+                  create: (context) => ProfilesViewModel(
+                    minecraftRepository: context.read(),
+                  ),
+                  child: Consumer<ProfilesViewModel>(
+                    builder: (context, viewModel, _) => ProfilesScreen(viewModel: viewModel),
+                  ),
                 );
-                return ProfilesScreen(viewModel: viewModel);
               },
             ),
           ],
@@ -105,11 +135,15 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
             GoRoute(
               path: Routes.settings,
               builder: (context, state) {
-                final viewModel = SettingsViewModel(
-                  settingsRepository: context.read(),
-                  minecraftRepository: context.read(),
+                return ChangeNotifierProvider(
+                  create: (context) => SettingsViewModel(
+                    settingsRepository: context.read(),
+                    minecraftRepository: context.read(),
+                  ),
+                  child: Consumer<SettingsViewModel>(
+                    builder: (context, viewModel, _) => SettingsScreen(viewModel: viewModel),
+                  ),
                 );
-                return SettingsScreen(viewModel: viewModel);
               },
             ),
           ],

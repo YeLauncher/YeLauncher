@@ -1,9 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:yelauncher/data/repositories/content/content_repository.dart';
-import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
-import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/ui/content/view_models/content_screen_viewmodel.dart';
 import 'package:yelauncher/ui/content/widgets/content_filter_bar.dart';
 import 'package:yelauncher/ui/content/widgets/content_card.dart';
@@ -66,7 +63,11 @@ class _ContentScreenState extends State<ContentScreen> {
     });
 
     _scrollController.addListener(_onScroll);
-    widget.viewModel.search();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        widget.viewModel.search();
+      }
+    });
   }
 
   @override
@@ -91,16 +92,10 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   void _showInstallDialog(BuildContext context, ContentItem item) async {
-    final viewModel = ContentDetailViewModel(
-      item: item,
-      contentRepository: context.read<ContentRepository>(),
-      instanceRepository: context.read<InstanceRepository>(),
-    );
-
-    // Just push to the detail page.
+    // Just push to the detail page with the ID.
     if (context.mounted) {
-      context.push(Routes.contentDetail, extra: {
-        'viewModel': viewModel,
+      context.push('${Routes.content}/${item.id}', extra: {
+        'item': item,
         'targetVersion': null,
       });
     }
@@ -118,7 +113,7 @@ class _ContentScreenState extends State<ContentScreen> {
           children: [
             Text(
               AppLocalizations.of(context)!.contentTab,
-              style: AppText.defaultTheme.titleLarge.copyWith(
+              style: AppText.defaultTheme.headlineLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
@@ -150,7 +145,7 @@ class _ContentScreenState extends State<ContentScreen> {
                     ),
                     child: Text(
                       _getTabLabels(context)[index],
-                      style: AppText.defaultTheme.label.copyWith(
+                      style: AppText.defaultTheme.labelLarge.copyWith(
                         color: isSelected
                             ? AppColors.dark.onPrimaryContainer
                             : AppColors.dark.onSurfaceVariant,
@@ -175,7 +170,7 @@ class _ContentScreenState extends State<ContentScreen> {
                     return Center(
                       child: Text(
                         AppLocalizations.of(context)!.nothingFound,
-                        style: AppText.defaultTheme.body.copyWith(
+                        style: AppText.defaultTheme.bodyLarge.copyWith(
                           color: AppColors.dark.onSurfaceVariant,
                         ),
                       ),

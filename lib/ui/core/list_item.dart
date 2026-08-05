@@ -74,7 +74,9 @@ class _ListItemState extends State<ListItem> {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      cursor: widget.onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      cursor: widget.onTap != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
       child: GestureDetector(
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
@@ -83,10 +85,11 @@ class _ListItemState extends State<ListItem> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           decoration: BoxDecoration(
             color: widget.isSelected
-                ? (widget.selectedBackgroundColor ?? widget.selectedColor.withValues(alpha: 0.1))
+                ? (widget.selectedBackgroundColor ??
+                      widget.selectedColor.withValues(alpha: 0.1))
                 : _isHovered
-                    ? AppColors.dark.surfaceContainerHighest
-                    : AppColors.dark.surfaceContainerHigh,
+                ? AppColors.dark.surfaceContainerHighest
+                : AppColors.dark.surfaceContainerHigh,
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             border: Border.all(
               width: 1.5,
@@ -113,7 +116,7 @@ class _ListItemState extends State<ListItem> {
                     Text(
                       widget.title,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.defaultTheme.title.copyWith(
+                      style: AppText.defaultTheme.labelLarge.copyWith(
                         color: widget.isSelected
                             ? widget.selectedColor
                             : AppColors.dark.onSurface,
@@ -123,27 +126,29 @@ class _ListItemState extends State<ListItem> {
                       Text(
                         widget.subtitle!,
                         overflow: TextOverflow.ellipsis,
-                        style: AppText.defaultTheme.bodySmall.copyWith(
+                        style: AppText.defaultTheme.labelSmall.copyWith(
                           color: AppColors.dark.onSurfaceVariant,
                         ),
                       ),
                     if (widget.tags != null && widget.tags!.isNotEmpty)
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: widget.tags!,
-                      ),
+                      Wrap(spacing: 8, runSpacing: 8, children: widget.tags!),
                   ],
                 ),
               ),
               const SizedBox(width: 16),
               if (widget.chip != null) ...[
                 widget.chip!,
-                if (widget.trailingWidget != null || (widget.trailingIcon != null && widget.isSelected))
+                if (widget.trailingWidget != null ||
+                    (widget.trailingIcon != null && widget.isSelected))
                   const SizedBox(width: 16),
               ],
               if (widget.trailingIcon != null && widget.isSelected) ...[
-                Icon(widget.trailingIcon, size: 24, color: widget.selectedColor, weight: 600),
+                Icon(
+                  widget.trailingIcon,
+                  size: 24,
+                  color: widget.selectedColor,
+                  weight: 600,
+                ),
                 if (widget.trailingWidget != null) const SizedBox(width: 16),
               ],
               if (widget.trailingWidget != null) widget.trailingWidget!,
@@ -154,7 +159,6 @@ class _ListItemState extends State<ListItem> {
     );
   }
 }
-
 
 // 1. Default Unselected
 @Preview(name: "Primary - Unselected")

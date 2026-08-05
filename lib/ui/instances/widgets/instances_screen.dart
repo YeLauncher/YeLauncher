@@ -78,31 +78,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              spacing: 16,
-                              children: [
-                                Icon(
-                                  Symbols.sports_esports_rounded,
-                                  size: 40,
-                                  weight: 700,
-                                  color: AppColors.dark.primary,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)!.instancesTab,
-                                  style: AppText.defaultTheme.titleLarge
-                                      .copyWith(
-                                        color: AppColors.dark.onSurface,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.instancesSubtitle,
-                              style: AppText.defaultTheme.body.copyWith(
-                                color: AppColors.dark.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
+
                             widget.viewModel.isSelectionMode
                                 ? Row(
                                     children: [
@@ -110,7 +86,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                         AppLocalizations.of(context)!.selectedCount(
                                           widget.viewModel.selectedInstanceIds.length,
                                         ),
-                                        style: AppText.defaultTheme.label.copyWith(
+                                        style: AppText.defaultTheme.titleMedium.copyWith(
                                           color: AppColors.dark.onSurface,
                                         ),
                                       ),
@@ -226,7 +202,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                     AppLocalizations.of(
                                       context,
                                     )!.noInstancesTitle,
-                                    style: AppText.defaultTheme.titleSmall
+                                    style: AppText.defaultTheme.headlineSmall
                                         .copyWith(
                                           color: AppColors.dark.onSurface,
                                         ),
@@ -235,7 +211,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                     AppLocalizations.of(
                                       context,
                                     )!.noInstancesSubtitle,
-                                    style: AppText.defaultTheme.bodySmall
+                                    style: AppText.defaultTheme.bodyLarge
                                         .copyWith(
                                           color:
                                               AppColors.dark.onSurfaceVariant,
@@ -427,13 +403,13 @@ class _InstancesScreenState extends State<InstancesScreen> {
           backgroundColor: AppColors.dark.surfaceContainerHigh,
           title: Text(
             AppLocalizations.of(context)!.deleteInstanceTitle,
-            style: AppText.defaultTheme.titleSmall.copyWith(
+            style: AppText.defaultTheme.headlineSmall.copyWith(
               color: AppColors.dark.onSurface,
             ),
           ),
           content: Text(
             AppLocalizations.of(context)!.deleteInstanceContent,
-            style: AppText.defaultTheme.body.copyWith(
+            style: AppText.defaultTheme.bodyLarge.copyWith(
               color: AppColors.dark.onSurfaceVariant,
             ),
           ),

@@ -150,7 +150,7 @@ class _ContentCardState extends State<ContentCard> {
                       children: [
                         Text(
                           widget.item.title,
-                          style: AppText.defaultTheme.titleSmall.copyWith(
+                          style: AppText.defaultTheme.titleLarge.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
                           maxLines: 2,
@@ -167,7 +167,7 @@ class _ContentCardState extends State<ContentCard> {
                                   widget.item.teamId ??
                                   '',
                             ),
-                            style: AppText.defaultTheme.caption.copyWith(
+                            style: AppText.defaultTheme.labelSmall.copyWith(
                               color: AppColors.dark.onSurfaceVariant,
                             ),
                             maxLines: 1,
@@ -184,7 +184,7 @@ class _ContentCardState extends State<ContentCard> {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
                   widget.item.description,
-                  style: AppText.defaultTheme.bodySmall.copyWith(
+                  style: AppText.defaultTheme.bodyMedium.copyWith(
                     color: AppColors.dark.onSurfaceVariant,
                   ),
                   maxLines: 4,
@@ -209,7 +209,7 @@ class _ContentCardState extends State<ContentCard> {
                       ),
                       Text(
                         _formatDownloads(widget.item.downloads),
-                        style: AppText.defaultTheme.label.copyWith(
+                        style: AppText.defaultTheme.labelLarge.copyWith(
                           color: AppColors.dark.onSurfaceVariant,
                         ),
                       ),
@@ -227,7 +227,7 @@ class _ContentCardState extends State<ContentCard> {
                         ),
                         Text(
                           _formatGameVersions(),
-                          style: AppText.defaultTheme.label.copyWith(
+                          style: AppText.defaultTheme.labelLarge.copyWith(
                             color: AppColors.dark.onSurfaceVariant,
                           ),
                         ),
