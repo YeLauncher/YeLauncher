@@ -126,33 +126,11 @@ class _InstanceCardState extends State<InstanceCard> {
     return step;
   }
 
-  IconData _getIconData(String? iconName) {
-    switch (iconName) {
-      case 'swords_rounded':
-        return Symbols.swords_rounded;
-      case 'eco_rounded':
-        return Symbols.eco_rounded;
-      case 'home_rounded':
-        return Symbols.home_rounded;
-      case 'star_rounded':
-        return Symbols.star_rounded;
-      case 'sports_esports_rounded':
-        return Symbols.sports_esports_rounded;
-      case 'public_rounded':
-        return Symbols.public_rounded;
-      case 'inventory_2_rounded':
-      default:
-        return Symbols.inventory_2_rounded;
-    }
-  }
-
   Widget _buildIcon({required double size, required double iconSize}) {
     final instanceColor = widget.viewModel.instance.color;
     final instanceIcon = widget.viewModel.instance.icon;
 
-    final bgColor = instanceColor != null
-        ? Color(int.parse(instanceColor.replaceAll('#', '0xFF')))
-        : AppColors.dark.primaryContainer;
+    final bgColor = widget.viewModel.stylingRepository.getColor(instanceColor, fallback: AppColors.dark.primaryContainer);
 
     final iconColor = instanceColor != null
         ? const Color(0xFFFFFFFF)
@@ -165,7 +143,7 @@ class _InstanceCardState extends State<InstanceCard> {
         color: bgColor,
         borderRadius: BorderRadius.circular(size * 0.25),
       ),
-      child: Icon(_getIconData(instanceIcon), color: iconColor, size: iconSize),
+      child: Icon(widget.viewModel.stylingRepository.getIconData(instanceIcon), color: iconColor, size: iconSize),
     );
   }
 

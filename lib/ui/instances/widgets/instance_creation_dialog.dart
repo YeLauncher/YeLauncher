@@ -227,21 +227,8 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   }
 
   Widget get _stepAppearance {
-    IconData getIconData(String iconName) {
-      switch (iconName) {
-        case 'inventory_2_rounded': return Symbols.inventory_2_rounded;
-        case 'swords_rounded': return Symbols.swords_rounded;
-        case 'eco_rounded': return Symbols.eco_rounded;
-        case 'home_rounded': return Symbols.home_rounded;
-        case 'star_rounded': return Symbols.star_rounded;
-        case 'sports_esports_rounded': return Symbols.sports_esports_rounded;
-        case 'public_rounded': return Symbols.public_rounded;
-        default: return Symbols.inventory_2_rounded;
-      }
-    }
-
     final selectedColorHex = widget.viewModel.selectedColor;
-    final selectedBgColor = Color(int.parse(selectedColorHex.replaceAll('#', '0xFF')));
+    final selectedBgColor = widget.viewModel.stylingRepository.getColor(selectedColorHex, fallback: AppColors.dark.primaryContainer);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +258,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: InstanceCreationViewModel.availableIcons.map((icon) {
+                children: widget.viewModel.stylingRepository.availableIcons.map((icon) {
                   final isSelected = widget.viewModel.selectedIcon == icon;
                   return MouseRegion(
                     cursor: SystemMouseCursors.click,
@@ -290,7 +277,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                         ),
                         child: Center(
                           child: Icon(
-                            getIconData(icon),
+                            widget.viewModel.stylingRepository.getIconData(icon),
                             color: isSelected ? AppColors.dark.primary : AppColors.dark.onSurfaceVariant,
                             size: 24,
                           ),
@@ -322,9 +309,9 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
-                children: InstanceCreationViewModel.availableColors.map((colorHex) {
+                children: widget.viewModel.stylingRepository.availableColors.map((colorHex) {
                   final isSelected = widget.viewModel.selectedColor == colorHex;
-                  final color = Color(int.parse(colorHex.replaceAll('#', '0xFF')));
+                  final color = widget.viewModel.stylingRepository.getColor(colorHex, fallback: AppColors.dark.primaryContainer);
                   return MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
@@ -390,7 +377,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               ),
               child: Center(
                 child: Icon(
-                  getIconData(widget.viewModel.selectedIcon),
+                  widget.viewModel.stylingRepository.getIconData(widget.viewModel.selectedIcon),
                   color: const Color(0xFFFFFFFF),
                   size: 48,
                 ),

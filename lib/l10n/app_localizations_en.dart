@@ -517,4 +517,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String downloadProgressUnknownTotal(String downloaded) {
     return '$downloaded MB';
   }
+
+  @override
+  String get clearSelection => 'Clear selection';
 }

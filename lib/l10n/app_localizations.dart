@@ -1051,6 +1051,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{downloaded} MB'**
   String downloadProgressUnknownTotal(String downloaded);
+
+  /// No description provided for @clearSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get clearSelection;
 }
 
 class _AppLocalizationsDelegate

@@ -10,6 +10,7 @@ class ContentItem {
   final String slug;
   final String title;
   final String description;
+  final String? body;
   final String projectType;
   final String? iconUrl;
   final int? downloads;
@@ -63,6 +64,7 @@ class ContentItem {
     required this.slug,
     required this.title,
     required this.description,
+    this.body,
     required this.projectType,
     this.iconUrl,
     this.downloads,

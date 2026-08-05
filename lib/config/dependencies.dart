@@ -27,10 +27,11 @@ import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
 import 'package:yelauncher/data/services/update_service.dart';
 import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
-
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
 
 List<SingleChildWidget> get _sharedProviders {
   return [
+    Provider(create: (_) => InstanceStylingRepository()),
     Provider(create: (_) => FileService()),
     Provider(create: (_) => MinecraftService()),
     Provider(create: (_) => UpdateService()),

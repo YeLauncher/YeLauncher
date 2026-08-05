@@ -225,5 +225,6 @@
     "placeholders": {
       "downloaded": { "type": "String" }
     }
-  }
+  },
+  "clearSelection": "Clear selection"
 }

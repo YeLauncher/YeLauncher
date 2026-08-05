@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter_markdown/flutter_markdown.dart';
+
+import 'package:yelauncher/config/assets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:yelauncher/ui/core/checkbox.dart';
 import 'package:yelauncher/ui/core/chip.dart';
-import 'package:yelauncher/ui/core/icon_button.dart' as core_icon_button;
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
+
 import 'package:yelauncher/ui/core/multi_select_dropdown.dart';
 import 'package:yelauncher/ui/core/tabs.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -65,6 +69,35 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
   int _selectedTabIndex = 0;
   final List<String> _selectedGameVersions = [];
   bool _showSnapshots = false;
+
+  String? _getLoaderIcon(String loader) {
+    final lower = loader.toLowerCase();
+    if (lower == 'fabric' || lower == 'quilt') return Assets.fabricLogo;
+    if (lower == 'forge' || lower == 'neoforge') return Assets.forgeLogo;
+    return null;
+  }
+
+  Widget _buildInstanceIcon(InstanceModel instance, BuildContext context) {
+    final instanceColor = instance.color;
+    final instanceIcon = instance.icon;
+
+    final stylingRepository = context.read<InstanceStylingRepository>();
+
+    final bgColor = stylingRepository.getColor(instanceColor, fallback: AppColors.dark.primaryContainer);
+    final iconColor = instanceColor != null
+        ? const Color(0xFFFFFFFF)
+        : AppColors.dark.primary;
+
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(stylingRepository.getIconData(instanceIcon), color: iconColor, size: 20),
+    );
+  }
 
   List<Tab> _getTabs(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -551,10 +584,10 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
           Expanded(
             child: Skeletonizer(
               enabled: widget.viewModel.isLoading,
-              containersColor: const Color(0xFF000000),
-              effect: const ShimmerEffect(
-                baseColor: Color(0xFF121212),
-                highlightColor: Color(0xFF282828),
+              containersColor: AppColors.dark.skeletonContainer,
+              effect: ShimmerEffect(
+                baseColor: AppColors.dark.skeletonBase,
+                highlightColor: AppColors.dark.skeletonHighlight,
               ),
               child: Builder(
                 builder: (context) {
@@ -589,10 +622,10 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
     if (widget.viewModel.isLoading) {
       return Skeletonizer(
         enabled: true,
-        containersColor: const Color(0xFF000000),
-        effect: const ShimmerEffect(
-          baseColor: Color(0xFF121212),
-          highlightColor: Color(0xFF282828),
+        containersColor: AppColors.dark.skeletonContainer,
+        effect: ShimmerEffect(
+          baseColor: AppColors.dark.skeletonBase,
+          highlightColor: AppColors.dark.skeletonHighlight,
         ),
         child: Wrap(
           spacing: 8,
@@ -601,10 +634,10 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
             4,
             (index) => Container(
               width: 80 + (index * 20.0),
-              height: 32,
+              height: 24,
               decoration: BoxDecoration(
                 color: AppColors.dark.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(100),
               ),
             ),
           ),
@@ -636,7 +669,11 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
             iconData: Symbols.gamepad_rounded,
           ),
         if (item.loaders != null)
-          for (final loader in item.loaders!) Chip.surface(loader),
+          for (final loader in item.loaders!) 
+            Chip.surface(
+              loader, 
+              svgIcon: _getLoaderIcon(loader),
+            ),
       ],
     );
   }
@@ -666,10 +703,36 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            item.description,
-            style: AppText.defaultTheme.body.copyWith(
-              color: AppColors.dark.onSurface,
+          MarkdownBody(
+            data: item.body ?? item.description,
+            styleSheet: MarkdownStyleSheet(
+              p: AppText.defaultTheme.body.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+              h1: AppText.defaultTheme.titleLarge.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+              h2: AppText.defaultTheme.title.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+              h3: AppText.defaultTheme.titleSmall.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+              h4: AppText.defaultTheme.labelLarge.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+              h5: AppText.defaultTheme.label.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+              h6: AppText.defaultTheme.caption.copyWith(
+                color: AppColors.dark.onSurfaceVariant,
+              ),
+              listBullet: AppText.defaultTheme.body.copyWith(
+                color: AppColors.dark.onSurface,
+              ),
+              a: AppText.defaultTheme.body.copyWith(
+                color: AppColors.dark.primaryContainer,
+              ),
             ),
           ),
         ],
@@ -805,6 +868,21 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
               },
               label: AppLocalizations.of(context)!.showSnapshots,
             ),
+            const SizedBox(width: 16),
+            if (widget.targetVersion != null)
+              Button.surface(
+                AppLocalizations.of(context)!.clearSelection,
+                iconData: Symbols.close_rounded,
+                onPressed: () {
+                  context.replace(
+                    Routes.contentDetail,
+                    extra: {
+                      'viewModel': widget.viewModel,
+                      'targetVersion': null,
+                    },
+                  );
+                },
+              ),
           ],
         ),
         const SizedBox(height: 16),
@@ -814,137 +892,34 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
             separatorBuilder: (context, index) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final version = filteredVersions[index];
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.dark.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  version.name,
-                                  style: AppText.defaultTheme.title.copyWith(
-                                    color: AppColors.dark.onSurface,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              if (version.versionNumber != version.name)
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: Text(
-                                    version.versionNumber,
-                                    style: AppText.defaultTheme.label.copyWith(
-                                      color: AppColors.dark.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              ...version.gameVersions.map(
-                                (gv) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.dark.primaryContainer,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Symbols.gamepad_rounded,
-                                        size: 14,
-                                        color:
-                                            AppColors.dark.onPrimaryContainer,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        gv,
-                                        style: AppText.defaultTheme.label
-                                            .copyWith(
-                                              color: AppColors
-                                                  .dark
-                                                  .onPrimaryContainer,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              ...version.loaders.map(
-                                (loader) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.dark.surfaceContainerHigh,
-                                    border: Border.all(
-                                      color: AppColors.dark.outlineVariant,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Symbols.extension_rounded,
-                                        size: 14,
-                                        color: AppColors.dark.onSurfaceVariant,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        loader,
-                                        style: AppText.defaultTheme.label
-                                            .copyWith(
-                                              color: AppColors
-                                                  .dark
-                                                  .onSurfaceVariant,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+              final isSelected = widget.targetVersion?.id == version.id;
+
+              return ListItem.primary(
+                title: version.versionNumber,
+                isSelected: isSelected,
+                tags: [
+                  ...version.gameVersions.map(
+                    (gv) => Chip.primary(
+                      gv,
+                      iconData: Symbols.gamepad_rounded,
                     ),
-                    const SizedBox(width: 16),
-                    core_icon_button.IconButton.transparent(
-                      onPressed: () {
-                        context.replace(
-                          Routes.contentDetail,
-                          extra: {
-                            'viewModel': widget.viewModel,
-                            'targetVersion': version,
-                          },
-                        );
-                      },
-                      iconData: Symbols.download_rounded,
+                  ),
+                  ...version.loaders.map(
+                    (loader) => Chip.surface(
+                      loader,
+                      svgIcon: _getLoaderIcon(loader),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+                onTap: () {
+                  context.replace(
+                    Routes.contentDetail,
+                    extra: {
+                      'viewModel': widget.viewModel,
+                      'targetVersion': isSelected ? null : version,
+                    },
+                  );
+                },
               );
             },
           ),
@@ -1076,10 +1051,10 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
             child: widget.viewModel.isLoading
                 ? Skeletonizer(
                     enabled: true,
-                    containersColor: const Color(0xFF000000),
-                    effect: const ShimmerEffect(
-                      baseColor: Color(0xFF121212),
-                      highlightColor: Color(0xFF282828),
+                    containersColor: AppColors.dark.skeletonContainer,
+                    effect: ShimmerEffect(
+                      baseColor: AppColors.dark.skeletonBase,
+                      highlightColor: AppColors.dark.skeletonHighlight,
                     ),
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -1129,6 +1104,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                           title: instance.name,
                           subtitle:
                               '${instance.minecraftVersion} - ${instance.modLoader}',
+                          leadingWidget: _buildInstanceIcon(instance, context),
                           trailingIcon: Symbols.check_circle_rounded,
                           isSelected: isSelected,
                           onTap: () {
@@ -1226,3 +1202,4 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
     );
   }
 }
+

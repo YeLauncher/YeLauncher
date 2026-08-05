@@ -30,6 +30,10 @@ final class AppColors {
 
   final Color error;
 
+  final Color skeletonContainer;
+  final Color skeletonBase;
+  final Color skeletonHighlight;
+
   static Color get transparent => const Color(0x00000000);
 
   const AppColors({
@@ -57,6 +61,9 @@ final class AppColors {
     required this.inverseOnSurface,
     required this.scrim,
     required this.error,
+    required this.skeletonContainer,
+    required this.skeletonBase,
+    required this.skeletonHighlight,
   });
 
   // Dark Theme Colors
@@ -85,6 +92,9 @@ final class AppColors {
     inverseOnSurface: Color(0xFF333333),
     error: Color(0xFFF1A7A7),
     scrim: Color(0xFF000000),
+    skeletonContainer: Color(0xFF000000),
+    skeletonBase: Color(0xFF121212),
+    skeletonHighlight: Color(0xFF282828),
   );
 
   // Light Theme Colors
@@ -113,6 +123,9 @@ final class AppColors {
     inverseOnSurface: Color(0xFF333333),
     scrim: Color(0xFF000000),
     error: Color(0xFF9A1919),
+    skeletonContainer: Color(0xFF000000),
+    skeletonBase: Color(0xFF121212),
+    skeletonHighlight: Color(0xFF282828),
   );
 
   static Color convertToContainerColor(Color color) {

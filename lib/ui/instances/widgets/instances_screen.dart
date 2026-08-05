@@ -4,6 +4,7 @@ import 'package:flutter/material.dart'
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
@@ -278,6 +279,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                 .read<InstanceRepository>(),
                             downloadService: context.read<DownloadService>(),
                             javaRepository: context.read<JavaRepository>(),
+                            stylingRepository: context.read<InstanceStylingRepository>(),
                           ),
                           child: Builder(
                             builder: (context) {
@@ -396,6 +398,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
       minecraftRepository: context.read<MinecraftRepository>(),
       modLoaderRepositories: context.read<List<ModLoaderRepository>>(),
       instanceRepository: context.read<InstanceRepository>(),
+      stylingRepository: context.read<InstanceStylingRepository>(),
       existingInstanceNames: widget.viewModel.instances
           .map((i) => i.name)
           .toList(),

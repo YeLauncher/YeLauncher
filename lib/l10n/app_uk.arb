@@ -214,5 +214,6 @@
   "contentTypeShader": "ШЕЙДЕР",
   "minecraftVersions": "Версії Minecraft",
   "downloadProgress": "{downloaded} МБ / {total} МБ",
-  "downloadProgressUnknownTotal": "{downloaded} МБ"
+  "downloadProgressUnknownTotal": "{downloaded} МБ",
+  "clearSelection": "Очистити вибір"
 }
