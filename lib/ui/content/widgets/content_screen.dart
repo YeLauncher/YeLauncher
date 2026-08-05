@@ -3,39 +3,31 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:yelauncher/data/repositories/content/content_repository.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
-
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/ui/content/view_models/content_screen_viewmodel.dart';
-import 'package:yelauncher/ui/content/widgets/content_detail_dialog.dart';
 import 'package:yelauncher/ui/content/widgets/content_filter_bar.dart';
-import 'package:yelauncher/ui/core/button.dart';
-import 'package:yelauncher/ui/core/card.dart';
+import 'package:yelauncher/ui/content/widgets/content_card.dart';
 import 'package:yelauncher/ui/core/loading_indicator.dart';
 import 'package:yelauncher/ui/core/text_field.dart' as core_text_field;
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:yelauncher/domain/models/content/content_item.dart';
-import 'package:yelauncher/ui/core/icon_button.dart';
-import 'package:yelauncher/ui/content/widgets/content_install_dialog.dart';
+import 'package:yelauncher/routing/routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 
-typedef DisplayItem = ({
-  String title,
-  String description,
-  String? iconUrl,
-  String? authorName,
-  ContentItem? originalItem,
-});
-
-final List<DisplayItem> _skeletonItems = List.generate(
+final List<ContentItem> _skeletonItems = List.generate(
   12,
-  (_) => (
-    title: 'Placeholder title',
+  (_) => const ContentItem(
+    id: 'skeleton',
+    slug: 'skeleton',
+    title: 'Placeholder title text',
     description: 'Placeholder description text here',
-    iconUrl: null,
-    authorName: 'Loading Author',
-    originalItem: null,
+    projectType: 'mod',
+    author: 'Loading Author',
+    downloads: 1000000,
+    gameVersions: ['1.20.1'],
+    loaders: ['Fabric'],
   ),
 );
 
@@ -98,22 +90,6 @@ class _ContentScreenState extends State<ContentScreen> {
     widget.viewModel.setProjectType(_projectTypes[index]);
   }
 
-  void _showInfoDialog(BuildContext context, ContentItem item) {
-    debugPrint('_showInfoDialog called for ${item.title}');
-    final viewModel = ContentDetailViewModel(
-      item: item,
-      contentRepository: context.read<ContentRepository>(),
-      instanceRepository: context.read<InstanceRepository>(),
-    );
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Dismiss",
-      pageBuilder: (context, anim1, anim2) =>
-          Center(child: ContentDetailDialog(viewModel: viewModel)),
-    );
-  }
-
   void _showInstallDialog(BuildContext context, ContentItem item) async {
     final viewModel = ContentDetailViewModel(
       item: item,
@@ -121,25 +97,12 @@ class _ContentScreenState extends State<ContentScreen> {
       instanceRepository: context.read<InstanceRepository>(),
     );
 
-    // show loading dialog or just load it silently? Since it's quick, let's load it and then show the dialog.
-    // To provide feedback, we could just show the detail dialog if versions are not ready, or a loading overlay.
-    // For simplicity, we just await it.
-    await viewModel.loadDetails();
-    if (viewModel.versions.isNotEmpty && context.mounted) {
-      showGeneralDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierLabel: "Dismiss",
-        pageBuilder: (context, anim1, anim2) => Center(
-          child: ContentInstallDialog(
-            viewModel: viewModel,
-            targetVersion: null,
-          ),
-        ),
-      );
-    } else if (context.mounted) {
-      // Fallback if no versions or if modpack (which currently returns empty compatible instances or we handle differently)
-      _showInfoDialog(context, item);
+    // Just push to the detail page.
+    if (context.mounted) {
+      context.push(Routes.contentDetail, extra: {
+        'viewModel': viewModel,
+        'targetVersion': null,
+      });
     }
   }
 
@@ -204,19 +167,9 @@ class _ContentScreenState extends State<ContentScreen> {
               child: Consumer<ContentScreenViewModel>(
                 builder: (context, viewModel, child) {
                   final isLoading = viewModel.isLoading;
-                  final List<DisplayItem> displayItems = isLoading
+                  final List<ContentItem> displayItems = isLoading
                       ? _skeletonItems
-                      : viewModel.items
-                            .map<DisplayItem>(
-                              (item) => (
-                                title: item.title,
-                                description: item.description,
-                                iconUrl: item.iconUrl,
-                                authorName: item.author ?? item.organization ?? item.teamId,
-                                originalItem: item,
-                              ),
-                            )
-                            .toList();
+                      : viewModel.items;
 
                   if (!isLoading && viewModel.items.isEmpty) {
                     return Center(
@@ -274,41 +227,13 @@ class _ContentScreenState extends State<ContentScreen> {
                                         children: [
                                           for (final item
                                               in columnItems[colIndex]) ...[
-                                            Card(
-                                              title: item.title,
-                                              subtitle: item.authorName != null ? AppLocalizations.of(context)!.byAuthor(item.authorName!) : null,
-                                              description: item.description,
-                                              imageUrl: item.iconUrl,
-                                              maxWidth: 500,
-                                              maxHeight: 500,
-                                              minWidth: 0,
-                                              minHeight: 0,
-                                              buttons: [
-                                                IconButton.surface(
-                                                  iconData: Symbols.info,
-                                                  onPressed:
-                                                      item.originalItem == null
-                                                      ? () {}
-                                                      : () {
-                                                          _showInfoDialog(
-                                                            context,
-                                                            item.originalItem!,
-                                                          );
-                                                        },
-                                                ),
-                                                Button.primary(
-                                                  AppLocalizations.of(context)!.addButton,
-                                                  onPressed:
-                                                      item.originalItem == null
-                                                      ? () {}
-                                                      : () {
-                                                          _showInstallDialog(
-                                                            context,
-                                                            item.originalItem!,
-                                                          );
-                                                        },
-                                                ),
-                                              ],
+                                            ContentCard(
+                                              item: item,
+                                              onTap: () {
+                                                if (!isLoading && item.id != 'skeleton') {
+                                                  _showInstallDialog(context, item);
+                                                }
+                                              },
                                             ),
                                             const SizedBox(height: 8),
                                             // Vertical item gap

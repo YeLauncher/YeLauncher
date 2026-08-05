@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:provider/provider.dart';
-import 'package:yelauncher/ui/content/widgets/content_install_dialog.dart';
+import 'package:yelauncher/ui/content/pages/content_detail_page.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/domain/models/content/content_item.dart';
 import 'package:yelauncher/domain/models/content/content_version.dart';
@@ -97,7 +97,7 @@ Widget contentInstallDialogPreview() {
     child: Center(
       child: Material(
         color: Colors.transparent,
-        child: ContentInstallDialog(
+        child: ContentDetailPage(
           viewModel: viewModel,
           targetVersion: version,
         ),
@@ -151,7 +151,7 @@ Widget contentInstallDialogEmptyPreview() {
     child: Center(
       child: Material(
         color: Colors.transparent,
-        child: ContentInstallDialog(
+        child: ContentDetailPage(
           viewModel: viewModel,
           targetVersion: version,
         ),

@@ -14,11 +14,12 @@ import 'package:yelauncher/domain/models/instance/installed_content_model.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
-import 'package:yelauncher/ui/content/widgets/content_install_dialog.dart';
+import 'package:yelauncher/ui/content/pages/content_detail_page.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:yelauncher/ui/core/button.dart';
 
 import '../integration_mocks.mocks.dart';
 
@@ -40,16 +41,12 @@ void main() {
   late Directory tempDir;
 
   setUp(() async {
-    print('setUp started');
     mockInstanceRepository = MockInstanceRepository();
     mockDownloadService = MockDownloadService();
     mockContentRepository = MockContentRepository();
     
-    print('creating temp dir');
     tempDir = await Directory.systemTemp.createTemp('yelauncher_test_');
-    print('setting path provider instance');
     PathProviderPlatform.instance = MockPathProviderPlatform(tempDir.path);
-    print('setUp finished');
   });
 
   tearDown(() async {
@@ -69,9 +66,15 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
-          body: ContentInstallDialog(
-            viewModel: viewModel,
-            targetVersion: version,
+          body: SingleChildScrollView(
+            child: SizedBox(
+              width: 1200,
+              height: 2000,
+              child: ContentDetailPage(
+                viewModel: viewModel,
+                targetVersion: version,
+              ),
+            ),
           ),
         ),
       ),
@@ -111,14 +114,6 @@ void main() {
     final oldJarFile = File(p.join(modDir.path, oldVersionJarName));
     oldJarFile.writeAsStringSync('old jar content');
 
-    when(mockInstanceRepository.getInstances())
-        .thenAnswer((_) async => [existingInstance]);
-    when(mockInstanceRepository.saveInstance(any)).thenAnswer((_) async {});
-    provideDummy<Result<void>>(const Result<void>.success(null));
-    when(mockDownloadService.downloadIfMissing(any))
-        .thenAnswer((_) async => const Result.success(null));
-
-    // Create view model and new version
     final item = ContentItem(
       id: projectId,
       slug: 'test-mod',
@@ -126,7 +121,25 @@ void main() {
       description: 'Test mod description',
       projectType: 'mod',
     );
+
+    provideDummy<Result<void>>(const Result<void>.success(null));
+    provideDummy<Result<ContentItem>>(Result.success(item));
+    provideDummy<Result<List<ContentVersion>>>(const Result.success([]));
+    provideDummy<Result<List<ContentItem>>>(const Result.success([]));
+
+    when(mockInstanceRepository.getInstances())
+        .thenAnswer((_) async => [existingInstance]);
+    when(mockInstanceRepository.saveInstance(any)).thenAnswer((_) async {});
+    when(mockDownloadService.downloadIfMissing(any, onProgress: anyNamed('onProgress')))
+        .thenAnswer((_) async => const Result.success(null));
     
+    when(mockContentRepository.getContent(any))
+        .thenAnswer((_) async => Result.success(item));
+    when(mockContentRepository.getVersions(any))
+        .thenAnswer((_) async => const Result.success([]));
+    when(mockContentRepository.getProjectDependencies(any))
+        .thenAnswer((_) async => const Result.success([]));
+
     final newVersion = ContentVersion(
       id: 'ver2',
       projectId: projectId,
@@ -152,6 +165,10 @@ void main() {
     );
     viewModel.instances = [existingInstance];
 
+    tester.view.physicalSize = const Size(1200, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.resetPhysicalSize());
+    addTearDown(() => tester.view.resetDevicePixelRatio());
     await tester.pumpWidget(createTestWidget(viewModel, newVersion));
     await tester.pump();
 
@@ -161,7 +178,10 @@ void main() {
 
     // Click Install and wait for real async I/O to complete
     await tester.runAsync(() async {
-      await tester.tap(find.text('Install'));
+      final button = find.widgetWithText(Button, 'Install');
+      await tester.ensureVisible(button);
+      await tester.pumpAndSettle();
+      await tester.tap(button);
       await Future.delayed(const Duration(milliseconds: 500));
     });
     await tester.pump();

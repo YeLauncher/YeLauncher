@@ -14,6 +14,9 @@ import 'package:yelauncher/ui/profiles/view_models/profiles_viewmodel.dart';
 import 'package:yelauncher/ui/profiles/widgets/profiles_screen.dart';
 import 'package:yelauncher/ui/splash/view_models/splash_viewmodel.dart';
 import 'package:yelauncher/ui/splash/widgets/splash_screen.dart';
+import 'package:yelauncher/domain/models/content/content_version.dart';
+import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
+import 'package:yelauncher/ui/content/pages/content_detail_page.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -30,6 +33,25 @@ GoRouter getRouter(MinecraftRepository minecraftRepository) => GoRouter(
           updateService: context.read(),
         );
         return SplashScreen(viewModel: viewModel);
+      },
+    ),
+    GoRoute(
+      path: Routes.contentDetail,
+      pageBuilder: (context, state) {
+        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: ContentDetailPage(
+            viewModel: extra['viewModel'] as ContentDetailViewModel,
+            targetVersion: extra['targetVersion'] as ContentVersion?,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+              child: child,
+            );
+          },
+        );
       },
     ),
     // Login route removed

@@ -17,12 +17,13 @@ ContentItem _$ContentItemFromJson(Map<String, dynamic> json) => ContentItem(
   organization: json['organization'] as String?,
   teamId: json['team_id'] as String?,
   author: json['author'] as String?,
-  loaders: (json['loaders'] as List<dynamic>?)
+  loaders: (ContentItem._readLoaders(json, 'loaders') as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  gameVersions: (json['game_versions'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
+  gameVersions:
+      (ContentItem._readGameVersions(json, 'game_versions') as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
   gallery: (ContentItem._readGallery(json, 'gallery') as List<dynamic>?)
       ?.map((e) => ContentGalleryImage.fromJson(e as Map<String, dynamic>))
       .toList(),
