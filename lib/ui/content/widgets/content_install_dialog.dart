@@ -339,7 +339,7 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
         file ??= version.files.firstWhere((f) => f.primary, orElse: () => version.files.first);
         
         final url = file.url;
-        final fileName = file.filename;
+        final fileName = Uri.decodeFull(file.filename);
 
         final folderName = switch (type) {
           'resourcepack' => 'resourcepacks',

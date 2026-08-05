@@ -97,8 +97,9 @@ class SplashViewModel extends ChangeNotifier {
               _ => 'mods',
             };
             final file = File(p.join(gameDir.path, folderName, content.filename));
+            final disabledFile = File('${file.path}.disabled');
 
-            if (await file.exists()) {
+            if (await file.exists() || await disabledFile.exists()) {
               verifiedContent.add(content);
             } else {
               _log.warning('Missing content file: ${file.path} for instance ${instance.id}');
