@@ -29,12 +29,12 @@ import 'package:logging/logging.dart';
 
 class ContentInstallDialog extends StatefulWidget {
   final ContentDetailViewModel viewModel;
-  final ContentVersion version;
+  final ContentVersion? targetVersion;
 
   const ContentInstallDialog({
     super.key,
     required this.viewModel,
-    required this.version,
+    this.targetVersion,
   });
 
   @override
@@ -120,7 +120,10 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
     }
 
     try {
-      await resolve(widget.version);
+      final vToResolve = widget.targetVersion ?? widget.viewModel.getBestVersionForInstance(instance);
+      if (vToResolve != null) {
+        await resolve(vToResolve);
+      }
     } catch (e) {
       _log.warning('Error resolving dependencies: $e');
     }
@@ -135,12 +138,30 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final compatibleInstances = widget.viewModel.getCompatibleInstances(widget.version);
+    final compatibleInstances = widget.targetVersion != null 
+        ? widget.viewModel.getCompatibleInstances(widget.targetVersion!).toList()
+        : widget.viewModel.instances.where((i) => widget.viewModel.getBestVersionForInstance(i) != null).toList();
+        
+    compatibleInstances.sort((a, b) {
+      final vA = widget.targetVersion ?? widget.viewModel.getBestVersionForInstance(a)!;
+      final aInstalled = a.installedContent.any((c) => c.projectId == widget.viewModel.item.id && c.versionId == vA.id);
+      
+      final vB = widget.targetVersion ?? widget.viewModel.getBestVersionForInstance(b)!;
+      final bInstalled = b.installedContent.any((c) => c.projectId == widget.viewModel.item.id && c.versionId == vB.id);
+      
+      if (aInstalled == bInstalled) return a.name.compareTo(b.name);
+      return aInstalled ? 1 : -1;
+    });
+    
     bool isAlreadyInstalled = false;
+    ContentVersion? versionToInstall;
     if (selectedInstance != null) {
-      isAlreadyInstalled = selectedInstance!.installedContent.any(
-        (content) => content.projectId == widget.viewModel.item.id && content.versionId == widget.version.id
-      );
+      versionToInstall = widget.targetVersion ?? widget.viewModel.getBestVersionForInstance(selectedInstance!);
+      if (versionToInstall != null) {
+        isAlreadyInstalled = selectedInstance!.installedContent.any(
+          (content) => content.projectId == widget.viewModel.item.id && content.versionId == versionToInstall!.id
+        );
+      }
     }
 
     return ConstrainedBox(
@@ -236,17 +257,26 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
                 itemBuilder: (context, index) {
                   final instance = compatibleInstances[index];
                   final isSelected = selectedInstance == instance;
-                  return ListItem.secondary(
-                    title: instance.name,
-                    subtitle: '${instance.minecraftVersion} - ${instance.modLoader}',
-                    trailingIcon: Symbols.check_circle_rounded,
-                    isSelected: isSelected,
-                    onTap: () {
-                      setState(() {
-                        selectedInstance = instance;
-                      });
-                      _resolveDependencies(instance);
-                    },
+                  
+                  final vForInst = widget.targetVersion ?? widget.viewModel.getBestVersionForInstance(instance)!;
+                  final isInstalled = instance.installedContent.any(
+                    (content) => content.projectId == widget.viewModel.item.id && content.versionId == vForInst.id
+                  );
+                  
+                  return Opacity(
+                    opacity: isInstalled ? 0.5 : 1.0,
+                    child: ListItem.secondary(
+                      title: instance.name,
+                      subtitle: '${instance.minecraftVersion} - ${instance.modLoader}',
+                      trailingIcon: Symbols.check_circle_rounded,
+                      isSelected: isSelected,
+                      onTap: () {
+                        setState(() {
+                          selectedInstance = instance;
+                        });
+                        _resolveDependencies(instance);
+                      },
+                    ),
                   );
                 },
               ),
@@ -321,6 +351,10 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
       final newInstalledContent = List<InstalledContentModel>.from(currentInstance.installedContent);
 
       Future<void> downloadAndInstall(ContentItem item, ContentVersion version) async {
+        if (newInstalledContent.any((c) => c.projectId == item.id && c.versionId == version.id)) {
+          return;
+        }
+
         final type = item.projectType;
         ContentFile? file;
         
@@ -383,7 +417,12 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
       }
 
       // Install main mod
-      await downloadAndInstall(widget.viewModel.item, widget.version);
+      final mainVersionToInstall = widget.targetVersion ?? widget.viewModel.getBestVersionForInstance(currentInstance);
+      if (mainVersionToInstall == null) {
+        throw Exception('No compatible version found for this instance.');
+      }
+      
+      await downloadAndInstall(widget.viewModel.item, mainVersionToInstall);
 
       // Install all resolved dependencies
       for (final dep in resolvedDependencies) {

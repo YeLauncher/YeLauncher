@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:yelauncher/data/repositories/content/content_repository.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
-import 'package:yelauncher/domain/models/content/content_version.dart';
+
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/ui/content/view_models/content_screen_viewmodel.dart';
 import 'package:yelauncher/ui/content/widgets/content_detail_dialog.dart';
@@ -126,15 +126,6 @@ class _ContentScreenState extends State<ContentScreen> {
     // For simplicity, we just await it.
     await viewModel.loadDetails();
     if (viewModel.versions.isNotEmpty && context.mounted) {
-      ContentVersion? bestVersion;
-      for (final v in viewModel.versions) {
-        if (viewModel.getCompatibleInstances(v).isNotEmpty) {
-          bestVersion = v;
-          break;
-        }
-      }
-      bestVersion ??= viewModel.versions.first;
-
       showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -142,7 +133,7 @@ class _ContentScreenState extends State<ContentScreen> {
         pageBuilder: (context, anim1, anim2) => Center(
           child: ContentInstallDialog(
             viewModel: viewModel,
-            version: bestVersion!,
+            targetVersion: null,
           ),
         ),
       );

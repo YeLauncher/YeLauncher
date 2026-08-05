@@ -98,7 +98,7 @@ Widget contentInstallDialogPreview() {
         color: Colors.transparent,
         child: ContentInstallDialog(
           viewModel: viewModel,
-          version: version,
+          targetVersion: version,
         ),
       ),
     ),
@@ -151,7 +151,7 @@ Widget contentInstallDialogEmptyPreview() {
         color: Colors.transparent,
         child: ContentInstallDialog(
           viewModel: viewModel,
-          version: version,
+          targetVersion: version,
         ),
       ),
     ),

@@ -418,7 +418,7 @@ class _ContentDetailDialogState extends State<ContentDetailDialog> {
         pageBuilder: (context, anim1, anim2) => Center(
           child: ContentInstallDialog(
             viewModel: widget.viewModel,
-            version: version,
+            targetVersion: version,
           ),
         ),
       );

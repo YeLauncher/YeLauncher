@@ -71,7 +71,7 @@ void main() {
         home: Scaffold(
           body: ContentInstallDialog(
             viewModel: viewModel,
-            version: version,
+            targetVersion: version,
           ),
         ),
       ),

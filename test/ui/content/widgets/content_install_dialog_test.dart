@@ -107,7 +107,7 @@ void main() {
                     context: context,
                     builder: (context) => ContentInstallDialog(
                       viewModel: viewModel,
-                      version: testVersion,
+                      targetVersion: testVersion,
                     ),
                   );
                 },

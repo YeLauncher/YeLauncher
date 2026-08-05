@@ -82,4 +82,25 @@ class ContentDetailViewModel extends ChangeNotifier {
       return true;
     }).toList();
   }
+
+  ContentVersion? getBestVersionForInstance(InstanceModel instance) {
+    if (item.projectType == 'modpack') return null;
+
+    for (final v in versions) {
+      if (!v.gameVersions.contains(instance.minecraftVersion)) continue;
+      
+      if (item.projectType == 'mod') {
+        final loaderLower = instance.modLoader.toLowerCase();
+        if (loaderLower.isEmpty || loaderLower == 'none' || loaderLower == 'vanilla') continue;
+        
+        bool loaderMatch = v.loaders.contains(loaderLower);
+        if (loaderLower == 'quilt' && v.loaders.contains('fabric')) {
+          loaderMatch = true;
+        }
+        if (!loaderMatch) continue;
+      }
+      return v;
+    }
+    return null;
+  }
 }
