@@ -341,7 +341,11 @@ class _ContentInstallDialogState extends State<ContentInstallDialog> {
         final url = file.url;
         final fileName = file.filename;
 
-        final folderName = type == 'resourcepack' ? 'resourcepacks' : 'mods';
+        final folderName = switch (type) {
+          'resourcepack' => 'resourcepacks',
+          'shader' => 'shaderpacks',
+          _ => 'mods',
+        };
         final relativePath = 'instances/${selectedInstance!.id}/$folderName/$fileName';
 
         await downloadService.downloadIfMissing(

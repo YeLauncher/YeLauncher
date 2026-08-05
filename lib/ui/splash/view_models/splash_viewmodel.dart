@@ -91,7 +91,11 @@ class SplashViewModel extends ChangeNotifier {
           final List<InstalledContentModel> verifiedContent = [];
 
           for (final content in instance.installedContent) {
-            final folderName = content.type == 'resourcepack' ? 'resourcepacks' : 'mods';
+            final folderName = switch (content.type) {
+              'resourcepack' => 'resourcepacks',
+              'shader' => 'shaderpacks',
+              _ => 'mods',
+            };
             final file = File(p.join(gameDir.path, folderName, content.filename));
 
             if (await file.exists()) {

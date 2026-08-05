@@ -229,6 +229,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
     );
     final modsDir = Directory(p.join(instanceDir.path, 'mods'));
     final rpDir = Directory(p.join(instanceDir.path, 'resourcepacks'));
+    final spDir = Directory(p.join(instanceDir.path, 'shaderpacks'));
 
     final List<_DisplayContent> items = [];
     final Map<String, InstalledContentModel> managedMap = {
@@ -272,6 +273,7 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
 
     await scanDir(modsDir, 'mod');
     await scanDir(rpDir, 'resourcepack');
+    await scanDir(spDir, 'shader');
 
     for (var model in managedMap.values) {
       items.add(
@@ -1079,7 +1081,11 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
         .toList();
 
     for (final item in itemsToDelete) {
-      final folderName = item.type == 'resourcepack' ? 'resourcepacks' : 'mods';
+      final folderName = switch (item.type) {
+        'resourcepack' => 'resourcepacks',
+        'shader' => 'shaderpacks',
+        _ => 'mods',
+      };
       final file = File(
         p.join(
           appData.path,
@@ -1118,7 +1124,11 @@ class _InstanceDrawerState extends State<InstanceDrawer> {
 
   Future<void> _toggleContent(_DisplayContent item) async {
     final instanceRepo = context.read<InstanceRepository>();
-    final folderName = item.type == 'resourcepack' ? 'resourcepacks' : 'mods';
+    final folderName = switch (item.type) {
+      'resourcepack' => 'resourcepacks',
+      'shader' => 'shaderpacks',
+      _ => 'mods',
+    };
     final appData = await getApplicationSupportDirectory();
     final file = File(
       p.join(
