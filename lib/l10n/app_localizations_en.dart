@@ -537,4 +537,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String installRequiredDependenciesTooltip(Object dependencies) {
     return 'Will download:\n$dependencies';
   }
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications';
 }

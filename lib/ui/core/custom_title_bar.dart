@@ -6,6 +6,9 @@ import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/ui/core/breadcrumb_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yelauncher/config/assets.dart';
+import 'package:provider/provider.dart';
+import 'package:yelauncher/ui/core/notification_provider.dart';
+import 'package:yelauncher/ui/core/notification_popup.dart';
 
 class CustomTitleBar extends StatefulWidget {
   const CustomTitleBar({super.key});
@@ -16,6 +19,8 @@ class CustomTitleBar extends StatefulWidget {
 
 class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
   bool _isMaximized = false;
+  final OverlayPortalController _notificationPortalController = OverlayPortalController();
+  final LayerLink _notificationLayerLink = LayerLink();
 
   @override
   void initState() {
@@ -76,6 +81,68 @@ class _CustomTitleBarState extends State<CustomTitleBar> with WindowListener {
                   // Breadcrumbs integrated into the drag area
                   const BreadcrumbBar(),
                 ],
+              ),
+            ),
+          ),
+
+          // Notification Bell
+          CompositedTransformTarget(
+            link: _notificationLayerLink,
+            child: OverlayPortal(
+              controller: _notificationPortalController,
+              overlayChildBuilder: (context) {
+                return Stack(
+                  children: [
+                    // Invisible barrier to close popup when tapping outside
+                    Positioned.fill(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => _notificationPortalController.hide(),
+                        child: Container(color: const Color(0x00000000)),
+                      ),
+                    ),
+                    Positioned(
+                      top: 48, // Height of the title bar
+                      right: 138, // Before window controls
+                      child: CompositedTransformFollower(
+                        link: _notificationLayerLink,
+                        showWhenUnlinked: false,
+                        offset: const Offset(-280, 48), // Align right, below the bell
+                        child: const NotificationPopup(),
+                      ),
+                    ),
+                  ],
+                );
+              },
+              child: Consumer<NotificationProvider>(
+                builder: (context, notificationProvider, child) {
+                  final activeCount = notificationProvider.activeCount;
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      _WindowButton(
+                        icon: Symbols.notifications_rounded,
+                        onPressed: () => _notificationPortalController.toggle(),
+                      ),
+                      if (activeCount > 0)
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: AppColors.dark.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 8,
+                              minHeight: 8,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
           ),

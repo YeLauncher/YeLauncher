@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'package:yelauncher/config/assets.dart';
@@ -8,25 +6,22 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yelauncher/routing/routes.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:yelauncher/ui/core/checkbox.dart';
 import 'package:yelauncher/ui/core/chip.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
 import 'package:yelauncher/ui/core/icon_button.dart';
 
 import 'package:yelauncher/ui/core/multi_select_dropdown.dart';
 import 'package:yelauncher/ui/core/tabs.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/domain/models/content/content_version.dart';
-import 'package:yelauncher/domain/models/content/content_file.dart';
-import 'package:yelauncher/domain/models/download/download_model.dart';
-import 'package:yelauncher/domain/models/instance/installed_content_model.dart';
 import 'package:yelauncher/domain/models/instance/instance_model.dart';
+import 'package:yelauncher/ui/core/notification_provider.dart';
+import 'package:yelauncher/ui/core/toast/toast_service.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:yelauncher/ui/core/list_item.dart';
@@ -37,7 +32,6 @@ import 'package:yelauncher/domain/models/content/resolved_dependency.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/utilities/result.dart';
-import 'package:yelauncher/ui/core/circular_progress_indicator.dart';
 import 'package:yelauncher/ui/core/tooltip.dart';
 import 'package:logging/logging.dart';
 
@@ -57,11 +51,7 @@ class ContentDetailPage extends StatefulWidget {
 
 class _ContentDetailPageState extends State<ContentDetailPage> {
   InstanceModel? selectedInstance;
-  bool isInstalling = false;
   String? errorMessage;
-
-  int _currentDownloadedBytes = 0;
-  int? _currentTotalBytes;
 
   final _log = Logger('ContentDetailPage');
   List<ResolvedDependency> resolvedDependencies = [];
@@ -212,116 +202,20 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
 
   Future<void> _install() async {
     setState(() {
-      isInstalling = true;
       errorMessage = null;
     });
 
     try {
       final downloadService = context.read<DownloadService>();
       final instanceRepo = context.read<InstanceRepository>();
+      final toastService = context.read<ToastService>();
+      final notificationProvider = context.read<NotificationProvider>();
+      
       final allInstances = await instanceRepo.getInstances();
       final currentInstance = allInstances.firstWhere(
         (i) => i.id == selectedInstance!.id,
       );
 
-      final newInstalledContent = List<InstalledContentModel>.from(
-        currentInstance.installedContent,
-      );
-
-      Future<void> downloadAndInstall(
-        ContentItem item,
-        ContentVersion version,
-      ) async {
-        if (newInstalledContent.any(
-          (c) => c.projectId == item.id && c.versionId == version.id,
-        )) {
-          return;
-        }
-
-        final type = item.projectType;
-        ContentFile? file;
-
-        if (type == 'mod' && selectedInstance != null) {
-          final loader = selectedInstance!.modLoader.toLowerCase();
-          if (loader.isNotEmpty && loader != 'none' && loader != 'vanilla') {
-            for (final f in version.files) {
-              if (f.filename.toLowerCase().contains(loader)) {
-                file = f;
-                break;
-              }
-            }
-          }
-        }
-
-        file ??= version.files.firstWhere(
-          (f) => f.primary,
-          orElse: () => version.files.first,
-        );
-
-        final url = file.url;
-        final fileName = Uri.decodeFull(file.filename);
-
-        final folderName = switch (type) {
-          'resourcepack' => 'resourcepacks',
-          'shader' => 'shaderpacks',
-          _ => 'mods',
-        };
-        final relativePath =
-            'instances/${selectedInstance!.id}/$folderName/$fileName';
-
-        await downloadService.downloadIfMissing(
-          DownloadModel(url: url, path: relativePath, sha1: ''),
-          onProgress: (downloaded, total) {
-            if (mounted) {
-              setState(() {
-                _currentDownloadedBytes = downloaded;
-                _currentTotalBytes = total;
-              });
-            }
-          },
-        );
-
-        // Remove existing installed content if present
-        final existingIndex = newInstalledContent.indexWhere(
-          (c) => c.projectId == item.id,
-        );
-        if (existingIndex != -1) {
-          final oldContent = newInstalledContent[existingIndex];
-          final appData = await getApplicationSupportDirectory();
-          final oldFile = File(
-            p.join(
-              appData.path,
-              'instances',
-              selectedInstance!.id,
-              folderName,
-              Uri.decodeFull(oldContent.filename),
-            ),
-          );
-
-          if (await oldFile.exists()) {
-            await oldFile.delete();
-          }
-          final disabledOldFile = File('${oldFile.path}.disabled');
-          if (await disabledOldFile.exists()) {
-            await disabledOldFile.delete();
-          }
-          newInstalledContent.removeAt(existingIndex);
-        }
-
-        final content = InstalledContentModel(
-          projectId: item.id,
-          versionId: version.id,
-          filename: Uri.decodeFull(fileName),
-          title: item.title,
-          type: type,
-          author: item.author ?? 'Unknown Author',
-          version: version.versionNumber,
-          iconUrl: item.iconUrl,
-        );
-        newInstalledContent.add(content);
-      }
-
-      // Install main mod
       final mainVersionToInstall =
           widget.targetVersion ??
           widget.viewModel.getBestVersionForInstance(currentInstance);
@@ -329,19 +223,25 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
         throw Exception('No compatible version found for this instance.');
       }
 
-      await downloadAndInstall(widget.viewModel.item, mainVersionToInstall);
-
-      // Install all resolved dependencies
+      final List<Map<String, dynamic>> depsToInstall = [];
       if (_installRequiredDependencies) {
         for (final dep in resolvedDependencies) {
-          await downloadAndInstall(dep.item, dep.version);
+          depsToInstall.add({
+            'item': dep.item,
+            'version': dep.version,
+          });
         }
       }
 
-      final updatedInstance = currentInstance.copyWith(
-        installedContent: newInstalledContent,
+      notificationProvider.startInstallation(
+        downloadService: downloadService,
+        instanceRepo: instanceRepo,
+        selectedInstance: currentInstance,
+        mainItem: widget.viewModel.item,
+        mainVersion: mainVersionToInstall,
+        dependenciesToInstall: depsToInstall,
+        toastService: toastService,
       );
-      await instanceRepo.saveInstance(updatedInstance);
 
       if (!mounted) return;
       context.pop();
@@ -352,14 +252,6 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
           context,
         )!.errorWithParam(e.toString());
       });
-    } finally {
-      if (mounted) {
-        setState(() {
-          isInstalling = false;
-          _currentDownloadedBytes = 0;
-          _currentTotalBytes = null;
-        });
-      }
     }
   }
 
@@ -1208,55 +1100,19 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (isInstalling) ...[
-                          Tooltip(
-                            message:
-                                _currentTotalBytes != null &&
-                                    _currentTotalBytes! > 0
-                                ? AppLocalizations.of(
-                                    context,
-                                  )!.downloadProgress(
-                                    (_currentDownloadedBytes / 1048576)
-                                        .toStringAsFixed(2),
-                                    (_currentTotalBytes! / 1048576)
-                                        .toStringAsFixed(2),
-                                  )
-                                : AppLocalizations.of(
-                                    context,
-                                  )!.downloadProgressUnknownTotal(
-                                    (_currentDownloadedBytes / 1048576)
-                                        .toStringAsFixed(2),
-                                  ),
-                            child: CircularProgressIndicator.primary(
-                              size: 24,
-                              value:
-                                  _currentTotalBytes != null &&
-                                      _currentTotalBytes! > 0
-                                  ? (_currentDownloadedBytes /
-                                            _currentTotalBytes!)
-                                        .clamp(0.0, 1.0)
-                                  : null,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                        ],
                         Button.surface(
                           AppLocalizations.of(context)!.cancel,
                           onPressed: () => context.pop(),
                         ),
                         const SizedBox(width: 12),
                         Button.primary(
-                          isInstalling
-                              ? AppLocalizations.of(context)!.installingStatus
-                              : isAlreadyInstalled
+                          isAlreadyInstalled
                               ? AppLocalizations.of(context)!.alreadyInstalled
                               : AppLocalizations.of(context)!.installButton,
                           onPressed:
-                              selectedInstance == null ||
-                                  isInstalling ||
-                                  isAlreadyInstalled
-                              ? null
-                              : _install,
+                              selectedInstance == null || isAlreadyInstalled
+                                  ? null
+                                  : _install,
                         ),
                       ],
                     ),

@@ -11,16 +11,18 @@ import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:yelauncher/data/repositories/content/content_repository.dart'
     as _i11;
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart'
-    as _i19;
+    as _i20;
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart'
     as _i3;
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart'
     as _i14;
 import 'package:yelauncher/data/repositories/settings/settings_repository.dart'
-    as _i18;
+    as _i19;
 import 'package:yelauncher/data/services/download_service.dart' as _i16;
 import 'package:yelauncher/domain/models/content/content_item.dart' as _i12;
 import 'package:yelauncher/domain/models/content/content_version.dart' as _i13;
+import 'package:yelauncher/domain/models/download/cancellation_token.dart'
+    as _i18;
 import 'package:yelauncher/domain/models/download/download_model.dart' as _i17;
 import 'package:yelauncher/domain/models/instance/instance_model.dart' as _i9;
 import 'package:yelauncher/domain/models/minecraft/minecraft_process_model.dart'
@@ -662,16 +664,24 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
   _i4.Future<_i5.Result<void>> download(
     _i17.DownloadModel? model, {
     void Function(int, int?)? onProgress,
+    _i18.CancellationToken? cancellationToken,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#download, [model], {#onProgress: onProgress}),
+            Invocation.method(
+              #download,
+              [model],
+              {#onProgress: onProgress, #cancellationToken: cancellationToken},
+            ),
             returnValue: _i4.Future<_i5.Result<void>>.value(
               _i7.dummyValue<_i5.Result<void>>(
                 this,
                 Invocation.method(
                   #download,
                   [model],
-                  {#onProgress: onProgress},
+                  {
+                    #onProgress: onProgress,
+                    #cancellationToken: cancellationToken,
+                  },
                 ),
               ),
             ),
@@ -681,7 +691,10 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
                 Invocation.method(
                   #download,
                   [model],
-                  {#onProgress: onProgress},
+                  {
+                    #onProgress: onProgress,
+                    #cancellationToken: cancellationToken,
+                  },
                 ),
               ),
             ),
@@ -711,12 +724,13 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
   _i4.Future<_i5.Result<void>> downloadIfMissing(
     _i17.DownloadModel? model, {
     void Function(int, int?)? onProgress,
+    _i18.CancellationToken? cancellationToken,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
               #downloadIfMissing,
               [model],
-              {#onProgress: onProgress},
+              {#onProgress: onProgress, #cancellationToken: cancellationToken},
             ),
             returnValue: _i4.Future<_i5.Result<void>>.value(
               _i7.dummyValue<_i5.Result<void>>(
@@ -724,7 +738,10 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
                 Invocation.method(
                   #downloadIfMissing,
                   [model],
-                  {#onProgress: onProgress},
+                  {
+                    #onProgress: onProgress,
+                    #cancellationToken: cancellationToken,
+                  },
                 ),
               ),
             ),
@@ -734,7 +751,10 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
                 Invocation.method(
                   #downloadIfMissing,
                   [model],
-                  {#onProgress: onProgress},
+                  {
+                    #onProgress: onProgress,
+                    #cancellationToken: cancellationToken,
+                  },
                 ),
               ),
             ),
@@ -745,12 +765,13 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
   _i4.Future<_i5.Result<void>> downloadAll(
     List<_i17.DownloadModel>? models, {
     void Function(int, int?)? onProgress,
+    _i18.CancellationToken? cancellationToken,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
               #downloadAll,
               [models],
-              {#onProgress: onProgress},
+              {#onProgress: onProgress, #cancellationToken: cancellationToken},
             ),
             returnValue: _i4.Future<_i5.Result<void>>.value(
               _i7.dummyValue<_i5.Result<void>>(
@@ -758,7 +779,10 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
                 Invocation.method(
                   #downloadAll,
                   [models],
-                  {#onProgress: onProgress},
+                  {
+                    #onProgress: onProgress,
+                    #cancellationToken: cancellationToken,
+                  },
                 ),
               ),
             ),
@@ -768,7 +792,10 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
                 Invocation.method(
                   #downloadAll,
                   [models],
-                  {#onProgress: onProgress},
+                  {
+                    #onProgress: onProgress,
+                    #cancellationToken: cancellationToken,
+                  },
                 ),
               ),
             ),
@@ -780,7 +807,7 @@ class MockDownloadService extends _i1.Mock implements _i16.DownloadService {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSettingsRepository extends _i1.Mock
-    implements _i18.SettingsRepository {
+    implements _i19.SettingsRepository {
   @override
   _i2.Locale get currentLocale =>
       (super.noSuchMethod(
@@ -927,7 +954,7 @@ class MockSettingsRepository extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockInstanceRepository extends _i1.Mock
-    implements _i19.InstanceRepository {
+    implements _i20.InstanceRepository {
   @override
   _i4.Future<List<_i9.InstanceModel>> getInstances() =>
       (super.noSuchMethod(

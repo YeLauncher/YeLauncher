@@ -537,4 +537,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String installRequiredDependenciesTooltip(Object dependencies) {
     return 'Буде завантажено:\n$dependencies';
   }
+
+  @override
+  String get notificationsTitle => 'Сповіщення';
+
+  @override
+  String get noNotifications => 'Немає сповіщень';
 }

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:yelauncher/domain/models/download/cancellation_token.dart';
 import 'package:yelauncher/domain/models/download/download_model.dart';
 import 'package:yelauncher/utilities/result.dart';
 
@@ -17,6 +18,7 @@ class DownloadService {
   Future<Result<void>> download(
     DownloadModel model, {
     void Function(int downloadedBytes, int? totalBytes)? onProgress,
+    CancellationToken? cancellationToken,
   }) async {
     try {
       final appData = await getApplicationSupportDirectory();
@@ -38,6 +40,13 @@ class DownloadService {
         int total = 0;
         int lastNotifyTime = DateTime.now().millisecondsSinceEpoch;
         await for (final chunk in response.stream) {
+          if (cancellationToken?.isCancelled == true) {
+            await sink.close();
+            if (await file.exists()) {
+              await file.delete();
+            }
+            throw CancelledException();
+          }
           sink.add(chunk);
           total += chunk.length;
           onProgress?.call(total, model.expectedSize ?? response.contentLength);
@@ -118,12 +127,13 @@ class DownloadService {
   Future<Result<void>> downloadIfMissing(
     DownloadModel model, {
     void Function(int downloadedBytes, int? totalBytes)? onProgress,
+    CancellationToken? cancellationToken,
   }) async {
     final downloadedResult = await isDownloaded(model);
     switch (downloadedResult) {
       case Success<bool>(value: final isDownloaded):
         if (!isDownloaded) {
-          return download(model, onProgress: onProgress);
+          return download(model, onProgress: onProgress, cancellationToken: cancellationToken);
         } else {
           // File is already downloaded. Fetch local size and instantly report 100% progress
           // so the batch download differential math works correctly.
@@ -147,6 +157,7 @@ class DownloadService {
     List<DownloadModel> models, {
     void Function(int totalDownloadedBytes, int? totalExpectedBytes)?
     onProgress,
+    CancellationToken? cancellationToken,
   }) async {
     int accumulatedTotalBytes = 0;
     bool hasUnknownTotal = false;
@@ -162,6 +173,8 @@ class DownloadService {
         }
 
         final downloadedResult = await isDownloaded(model);
+        if (cancellationToken?.isCancelled == true) return null;
+        
         if (downloadedResult is Success<bool> && downloadedResult.value) {
           // File exists locally, check its size on disk
           try {
@@ -209,6 +222,7 @@ class DownloadService {
             // Emit unified progress using the pre-calculated grand total
             onProgress?.call(accumulatedDownloadedBytes, grandTotalBytes);
           },
+          cancellationToken: cancellationToken,
         );
         return result;
       });

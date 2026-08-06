@@ -231,5 +231,7 @@
   "optionalDependencies": "Optional Dependencies",
   "noDependenciesRequired": "No dependencies required",
   "installRequiredDependencies": "Install required dependencies",
-  "installRequiredDependenciesTooltip": "Will download:\n{dependencies}"
+  "installRequiredDependenciesTooltip": "Will download:\n{dependencies}",
+  "notificationsTitle": "Notifications",
+  "noNotifications": "No notifications"
 }

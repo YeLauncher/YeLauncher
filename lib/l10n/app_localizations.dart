@@ -1087,6 +1087,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Will download:\n{dependencies}'**
   String installRequiredDependenciesTooltip(Object dependencies);
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotifications;
 }
 
 class _AppLocalizationsDelegate
