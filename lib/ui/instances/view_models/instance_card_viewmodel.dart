@@ -7,6 +7,7 @@ import 'package:yelauncher/utilities/command.dart';
 import 'package:yelauncher/utilities/result.dart';
 import 'package:yelauncher/data/services/download_service.dart';
 import 'package:yelauncher/data/repositories/java/java_repository.dart';
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
 import 'package:yelauncher/ui/core/notification_service.dart';
 import 'package:yelauncher/ui/core/button.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -15,6 +16,7 @@ class InstanceCardViewModel extends ChangeNotifier {
   final MinecraftRepository _minecraftRepository;
   final InstanceRepository _instanceRepository;
   final JavaRepository _javaRepository;
+  final InstanceStylingRepository stylingRepository;
   late final Command0 installInstance;
   late final Command0 runInstance;
   late final Command0 stopInstance;
@@ -49,6 +51,7 @@ class InstanceCardViewModel extends ChangeNotifier {
     required InstanceRepository instanceRepository,
     required DownloadService downloadService,
     required JavaRepository javaRepository,
+    required this.stylingRepository,
   }) : _minecraftRepository = minecraftRepository,
        _instanceRepository = instanceRepository,
        _javaRepository = javaRepository,

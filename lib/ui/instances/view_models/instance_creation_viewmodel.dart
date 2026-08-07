@@ -7,6 +7,7 @@ import 'package:yelauncher/domain/models/instance/instance_model.dart';
 import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart';
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
 import 'package:yelauncher/domain/models/mod_loader/mod_loader_version_model.dart';
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
 import 'package:yelauncher/utilities/command.dart';
 import 'package:yelauncher/utilities/result.dart';
 
@@ -23,26 +24,10 @@ class InstanceCreationViewModel extends ChangeNotifier {
   MinecraftVersionModel? selectedVersion;
   String selectedModLoader = 'vanilla';
   
-  static const List<String> availableIcons = [
-    'inventory_2_rounded',
-    'swords_rounded',
-    'eco_rounded',
-    'home_rounded',
-    'star_rounded',
-    'sports_esports_rounded',
-    'public_rounded',
-  ];
+  final InstanceStylingRepository stylingRepository;
 
-  static const List<String> availableColors = [
-    '#3D5A80',
-    '#EE6C4D',
-    '#81B29A',
-    '#9B5DE5',
-    '#293241',
-  ];
-
-  String selectedIcon = availableIcons.first;
-  String selectedColor = availableColors.first;
+  late String selectedIcon;
+  late String selectedColor;
   
   final List<String> _existingInstanceNames;
 
@@ -81,11 +66,14 @@ class InstanceCreationViewModel extends ChangeNotifier {
     required MinecraftRepository minecraftRepository,
     required List<ModLoaderRepository> modLoaderRepositories,
     required InstanceRepository instanceRepository,
+    required this.stylingRepository,
     required List<String> existingInstanceNames,
   }) : _minecraftRepository = minecraftRepository,
        _modLoaderRepositories = modLoaderRepositories,
        _instanceRepository = instanceRepository,
        _existingInstanceNames = existingInstanceNames.map((n) => n.toLowerCase()).toList() {
+    selectedIcon = stylingRepository.availableIcons.first;
+    selectedColor = stylingRepository.availableColors.first;
     loadVersions = Command0(_loadVersions);
     loadModLoaders = Command1(_loadModLoaders);
   }

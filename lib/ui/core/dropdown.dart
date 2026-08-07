@@ -164,13 +164,13 @@ class _DropdownState<T> extends State<Dropdown<T>> {
                   Icon(
                     widget.iconData,
                     color: AppColors.dark.onSurface,
-                    size: AppText.defaultTheme.label.fontSize,
+                    size: AppText.defaultTheme.labelLarge.fontSize,
                   ),
                   const SizedBox(width: 8),
                 ],
                 Text(
                   currentItem.label,
-                  style: AppText.defaultTheme.label.copyWith(
+                  style: AppText.defaultTheme.labelLarge.copyWith(
                     color: AppColors.dark.onSurface,
                   ),
                 ),
@@ -178,7 +178,7 @@ class _DropdownState<T> extends State<Dropdown<T>> {
                 Icon(
                   _isOpen ? Symbols.arrow_drop_up_rounded : Symbols.arrow_drop_down_rounded,
                   color: AppColors.dark.onSurfaceVariant,
-                  size: AppText.defaultTheme.label.fontSize! + 4,
+                  size: AppText.defaultTheme.labelLarge.fontSize! + 4,
                 ),
               ],
             ),
@@ -228,7 +228,7 @@ class _DropdownMenuItemState<T> extends State<_DropdownMenuItem<T>> {
               Expanded(
                 child: Text(
                   widget.item.label,
-                  style: AppText.defaultTheme.body.copyWith(
+                  style: AppText.defaultTheme.bodyLarge.copyWith(
                     color: widget.isSelected
                         ? AppColors.dark.primary
                         : AppColors.dark.onSurface,

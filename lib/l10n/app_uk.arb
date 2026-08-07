@@ -59,6 +59,7 @@
   "tabResourcepacks": "Ресурспаки",
   "tabDatapacks": "Датапаки",
   "tabModpacks": "Модпаки",
+  "tabShaders": "Шейдери",
   "addButton": "Додати",
   "byAuthor": "від {author}",
   "@byAuthor": {
@@ -209,5 +210,18 @@
   "contentTypeMod": "МОД",
   "contentTypeResourcepack": "ТЕКСТУРИ",
   "contentTypeDatapack": "ДАТАПАК",
-  "contentTypeModpack": "МОДПАК"
+  "contentTypeModpack": "МОДПАК",
+  "contentTypeShader": "ШЕЙДЕР",
+  "minecraftVersions": "Версії Minecraft",
+  "downloadProgress": "{downloaded} МБ / {total} МБ",
+
+  "downloadProgressUnknownTotal": "{downloaded} МБ",
+  "clearSelection": "Очистити вибір",
+  "requiredDependencies": "Обов'язкові залежності",
+  "optionalDependencies": "Опціональні залежності",
+  "noDependenciesRequired": "Залежності не потрібні",
+  "installRequiredDependencies": "Встановити необхідні залежності",
+  "installRequiredDependenciesTooltip": "Буде завантажено:\n{dependencies}",
+  "notificationsTitle": "Сповіщення",
+  "noNotifications": "Немає сповіщень"
 }

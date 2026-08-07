@@ -10,18 +10,42 @@ class ContentItem {
   final String slug;
   final String title;
   final String description;
+  final String? body;
   final String projectType;
   final String? iconUrl;
   final int? downloads;
   final String? organization;
   final String? teamId;
   final String? author;
+  @JsonKey(readValue: _readLoaders)
   final List<String>? loaders;
+  @JsonKey(readValue: _readGameVersions)
   final List<String>? gameVersions;
   @JsonKey(readValue: _readGallery)
   final List<ContentGalleryImage>? gallery;
 
   static Object? _readId(Map json, String key) => json['project_id'] ?? json['id'];
+
+  static Object? _readLoaders(Map json, String key) {
+    if (json.containsKey('loaders')) return json['loaders'];
+    if (json.containsKey('display_categories')) {
+      final cats = List<String>.from(json['display_categories'] as List);
+      final loaders = cats.where((c) => const ['fabric', 'forge', 'neoforge', 'quilt', 'liteloader'].contains(c.toLowerCase())).toList();
+      if (loaders.isNotEmpty) return loaders;
+    }
+    if (json.containsKey('categories')) {
+      final cats = List<String>.from(json['categories'] as List);
+      final loaders = cats.where((c) => const ['fabric', 'forge', 'neoforge', 'quilt', 'liteloader'].contains(c.toLowerCase())).toList();
+      if (loaders.isNotEmpty) return loaders;
+    }
+    return json[key];
+  }
+
+  static Object? _readGameVersions(Map json, String key) {
+    if (json.containsKey('game_versions')) return json['game_versions'];
+    if (json.containsKey('versions')) return json['versions'];
+    return json[key];
+  }
 
   static Object? _readGallery(Map json, String key) {
     if (json[key] is List) {
@@ -40,6 +64,7 @@ class ContentItem {
     required this.slug,
     required this.title,
     required this.description,
+    this.body,
     required this.projectType,
     this.iconUrl,
     this.downloads,

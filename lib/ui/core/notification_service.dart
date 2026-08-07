@@ -52,7 +52,7 @@ class NotificationService {
                     ),
                     Text(
                       message,
-                      style: AppText.defaultTheme.body.copyWith(
+                      style: AppText.defaultTheme.bodyLarge.copyWith(
                         color: isError ? AppColors.dark.surface : AppColors.dark.onSurface,
                         decoration: TextDecoration.none,
                       ),

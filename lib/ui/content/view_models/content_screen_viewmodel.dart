@@ -21,7 +21,7 @@ class ContentScreenViewModel extends ChangeNotifier {
   }
 
   List<ContentItem> items = [];
-  bool isLoading = false;
+  bool isLoading = true;
   bool isLoadingMore = false; // Tracks pagination loading state
   bool hasMoreData = true;     // Flag to prevent useless API calls
 

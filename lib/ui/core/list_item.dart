@@ -6,7 +6,7 @@ import 'package:yelauncher/ui/core/themes/text.dart';
 
 import 'chip.dart';
 
-class ListItem extends StatelessWidget {
+class ListItem extends StatefulWidget {
   const ListItem({
     super.key,
     required this.title,
@@ -15,6 +15,7 @@ class ListItem extends StatelessWidget {
     this.isSelected = false,
     this.onTap,
     required this.selectedColor,
+    this.selectedBackgroundColor,
     this.chip,
     this.subtitle,
     this.leadingWidget,
@@ -29,6 +30,7 @@ class ListItem extends StatelessWidget {
   final Widget? leadingWidget;
   final List<Widget>? tags;
   final Color selectedColor;
+  final Color? selectedBackgroundColor;
   final bool isSelected;
   final VoidCallback? onTap;
 
@@ -43,7 +45,8 @@ class ListItem extends StatelessWidget {
     required this.isSelected,
     this.onTap,
     super.key,
-  }) : selectedColor = AppColors.dark.primary;
+  }) : selectedColor = AppColors.dark.primary,
+       selectedBackgroundColor = AppColors.dark.primaryContainer;
 
   ListItem.secondary({
     this.subtitle,
@@ -56,70 +59,101 @@ class ListItem extends StatelessWidget {
     required this.isSelected,
     this.onTap,
     super.key,
-  }) : selectedColor = AppColors.dark.secondary;
+  }) : selectedColor = AppColors.dark.secondary,
+       selectedBackgroundColor = null;
+
+  @override
+  State<ListItem> createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.dark.surfaceContainerHigh,
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          border: Border.all(
-            width: 2,
-            color: isSelected ? selectedColor : AppColors.transparent,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            if (leadingWidget != null) ...[
-              leadingWidget!,
-              const SizedBox(width: 16),
-            ],
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 4,
-                children: [
-                  Text(
-                    title,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.defaultTheme.labelLarge.copyWith(
-                      color: AppColors.dark.onSurface,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: widget.onTap != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? (widget.selectedBackgroundColor ??
+                      widget.selectedColor.withValues(alpha: 0.1))
+                : _isHovered
+                ? AppColors.dark.surfaceContainerHighest
+                : AppColors.dark.surfaceContainerHigh,
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            border: Border.all(
+              width: 1.5,
+              color: widget.isSelected
+                  ? widget.selectedColor
+                  : AppColors.dark.outlineVariant.withValues(
+                      alpha: _isHovered ? 1.0 : 0.0,
                     ),
-                  ),
-                  if (subtitle != null) Text(
-                    subtitle!,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.defaultTheme.caption.copyWith(
-                      color: AppColors.dark.onSurfaceVariant,
-                    ),
-                  ),
-                  if (tags != null && tags!.isNotEmpty)
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: tags!,
-                    ),
-                ],
-              ),
             ),
-            const SizedBox(width: 16),
-            if (chip != null) ...[
-              chip!,
-              if (trailingWidget != null || (trailingIcon != null && isSelected))
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              if (widget.leadingWidget != null) ...[
+                widget.leadingWidget!,
                 const SizedBox(width: 16),
+              ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4,
+                  children: [
+                    Text(
+                      widget.title,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.defaultTheme.labelLarge.copyWith(
+                        color: widget.isSelected
+                            ? widget.selectedColor
+                            : AppColors.dark.onSurface,
+                      ),
+                    ),
+                    if (widget.subtitle != null)
+                      Text(
+                        widget.subtitle!,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppText.defaultTheme.labelSmall.copyWith(
+                          color: AppColors.dark.onSurfaceVariant,
+                        ),
+                      ),
+                    if (widget.tags != null && widget.tags!.isNotEmpty)
+                      Wrap(spacing: 8, runSpacing: 8, children: widget.tags!),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              if (widget.chip != null) ...[
+                widget.chip!,
+                if (widget.trailingWidget != null ||
+                    (widget.trailingIcon != null && widget.isSelected))
+                  const SizedBox(width: 16),
+              ],
+              if (widget.trailingIcon != null && widget.isSelected) ...[
+                Icon(
+                  widget.trailingIcon,
+                  size: 24,
+                  color: widget.selectedColor,
+                  weight: 600,
+                ),
+                if (widget.trailingWidget != null) const SizedBox(width: 16),
+              ],
+              if (widget.trailingWidget != null) widget.trailingWidget!,
             ],
-            if (trailingIcon != null && isSelected)
-              Icon(trailingIcon, size: 24, color: selectedColor, weight: 600),
-            ?trailingWidget,
-          ],
+          ),
         ),
       ),
     );

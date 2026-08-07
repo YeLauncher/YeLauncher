@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:yelauncher/data/services/api/content_provider.dart';
@@ -54,7 +55,7 @@ class ModrinthClient implements ContentProvider {
       final response = await _httpClient.get(uri, headers: _headers);
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = await Isolate.run(() => jsonDecode(response.body));
         final hits = json['hits'] as List;
         return Success(hits.map((e) => ContentItem.fromJson(e)).toList());
       } else {
@@ -73,7 +74,7 @@ class ModrinthClient implements ContentProvider {
       final response = await _httpClient.get(uri, headers: _headers);
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = await Isolate.run(() => jsonDecode(response.body));
         return Success(ContentItem.fromJson(json));
       } else {
         return Failure(Exception('Failed to get content: ${response.statusCode}'));
@@ -91,7 +92,7 @@ class ModrinthClient implements ContentProvider {
       final response = await _httpClient.get(uri, headers: _headers);
 
       if (response.statusCode == 200) {
-        final List json = jsonDecode(response.body);
+        final List json = await Isolate.run(() => jsonDecode(response.body));
         return Success(json.map((e) => ContentVersion.fromJson(e)).toList());
       } else {
         return Failure(Exception('Failed to get versions: ${response.statusCode}'));
@@ -109,7 +110,7 @@ class ModrinthClient implements ContentProvider {
       final response = await _httpClient.get(uri, headers: _headers);
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = await Isolate.run(() => jsonDecode(response.body));
         return Success(ContentVersion.fromJson(json));
       } else {
         return Failure(Exception('Failed to get version: ${response.statusCode}'));
@@ -127,7 +128,7 @@ class ModrinthClient implements ContentProvider {
       final response = await _httpClient.get(uri, headers: _headers);
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = await Isolate.run(() => jsonDecode(response.body));
         final projects = json['projects'] as List;
         return Success(projects.map((e) => ContentItem.fromJson(e)).toList());
       } else {

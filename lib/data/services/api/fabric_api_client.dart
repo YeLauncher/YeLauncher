@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:yelauncher/data/services/api/models/fabric_version_api_model.dart';
 import 'package:logging/logging.dart';
@@ -24,7 +25,7 @@ class FabricApiClient {
       final HttpClientResponse response = await request.close();
       final String body = await response.transform(utf8.decoder).join();
 
-      final List<dynamic> jsonList = jsonDecode(body) as List<dynamic>;
+      final List<dynamic> jsonList = await Isolate.run(() => jsonDecode(body) as List<dynamic>);
       return jsonList
           .map((e) => FabricVersionApiModel.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -45,7 +46,7 @@ class FabricApiClient {
       final HttpClientRequest request = await client.getUrl(uri);
       final HttpClientResponse response = await request.close();
       final String body = await response.transform(utf8.decoder).join();
-      return jsonDecode(body) as Map<String, dynamic>;
+      return await Isolate.run(() => jsonDecode(body) as Map<String, dynamic>);
     } catch (e, stack) {
       _log.severe('Failed to fetch Fabric profile json for $minecraftVersion / $loaderVersion', e, stack);
       rethrow;

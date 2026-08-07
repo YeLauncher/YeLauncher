@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:provider/provider.dart';
-import 'package:yelauncher/ui/content/widgets/content_install_dialog.dart';
+import 'package:yelauncher/routing/breadcrumb_service.dart';
+import 'package:yelauncher/ui/content/pages/content_detail_page.dart';
 import 'package:yelauncher/ui/content/view_models/content_detail_viewmodel.dart';
 import 'package:yelauncher/domain/models/content/content_item.dart';
 import 'package:yelauncher/domain/models/content/content_version.dart';
@@ -46,6 +47,7 @@ Widget contentInstallDialogPreview() {
     projectId: 'mock_mod_id',
     name: '1.0.0',
     versionNumber: '1.0.0',
+    versionType: 'release',
     gameVersions: ['1.20.1'],
     loaders: ['fabric', 'forge'],
     files: [
@@ -58,7 +60,9 @@ Widget contentInstallDialogPreview() {
   );
 
   final viewModel = ContentDetailViewModel(
-    item: item,
+    id: item.id,
+    initialItem: item,
+    breadcrumbService: BreadcrumbService(),
     contentRepository: _FakeContentRepo(),
     instanceRepository: _FakeInstanceRepo(),
   );
@@ -96,9 +100,9 @@ Widget contentInstallDialogPreview() {
     child: Center(
       child: Material(
         color: Colors.transparent,
-        child: ContentInstallDialog(
+        child: ContentDetailPage(
           viewModel: viewModel,
-          version: version,
+          targetVersion: version,
         ),
       ),
     ),
@@ -120,13 +124,16 @@ Widget contentInstallDialogEmptyPreview() {
     projectId: 'mock_mod_id',
     name: '1.0.0',
     versionNumber: '1.0.0',
+    versionType: 'release',
     gameVersions: ['1.16.5'], // No compatible instances
     loaders: ['fabric'],
     files: [],
   );
 
   final viewModel = ContentDetailViewModel(
-    item: item,
+    id: item.id,
+    initialItem: item,
+    breadcrumbService: BreadcrumbService(),
     contentRepository: _FakeContentRepo(),
     instanceRepository: _FakeInstanceRepo(),
   );
@@ -149,9 +156,9 @@ Widget contentInstallDialogEmptyPreview() {
     child: Center(
       child: Material(
         color: Colors.transparent,
-        child: ContentInstallDialog(
+        child: ContentDetailPage(
           viewModel: viewModel,
-          version: version,
+          targetVersion: version,
         ),
       ),
     ),

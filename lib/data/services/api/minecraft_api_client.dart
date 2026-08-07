@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:yelauncher/data/services/api/models/version_api_model.dart';
 import 'package:yelauncher/data/services/api/models/version_manifest_api_model.dart';
@@ -38,9 +39,8 @@ class MinecraftApiClient {
       );
       final HttpClientResponse response = await request.close();
       final String body = await response.transform(utf8.decoder).join();
-      final manifest = VersionManifestApiModel.fromJson(
-        jsonDecode(body) as Map<String, dynamic>,
-      );
+      final jsonMap = await Isolate.run(() => jsonDecode(body) as Map<String, dynamic>);
+      final manifest = VersionManifestApiModel.fromJson(jsonMap);
       _cachedManifest = manifest;
       return Result.success(manifest);
     } on Exception catch (e, stack) {
@@ -76,7 +76,7 @@ class MinecraftApiClient {
       );
       final HttpClientResponse response = await request.close();
       final String body = await response.transform(utf8.decoder).join();
-      var json = jsonDecode(body) as Map<String, dynamic>;
+      var json = await Isolate.run(() => jsonDecode(body) as Map<String, dynamic>);
       var minumumLauncherVersion = json["minimumLauncherVersion"];
       var strategy = _strategies.firstWhere(
         (strategy) => strategy.isCompatible(
@@ -96,11 +96,8 @@ class MinecraftApiClient {
       final HttpClientRequest request = await client.getUrl(Uri.parse(url));
       final HttpClientResponse response = await request.close();
       final String body = await response.transform(utf8.decoder).join();
-      return Result.success(
-        AssetIndexFileApiModel.fromJson(
-          jsonDecode(body) as Map<String, dynamic>,
-        ),
-      );
+      final jsonMap = await Isolate.run(() => jsonDecode(body) as Map<String, dynamic>);
+      return Result.success(AssetIndexFileApiModel.fromJson(jsonMap));
     } on Exception catch (e, stack) {
       _log.severe('Failed to get asset index from $url', e, stack);
       return Result.failure(e);

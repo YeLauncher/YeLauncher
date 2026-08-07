@@ -70,7 +70,7 @@ class _AppSliderState extends State<AppSlider> {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             label,
-            style: AppText.defaultTheme.labelLarge.copyWith(
+            style: AppText.defaultTheme.titleMedium.copyWith(
               color: AppColors.dark.primary,
             ),
           ),
@@ -128,14 +128,14 @@ class _AppSliderState extends State<AppSlider> {
               Text(
                 widget.valueLabelBuilder?.call(widget.min) ??
                     widget.min.toStringAsFixed(0),
-                style: AppText.defaultTheme.caption.copyWith(
+                style: AppText.defaultTheme.labelSmall.copyWith(
                   color: AppColors.dark.onSurfaceVariant,
                 ),
               ),
               Text(
                 widget.valueLabelBuilder?.call(widget.max) ??
                     widget.max.toStringAsFixed(0),
-                style: AppText.defaultTheme.caption.copyWith(
+                style: AppText.defaultTheme.labelSmall.copyWith(
                   color: AppColors.dark.onSurfaceVariant,
                 ),
               ),

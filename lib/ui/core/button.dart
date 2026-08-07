@@ -73,7 +73,7 @@ class _ButtonState extends State<Button> {
                         child: Icon(
                           widget.iconData,
                           color: widget.textColor,
-                          size: AppText.defaultTheme.label.fontSize,
+                          size: AppText.defaultTheme.labelLarge.fontSize,
                           weight: 600,
                         ),
                       )
@@ -83,7 +83,7 @@ class _ButtonState extends State<Button> {
                     widget.label,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: AppText.defaultTheme.label.copyWith(
+                    style: AppText.defaultTheme.labelLarge.copyWith(
                       color: widget.textColor,
                     ),
                   ),
