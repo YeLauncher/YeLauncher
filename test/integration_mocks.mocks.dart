@@ -6,12 +6,15 @@
 import 'dart:async' as _i4;
 import 'dart:ui' as _i2;
 
+import 'package:flutter/widgets.dart' as _i22;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:yelauncher/data/repositories/content/content_repository.dart'
     as _i11;
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart'
     as _i20;
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart'
+    as _i21;
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart'
     as _i3;
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart'
@@ -33,6 +36,10 @@ import 'package:yelauncher/domain/models/minecraft/minecraft_version_model.dart'
     as _i8;
 import 'package:yelauncher/domain/models/mod_loader/mod_loader_version_model.dart'
     as _i15;
+import 'package:yelauncher/domain/models/notification/notification_model.dart'
+    as _i25;
+import 'package:yelauncher/ui/core/notification_provider.dart' as _i24;
+import 'package:yelauncher/ui/core/toast/toast_service.dart' as _i23;
 import 'package:yelauncher/utilities/result.dart' as _i5;
 
 // ignore_for_file: type=lint
@@ -52,6 +59,11 @@ import 'package:yelauncher/utilities/result.dart' as _i5;
 
 class _FakeLocale_0 extends _i1.SmartFake implements _i2.Locale {
   _FakeLocale_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeColor_1 extends _i1.SmartFake implements _i2.Color {
+  _FakeColor_1(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -1013,4 +1025,182 @@ class MockInstanceRepository extends _i1.Mock
             returnValueForMissingStub: _i4.Future<void>.value(),
           )
           as _i4.Future<void>);
+}
+
+/// A class which mocks [InstanceStylingRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockInstanceStylingRepository extends _i1.Mock
+    implements _i21.InstanceStylingRepository {
+  @override
+  List<String> get availableIcons =>
+      (super.noSuchMethod(
+            Invocation.getter(#availableIcons),
+            returnValue: <String>[],
+            returnValueForMissingStub: <String>[],
+          )
+          as List<String>);
+
+  @override
+  List<String> get availableColors =>
+      (super.noSuchMethod(
+            Invocation.getter(#availableColors),
+            returnValue: <String>[],
+            returnValueForMissingStub: <String>[],
+          )
+          as List<String>);
+
+  @override
+  _i22.IconData getIconData(String? iconName) =>
+      (super.noSuchMethod(
+            Invocation.method(#getIconData, [iconName]),
+            returnValue: _i7.dummyValue<_i22.IconData>(
+              this,
+              Invocation.method(#getIconData, [iconName]),
+            ),
+            returnValueForMissingStub: _i7.dummyValue<_i22.IconData>(
+              this,
+              Invocation.method(#getIconData, [iconName]),
+            ),
+          )
+          as _i22.IconData);
+
+  @override
+  _i2.Color getColor(String? colorHex, {required _i2.Color? fallback}) =>
+      (super.noSuchMethod(
+            Invocation.method(#getColor, [colorHex], {#fallback: fallback}),
+            returnValue: _FakeColor_1(
+              this,
+              Invocation.method(#getColor, [colorHex], {#fallback: fallback}),
+            ),
+            returnValueForMissingStub: _FakeColor_1(
+              this,
+              Invocation.method(#getColor, [colorHex], {#fallback: fallback}),
+            ),
+          )
+          as _i2.Color);
+}
+
+/// A class which mocks [ToastService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockToastService extends _i1.Mock implements _i23.ToastService {
+  @override
+  _i4.Stream<_i23.ToastMessage> get onToast =>
+      (super.noSuchMethod(
+            Invocation.getter(#onToast),
+            returnValue: _i4.Stream<_i23.ToastMessage>.empty(),
+            returnValueForMissingStub: _i4.Stream<_i23.ToastMessage>.empty(),
+          )
+          as _i4.Stream<_i23.ToastMessage>);
+
+  @override
+  void show({
+    required String? title,
+    String? description,
+    _i23.ToastType? type = _i23.ToastType.info,
+    Duration? duration = const Duration(seconds: 4),
+  }) => super.noSuchMethod(
+    Invocation.method(#show, [], {
+      #title: title,
+      #description: description,
+      #type: type,
+      #duration: duration,
+    }),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [NotificationProvider].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationProvider extends _i1.Mock
+    implements _i24.NotificationProvider {
+  @override
+  List<_i25.NotificationModel> get notifications =>
+      (super.noSuchMethod(
+            Invocation.getter(#notifications),
+            returnValue: <_i25.NotificationModel>[],
+            returnValueForMissingStub: <_i25.NotificationModel>[],
+          )
+          as List<_i25.NotificationModel>);
+
+  @override
+  int get activeCount =>
+      (super.noSuchMethod(
+            Invocation.getter(#activeCount),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
+
+  @override
+  bool get hasListeners =>
+      (super.noSuchMethod(
+            Invocation.getter(#hasListeners),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
+
+  @override
+  void dismiss(String? id) => super.noSuchMethod(
+    Invocation.method(#dismiss, [id]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i4.Future<void> startInstallation({
+    required _i16.DownloadService? downloadService,
+    required _i20.InstanceRepository? instanceRepo,
+    required _i9.InstanceModel? selectedInstance,
+    required _i12.ContentItem? mainItem,
+    required _i13.ContentVersion? mainVersion,
+    required List<Map<String, dynamic>>? dependenciesToInstall,
+    required _i23.ToastService? toastService,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#startInstallation, [], {
+              #downloadService: downloadService,
+              #instanceRepo: instanceRepo,
+              #selectedInstance: selectedInstance,
+              #mainItem: mainItem,
+              #mainVersion: mainVersion,
+              #dependenciesToInstall: dependenciesToInstall,
+              #toastService: toastService,
+            }),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  void addListener(_i2.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#addListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeListener(_i2.VoidCallback? listener) => super.noSuchMethod(
+    Invocation.method(#removeListener, [listener]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void notifyListeners() => super.noSuchMethod(
+    Invocation.method(#notifyListeners, []),
+    returnValueForMissingStub: null,
+  );
 }

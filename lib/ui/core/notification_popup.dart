@@ -5,8 +5,6 @@ import 'package:yelauncher/ui/core/notification_provider.dart';
 import 'package:yelauncher/domain/models/notification/notification_model.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:yelauncher/ui/core/themes/text.dart';
-import 'package:material_symbols_icons/symbols.dart';
-import 'package:yelauncher/ui/core/icon_button.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
 import 'package:yelauncher/ui/core/notification_item.dart';
 
@@ -25,7 +23,10 @@ class NotificationPopup extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.dark.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.dark.outlineVariant.withValues(alpha: 0.2), width: 1),
+        border: Border.all(
+          color: AppColors.dark.outlineVariant.withValues(alpha: 0.2),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0x00000000).withValues(alpha: 0.25),
@@ -34,12 +35,15 @@ class NotificationPopup extends StatelessWidget {
           ),
         ],
       ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -76,7 +80,12 @@ class NotificationPopup extends StatelessWidget {
           ),
           if (notifications.isEmpty)
             Padding(
-              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0, top: 16.0),
+              padding: const EdgeInsets.only(
+                left: 32.0,
+                right: 32.0,
+                bottom: 32.0,
+                top: 16.0,
+              ),
               child: Center(
                 child: Text(
                   loc.noNotifications, // Add this to arb
@@ -108,36 +117,35 @@ class NotificationPopup extends StatelessWidget {
   }
 }
 
-
 class _MockNotificationProvider extends NotificationProvider {
   @override
   List<NotificationModel> get notifications => [
-        const NotificationModel(
-          id: '1',
-          title: 'Downloading Fabric Loader',
-          description: '45% - 2.1 MB / 4.5 MB',
-          progress: 0.45,
-          status: NotificationStatus.running,
-        ),
-        const NotificationModel(
-          id: '2',
-          title: 'Installation Complete',
-          description: 'Successfully installed Minecraft 1.20.1',
-          status: NotificationStatus.completed,
-        ),
-        const NotificationModel(
-          id: '3',
-          title: 'Installation Failed',
-          description: 'Network connection lost',
-          status: NotificationStatus.failed,
-        ),
-        const NotificationModel(
-          id: '4',
-          title: 'Download Cancelled',
-          description: 'Cancelled by user',
-          status: NotificationStatus.cancelled,
-        ),
-      ];
+    const NotificationModel(
+      id: '1',
+      title: 'Downloading Fabric Loader',
+      description: '45% - 2.1 MB / 4.5 MB',
+      progress: 0.45,
+      status: NotificationStatus.running,
+    ),
+    const NotificationModel(
+      id: '2',
+      title: 'Installation Complete',
+      description: 'Successfully installed Minecraft 1.20.1',
+      status: NotificationStatus.completed,
+    ),
+    const NotificationModel(
+      id: '3',
+      title: 'Installation Failed',
+      description: 'Network connection lost',
+      status: NotificationStatus.failed,
+    ),
+    const NotificationModel(
+      id: '4',
+      title: 'Download Cancelled',
+      description: 'Cancelled by user',
+      status: NotificationStatus.cancelled,
+    ),
+  ];
 }
 
 class _EmptyNotificationProvider extends NotificationProvider {
@@ -154,9 +162,7 @@ Widget populatedNotificationPopupPreview() {
     builder: (context, child) {
       return ChangeNotifierProvider<NotificationProvider>(
         create: (_) => _MockNotificationProvider(),
-        child: const Center(
-          child: NotificationPopup(),
-        ),
+        child: const Center(child: NotificationPopup()),
       );
     },
   );
@@ -171,9 +177,7 @@ Widget emptyNotificationPopupPreview() {
     builder: (context, child) {
       return ChangeNotifierProvider<NotificationProvider>(
         create: (_) => _EmptyNotificationProvider(),
-        child: const Center(
-          child: NotificationPopup(),
-        ),
+        child: const Center(child: NotificationPopup()),
       );
     },
   );

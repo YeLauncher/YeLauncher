@@ -47,8 +47,8 @@ class MinecraftService {
             arg == '--quickPlaySingleplayer' ||
             arg == '--quickPlayMultiplayer' ||
             arg == '--quickPlayRealms') {
-          // check if next argument is a variable for this flag
-          if (i + 1 < originalArgs.length && originalArgs[i + 1].startsWith('\${quickPlay')) {
+          // unconditionally skip the next argument (the value)
+          if (i + 1 < originalArgs.length) {
             i++;
           }
           continue;
@@ -93,14 +93,16 @@ class MinecraftService {
       final stdoutStream = process.stdout.asBroadcastStream();
       final stderrStream = process.stderr.asBroadcastStream();
       
+      final decoder = const Utf8Decoder(allowMalformed: true);
+      
       stdoutStream
-          .transform(utf8.decoder)
+          .transform(decoder)
           .listen((data) {
             _log.info('Minecraft: $data');
             sink.write(data);
           });
       stderrStream
-          .transform(utf8.decoder)
+          .transform(decoder)
           .listen((data) {
             _log.severe('Minecraft: $data');
             sink.write(data);

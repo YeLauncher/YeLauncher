@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/services.dart';
 import 'package:yelauncher/config/assets.dart';
@@ -82,7 +83,7 @@ class ForgeApiClient {
 
   Future<Map<String, String>> _getPromotions() async {
     final body = await _getString(_promotionsUrl);
-    final decoded = jsonDecode(body) as Map<String, dynamic>;
+    final decoded = await Isolate.run(() => jsonDecode(body) as Map<String, dynamic>);
     final promos = decoded['promos'] as Map<String, dynamic>;
     return promos.map((key, value) => MapEntry(key, value.toString()));
   }

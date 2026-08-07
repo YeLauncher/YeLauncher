@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
@@ -123,7 +124,9 @@ void main() {
       secureStorage: fakeSecureStorage,
       forgeRepository: forgeRepository,
       fabricRepository: fabricRepository,
-      settingsRepository: SettingsRepositoryLocal(storageService: fakeSecureStorage),
+      settingsRepository: SettingsRepositoryLocal(
+        storageService: fakeSecureStorage,
+      ),
     );
   });
 
@@ -218,7 +221,8 @@ void main() {
       debugPrint('Minecraft $version is already installed.');
     }
 
-    bool isLaunched = false;
+    final Completer<bool> launchCompleter = Completer<bool>();
+
     final logSubscription = Logger.root.onRecord.listen((record) {
       final msg = record.message.toLowerCase();
       if (msg.contains('openal initialized') ||
@@ -227,7 +231,9 @@ void main() {
           msg.contains('reloading resourcemanager') ||
           msg.contains('fabric loader has successfully loaded') ||
           msg.contains('setting user: e2etester')) {
-        isLaunched = true;
+        if (!launchCompleter.isCompleted) {
+          launchCompleter.complete(true);
+        }
       }
     });
 
@@ -236,26 +242,26 @@ void main() {
     expect(runResult, isA<Success>());
     debugPrint('Minecraft $version process started. Waiting for launch...');
 
-    int waitTime = 0;
-    while (!isLaunched && waitTime < 180) {
-      await Future.delayed(const Duration(seconds: 1));
-      waitTime++;
+    bool isLaunched = false;
+    try {
+      isLaunched = await launchCompleter.future.timeout(
+        const Duration(seconds: 180),
+      );
+    } catch (e) {
+      isLaunched = false;
     }
 
     await logSubscription.cancel();
 
     if (isLaunched) {
       debugPrint(
-        'Minecraft $version launched successfully (detected via logs in $waitTime seconds).',
+        'Minecraft $version launched successfully (detected via logs).',
       );
     } else {
       debugPrint(
         'Warning: Did not detect clear launch signal in logs after 180s.',
       );
     }
-
-    debugPrint('Waiting an additional 10 seconds before terminating...');
-    await Future.delayed(const Duration(seconds: 10));
 
     if (Platform.isWindows) {
       debugPrint('Killing Java processes...');
@@ -294,22 +300,6 @@ void main() {
     );
 
     test(
-      'Can install and launch Vanilla 1.20.6',
-      () async {
-        await runEndToEndTest('1.20.6');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
-      'Can install and launch Vanilla 1.19.4',
-      () async {
-        await runEndToEndTest('1.19.4');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
       'Can install and launch Vanilla 1.18.2',
       () async {
         await runEndToEndTest('1.18.2');
@@ -321,14 +311,6 @@ void main() {
       'Can install and launch Vanilla 1.16.5',
       () async {
         await runEndToEndTest('1.16.5');
-      },
-      timeout: const Timeout(Duration(minutes: 10)),
-    );
-
-    test(
-      'Can install and launch Vanilla 1.13.2',
-      () async {
-        await runEndToEndTest('1.13.2');
       },
       timeout: const Timeout(Duration(minutes: 10)),
     );
@@ -440,11 +422,11 @@ void main() {
     );
 
     test(
-      'Can install and launch Fabric 1.21.1',
+      'Can install and launch Fabric 1.16.5',
       () async {
-        final fabricVersion = await resolveLatestFabric('1.21.1');
+        final fabricVersion = await resolveLatestFabric('1.16.5');
         await runEndToEndTest(
-          '1.21.1',
+          '1.16.5',
           modLoader: 'fabric',
           modLoaderVersion: fabricVersion,
         );

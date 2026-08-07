@@ -36,6 +36,14 @@ class ContentDetailViewModel extends ChangeNotifier {
     }
   }
 
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
   bool isLoading = true;
   List<ContentVersion> versions = [];
   List<InstanceModel> instances = [];
@@ -63,6 +71,8 @@ class ContentDetailViewModel extends ChangeNotifier {
     final instancesResult = await _instanceRepository.getInstances();
     instances = instancesResult;
 
+    if (_isDisposed) return;
+    
     isLoading = false;
     notifyListeners();
   }

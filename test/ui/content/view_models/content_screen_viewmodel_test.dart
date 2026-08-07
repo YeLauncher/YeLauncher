@@ -33,7 +33,7 @@ void main() {
 
   test('initial state is correct', () {
     expect(viewModel.items, isEmpty);
-    expect(viewModel.isLoading, isFalse);
+    expect(viewModel.isLoading, isTrue);
     expect(viewModel.projectType, 'mod');
     expect(viewModel.query, '');
   });

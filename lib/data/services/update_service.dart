@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
@@ -12,6 +13,9 @@ class UpdateService {
   final _log = Logger('UpdateService');
   final String _owner = 'YeLauncher';
   final String _repo = 'YeLauncher';
+  final http.Client _client;
+
+  UpdateService({http.Client? client}) : _client = client ?? http.Client();
 
   /// Checks if an update is available. Returns the download URL if available, null otherwise.
   Future<String?> checkForUpdate() async {
@@ -20,10 +24,11 @@ class UpdateService {
       final currentVersion = Version.parse(packageInfo.version);
 
       final url = Uri.parse('https://api.github.com/repos/$_owner/$_repo/releases/latest');
-      final response = await http.get(url);
+      final response = await _client.get(url);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final body = response.body;
+        final data = await Isolate.run(() => jsonDecode(body) as Map<String, dynamic>);
         final tagName = data['tag_name'] as String;
         // Handle tags like 'v1.0.0'
         final versionString = tagName.startsWith('v') ? tagName.substring(1) : tagName;
@@ -61,11 +66,10 @@ class UpdateService {
     return null;
   }
 
-  /// Downloads the update to a temporary file and returns its path.
   Future<File?> downloadUpdate(String url, void Function(double) onProgress) async {
     try {
       final request = http.Request('GET', Uri.parse(url));
-      final response = await http.Client().send(request);
+      final response = await _client.send(request);
 
       if (response.statusCode != 200) {
         _log.warning('Failed to download update: ${response.statusCode}');
@@ -96,7 +100,6 @@ class UpdateService {
     }
   }
 
-  /// Installs the update by launching the downloaded file.
   Future<void> installUpdate(File file) async {
     try {
       if (Platform.isWindows) {
