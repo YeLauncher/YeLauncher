@@ -410,6 +410,12 @@ abstract class AppLocalizations {
   /// **'Modpacks'**
   String get tabModpacks;
 
+  /// No description provided for @tabShaders.
+  ///
+  /// In en, this message translates to:
+  /// **'Shaders'**
+  String get tabShaders;
+
   /// No description provided for @addButton.
   ///
   /// In en, this message translates to:
@@ -1021,6 +1027,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'MODPACK'**
   String get contentTypeModpack;
+
+  /// No description provided for @contentTypeShader.
+  ///
+  /// In en, this message translates to:
+  /// **'SHADER'**
+  String get contentTypeShader;
+
+  /// No description provided for @minecraftVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'Minecraft Versions'**
+  String get minecraftVersions;
+
+  /// No description provided for @downloadProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{downloaded} MB / {total} MB'**
+  String downloadProgress(String downloaded, String total);
+
+  /// No description provided for @downloadProgressUnknownTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{downloaded} MB'**
+  String downloadProgressUnknownTotal(String downloaded);
+
+  /// No description provided for @clearSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get clearSelection;
+
+  /// No description provided for @requiredDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Required Dependencies'**
+  String get requiredDependencies;
+
+  /// No description provided for @optionalDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional Dependencies'**
+  String get optionalDependencies;
+
+  /// No description provided for @noDependenciesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'No dependencies required'**
+  String get noDependenciesRequired;
+
+  /// No description provided for @installRequiredDependencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Install required dependencies'**
+  String get installRequiredDependencies;
+
+  /// No description provided for @installRequiredDependenciesTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Will download:\n{dependencies}'**
+  String installRequiredDependenciesTooltip(Object dependencies);
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotifications;
 }
 
 class _AppLocalizationsDelegate

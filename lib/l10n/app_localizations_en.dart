@@ -169,6 +169,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabModpacks => 'Modpacks';
 
   @override
+  String get tabShaders => 'Shaders';
+
+  @override
   String get addButton => 'Add';
 
   @override
@@ -498,4 +501,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contentTypeModpack => 'MODPACK';
+
+  @override
+  String get contentTypeShader => 'SHADER';
+
+  @override
+  String get minecraftVersions => 'Minecraft Versions';
+
+  @override
+  String downloadProgress(String downloaded, String total) {
+    return '$downloaded MB / $total MB';
+  }
+
+  @override
+  String downloadProgressUnknownTotal(String downloaded) {
+    return '$downloaded MB';
+  }
+
+  @override
+  String get clearSelection => 'Clear selection';
+
+  @override
+  String get requiredDependencies => 'Required Dependencies';
+
+  @override
+  String get optionalDependencies => 'Optional Dependencies';
+
+  @override
+  String get noDependenciesRequired => 'No dependencies required';
+
+  @override
+  String get installRequiredDependencies => 'Install required dependencies';
+
+  @override
+  String installRequiredDependenciesTooltip(Object dependencies) {
+    return 'Will download:\n$dependencies';
+  }
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications';
 }

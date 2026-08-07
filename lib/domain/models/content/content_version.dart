@@ -10,6 +10,7 @@ class ContentVersion {
   final String projectId;
   final String name;
   final String versionNumber;
+  final String versionType;
   final List<String> gameVersions;
   final List<String> loaders;
   final List<ContentFile> files;
@@ -20,6 +21,7 @@ class ContentVersion {
     required this.projectId,
     required this.name,
     required this.versionNumber,
+    required this.versionType,
     required this.gameVersions,
     required this.loaders,
     required this.files,

@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:yelauncher/ui/core/toast/toast_service.dart';
 import 'package:yelauncher/config/environment_config.dart';
 import 'package:yelauncher/data/services/api/content_provider.dart';
 import 'package:yelauncher/data/services/api/modrinth_client.dart';
@@ -27,10 +28,19 @@ import 'package:yelauncher/data/services/file_service.dart';
 import 'package:yelauncher/data/services/minecraft_service.dart';
 import 'package:yelauncher/data/services/update_service.dart';
 import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
-
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
+import 'package:yelauncher/routing/breadcrumb_service.dart';
+import 'package:yelauncher/ui/core/notification_provider.dart';
 
 List<SingleChildWidget> get _sharedProviders {
   return [
+    Provider<ToastService>(
+      create: (_) => ToastService(),
+      dispose: (_, service) => service.dispose(),
+    ),
+    ChangeNotifierProvider(create: (_) => NotificationProvider()),
+    ChangeNotifierProvider(create: (_) => BreadcrumbService()),
+    Provider(create: (_) => InstanceStylingRepository()),
     Provider(create: (_) => FileService()),
     Provider(create: (_) => MinecraftService()),
     Provider(create: (_) => UpdateService()),

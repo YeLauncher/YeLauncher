@@ -59,7 +59,7 @@ class Chip extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: AppText.defaultTheme.label.copyWith(color: textColor),
+              style: AppText.defaultTheme.labelLarge.copyWith(color: textColor),
               overflow: TextOverflow.ellipsis,
             ),
           ),

@@ -1,5 +1,6 @@
 abstract final class Assets {
   static const versionManifest = 'assets/version_manifest_v2.json';
+  static const logo = 'assets/logo.svg';
   static const fabricLogo = 'assets/fabric.svg';
   static const forgeLogo = 'assets/forge.svg';
   static const minecraftLogo = 'assets/minecraft.svg';

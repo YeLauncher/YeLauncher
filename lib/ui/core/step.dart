@@ -72,7 +72,7 @@ class _StepState extends State<Step> {
           ),
           Text(
             widget.title,
-            style: AppText.defaultTheme.caption.copyWith(color: _textColor),
+            style: AppText.defaultTheme.labelSmall.copyWith(color: _textColor),
           ),
         ],
       ),

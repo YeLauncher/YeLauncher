@@ -8,6 +8,7 @@ final _logger = Logger('SecureStorageService');
 
 class SecureStorageService {
   static const _instance = FlutterSecureStorage();
+
   static const _profilesKey = 'minecraft_profiles';
   static const _selectedProfileKey = 'selected_minecraft_profile';
   static const _legacyProfileKey = 'minecraft_profile';

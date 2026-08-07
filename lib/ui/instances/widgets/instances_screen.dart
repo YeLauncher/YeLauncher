@@ -4,6 +4,7 @@ import 'package:flutter/material.dart'
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:yelauncher/data/repositories/instances/instance_repository.dart';
+import 'package:yelauncher/data/repositories/instances/instance_styling_repository.dart';
 import 'package:yelauncher/data/repositories/minecraft/minecraft_repository.dart';
 import 'package:yelauncher/data/repositories/mod_loader/mod_loader_repository.dart';
 import 'package:yelauncher/data/services/download_service.dart';
@@ -77,31 +78,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              spacing: 16,
-                              children: [
-                                Icon(
-                                  Symbols.sports_esports_rounded,
-                                  size: 40,
-                                  weight: 700,
-                                  color: AppColors.dark.primary,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)!.instancesTab,
-                                  style: AppText.defaultTheme.titleLarge
-                                      .copyWith(
-                                        color: AppColors.dark.onSurface,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.instancesSubtitle,
-                              style: AppText.defaultTheme.body.copyWith(
-                                color: AppColors.dark.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
+
                             widget.viewModel.isSelectionMode
                                 ? Row(
                                     children: [
@@ -109,7 +86,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                         AppLocalizations.of(context)!.selectedCount(
                                           widget.viewModel.selectedInstanceIds.length,
                                         ),
-                                        style: AppText.defaultTheme.label.copyWith(
+                                        style: AppText.defaultTheme.titleMedium.copyWith(
                                           color: AppColors.dark.onSurface,
                                         ),
                                       ),
@@ -225,7 +202,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                     AppLocalizations.of(
                                       context,
                                     )!.noInstancesTitle,
-                                    style: AppText.defaultTheme.titleSmall
+                                    style: AppText.defaultTheme.headlineSmall
                                         .copyWith(
                                           color: AppColors.dark.onSurface,
                                         ),
@@ -234,7 +211,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                     AppLocalizations.of(
                                       context,
                                     )!.noInstancesSubtitle,
-                                    style: AppText.defaultTheme.bodySmall
+                                    style: AppText.defaultTheme.bodyLarge
                                         .copyWith(
                                           color:
                                               AppColors.dark.onSurfaceVariant,
@@ -278,6 +255,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
                                 .read<InstanceRepository>(),
                             downloadService: context.read<DownloadService>(),
                             javaRepository: context.read<JavaRepository>(),
+                            stylingRepository: context.read<InstanceStylingRepository>(),
                           ),
                           child: Builder(
                             builder: (context) {
@@ -396,6 +374,7 @@ class _InstancesScreenState extends State<InstancesScreen> {
       minecraftRepository: context.read<MinecraftRepository>(),
       modLoaderRepositories: context.read<List<ModLoaderRepository>>(),
       instanceRepository: context.read<InstanceRepository>(),
+      stylingRepository: context.read<InstanceStylingRepository>(),
       existingInstanceNames: widget.viewModel.instances
           .map((i) => i.name)
           .toList(),
@@ -424,13 +403,13 @@ class _InstancesScreenState extends State<InstancesScreen> {
           backgroundColor: AppColors.dark.surfaceContainerHigh,
           title: Text(
             AppLocalizations.of(context)!.deleteInstanceTitle,
-            style: AppText.defaultTheme.titleSmall.copyWith(
+            style: AppText.defaultTheme.headlineSmall.copyWith(
               color: AppColors.dark.onSurface,
             ),
           ),
           content: Text(
             AppLocalizations.of(context)!.deleteInstanceContent,
-            style: AppText.defaultTheme.body.copyWith(
+            style: AppText.defaultTheme.bodyLarge.copyWith(
               color: AppColors.dark.onSurfaceVariant,
             ),
           ),

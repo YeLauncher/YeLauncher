@@ -88,13 +88,13 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                       children: [
                         Text(
                           AppLocalizations.of(context)!.createInstanceTitle,
-                          style: AppText.defaultTheme.title.copyWith(
+                          style: AppText.defaultTheme.headlineMedium.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
                         ),
                         Text(
                           AppLocalizations.of(context)!.createInstanceSubtitle,
-                          style: AppText.defaultTheme.bodySmall.copyWith(
+                          style: AppText.defaultTheme.bodyLarge.copyWith(
                             color: AppColors.dark.onSurfaceVariant,
                           ),
                         ),
@@ -206,7 +206,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             ),
             Text(
               AppLocalizations.of(context)!.instanceNameLabel,
-              style: AppText.defaultTheme.label.copyWith(
+              style: AppText.defaultTheme.labelLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
@@ -227,21 +227,8 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
   }
 
   Widget get _stepAppearance {
-    IconData getIconData(String iconName) {
-      switch (iconName) {
-        case 'inventory_2_rounded': return Symbols.inventory_2_rounded;
-        case 'swords_rounded': return Symbols.swords_rounded;
-        case 'eco_rounded': return Symbols.eco_rounded;
-        case 'home_rounded': return Symbols.home_rounded;
-        case 'star_rounded': return Symbols.star_rounded;
-        case 'sports_esports_rounded': return Symbols.sports_esports_rounded;
-        case 'public_rounded': return Symbols.public_rounded;
-        default: return Symbols.inventory_2_rounded;
-      }
-    }
-
     final selectedColorHex = widget.viewModel.selectedColor;
-    final selectedBgColor = Color(int.parse(selectedColorHex.replaceAll('#', '0xFF')));
+    final selectedBgColor = widget.viewModel.stylingRepository.getColor(selectedColorHex, fallback: AppColors.dark.primaryContainer);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +248,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                   ),
                   Text(
                     AppLocalizations.of(context)!.iconLabel,
-                    style: AppText.defaultTheme.label.copyWith(
+                    style: AppText.defaultTheme.labelLarge.copyWith(
                       color: AppColors.dark.onSurface,
                     ),
                   ),
@@ -271,7 +258,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: InstanceCreationViewModel.availableIcons.map((icon) {
+                children: widget.viewModel.stylingRepository.availableIcons.map((icon) {
                   final isSelected = widget.viewModel.selectedIcon == icon;
                   return MouseRegion(
                     cursor: SystemMouseCursors.click,
@@ -290,7 +277,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                         ),
                         child: Center(
                           child: Icon(
-                            getIconData(icon),
+                            widget.viewModel.stylingRepository.getIconData(icon),
                             color: isSelected ? AppColors.dark.primary : AppColors.dark.onSurfaceVariant,
                             size: 24,
                           ),
@@ -312,7 +299,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                   ),
                   Text(
                     AppLocalizations.of(context)!.colorLabel,
-                    style: AppText.defaultTheme.label.copyWith(
+                    style: AppText.defaultTheme.labelLarge.copyWith(
                       color: AppColors.dark.onSurface,
                     ),
                   ),
@@ -322,9 +309,9 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
-                children: InstanceCreationViewModel.availableColors.map((colorHex) {
+                children: widget.viewModel.stylingRepository.availableColors.map((colorHex) {
                   final isSelected = widget.viewModel.selectedColor == colorHex;
-                  final color = Color(int.parse(colorHex.replaceAll('#', '0xFF')));
+                  final color = widget.viewModel.stylingRepository.getColor(colorHex, fallback: AppColors.dark.primaryContainer);
                   return MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
@@ -369,7 +356,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
           children: [
             Text(
               AppLocalizations.of(context)!.previewLabel,
-              style: AppText.defaultTheme.label.copyWith(
+              style: AppText.defaultTheme.labelLarge.copyWith(
                 color: AppColors.dark.onSurfaceVariant,
               ),
             ),
@@ -390,7 +377,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               ),
               child: Center(
                 child: Icon(
-                  getIconData(widget.viewModel.selectedIcon),
+                  widget.viewModel.stylingRepository.getIconData(widget.viewModel.selectedIcon),
                   color: const Color(0xFFFFFFFF),
                   size: 48,
                 ),
@@ -416,7 +403,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             ),
             Text(
               AppLocalizations.of(context)!.stepVersion,
-              style: AppText.defaultTheme.label.copyWith(
+              style: AppText.defaultTheme.labelLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
@@ -448,7 +435,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                 return Center(
                   child: Text(
                     AppLocalizations.of(context)!.loading,
-                    style: AppText.defaultTheme.body.copyWith(
+                    style: AppText.defaultTheme.bodyLarge.copyWith(
                       color: AppColors.dark.primary,
                     ),
                   ),
@@ -461,7 +448,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                 return Center(
                   child: Text(
                     AppLocalizations.of(context)!.nothingFound,
-                    style: AppText.defaultTheme.body.copyWith(
+                    style: AppText.defaultTheme.bodyLarge.copyWith(
                       color: AppColors.dark.onSurfaceVariant,
                     ),
                   ),
@@ -519,7 +506,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               ),
               Text(
                 AppLocalizations.of(context)!.modLoaderLabel,
-                style: AppText.defaultTheme.label.copyWith(
+                style: AppText.defaultTheme.labelLarge.copyWith(
                   color: AppColors.dark.onSurface,
                 ),
               ),
@@ -533,7 +520,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                 return Center(
                   child: Text(
                     AppLocalizations.of(context)!.loading,
-                    style: AppText.defaultTheme.body.copyWith(
+                    style: AppText.defaultTheme.bodyLarge.copyWith(
                       color: AppColors.dark.primary,
                     ),
                   ),
@@ -583,7 +570,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             ),
             Text(
               AppLocalizations.of(context)!.forgeVersionLabel,
-              style: AppText.defaultTheme.label.copyWith(
+              style: AppText.defaultTheme.labelLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
@@ -657,14 +644,14 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         if (!isCustom)
           Text(
             AppLocalizations.of(context)!.selectedForgeVersion(widget.viewModel.selectedForgeVersion ?? '-'),
-            style: AppText.defaultTheme.bodySmall.copyWith(
+            style: AppText.defaultTheme.bodyMedium.copyWith(
               color: AppColors.dark.onSurfaceVariant,
             ),
           ),
         if (isCustom) ...[
           Text(
             AppLocalizations.of(context)!.selectForgeVersion,
-            style: AppText.defaultTheme.bodySmall.copyWith(
+            style: AppText.defaultTheme.bodyMedium.copyWith(
               color: AppColors.dark.onSurfaceVariant,
             ),
           ),
@@ -694,7 +681,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                         child: Text(
                           selectedForgeVersion,
                           overflow: TextOverflow.ellipsis,
-                          style: AppText.defaultTheme.body.copyWith(
+                          style: AppText.defaultTheme.bodyLarge.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
                         ),
@@ -734,7 +721,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
             ),
             Text(
               AppLocalizations.of(context)!.fabricVersionLabel,
-              style: AppText.defaultTheme.label.copyWith(
+              style: AppText.defaultTheme.labelLarge.copyWith(
                 color: AppColors.dark.onSurface,
               ),
             ),
@@ -743,7 +730,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
         const SizedBox(height: 12),
         Text(
           AppLocalizations.of(context)!.selectFabricVersion,
-          style: AppText.defaultTheme.bodySmall.copyWith(
+          style: AppText.defaultTheme.bodyMedium.copyWith(
             color: AppColors.dark.onSurfaceVariant,
           ),
         ),
@@ -773,7 +760,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
                       child: Text(
                         selectedFabricVersion,
                         overflow: TextOverflow.ellipsis,
-                        style: AppText.defaultTheme.body.copyWith(
+                        style: AppText.defaultTheme.bodyLarge.copyWith(
                           color: AppColors.dark.onSurface,
                         ),
                       ),
@@ -823,7 +810,7 @@ class _InstanceCreationDialogState extends State<InstanceCreationDialog> {
               SvgPicture.asset(assetPath, height: 64),
               Text(
                 label,
-                style: AppText.defaultTheme.labelLarge.copyWith(
+                style: AppText.defaultTheme.titleMedium.copyWith(
                   color: AppColors.dark.onSurface,
                 ),
               ),

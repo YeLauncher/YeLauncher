@@ -9,6 +9,7 @@ import 'package:yelauncher/routing/router.dart';
 import 'package:yelauncher/ui/core/themes/colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:yelauncher/l10n/app_localizations.dart';
+import 'package:yelauncher/ui/core/toast/toast_overlay.dart';
 import 'package:yelauncher/data/repositories/settings/settings_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -42,7 +43,7 @@ void main() async {
     center: true,
     backgroundColor: AppColors.dark.surface,
     skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.normal,
+    titleBarStyle: TitleBarStyle.hidden,
   );
 
   windowManager.waitUntilReadyToShow(options, () async {
@@ -99,6 +100,7 @@ class _YeLauncherAppState extends State<YeLauncherApp> {
             Locale('en'),
             Locale('uk'),
           ],
+          builder: (context, child) => ToastOverlay(child: child!),
         );
       },
     );

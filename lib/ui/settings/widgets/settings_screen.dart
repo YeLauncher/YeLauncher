@@ -101,14 +101,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Text(
                 title,
-                style: AppText.defaultTheme.labelLarge.copyWith(
+                style: AppText.defaultTheme.titleMedium.copyWith(
                   color: AppColors.dark.onSurface,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 description,
-                style: AppText.defaultTheme.bodySmall.copyWith(
+                style: AppText.defaultTheme.bodyMedium.copyWith(
                   color: AppColors.dark.onSurfaceVariant,
                   height: 1.5,
                 ),
@@ -147,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: AppText.defaultTheme.titleSmall.copyWith(
+                  style: AppText.defaultTheme.titleLarge.copyWith(
                     color: AppColors.dark.onSurface,
                   ),
                 ),
@@ -191,14 +191,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 Text(
                   l10n.settingsTabTitle,
-                  style: AppText.defaultTheme.title.copyWith(
+                  style: AppText.defaultTheme.headlineMedium.copyWith(
                     color: AppColors.dark.onSurface,
                   ),
                 ),
                 const SizedBox(height: 32),
                 Text(
                   l10n.languageLabel,
-                  style: AppText.defaultTheme.titleSmall.copyWith(
+                  style: AppText.defaultTheme.titleLarge.copyWith(
                     color: AppColors.dark.onSurfaceVariant,
                   ),
                 ),
@@ -232,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 Text(
                   l10n.settingsMinecraftTitle,
-                  style: AppText.defaultTheme.titleSmall.copyWith(
+                  style: AppText.defaultTheme.titleLarge.copyWith(
                     color: AppColors.dark.onSurfaceVariant,
                   ),
                 ),
@@ -256,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           Text(
                             'x',
-                            style: AppText.defaultTheme.titleSmall.copyWith(
+                            style: AppText.defaultTheme.titleLarge.copyWith(
                               color: AppColors.dark.onSurfaceVariant,
                             ),
                           ),

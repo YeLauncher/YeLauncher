@@ -59,6 +59,7 @@
   "tabResourcepacks": "Resourcepacks",
   "tabDatapacks": "Datapacks",
   "tabModpacks": "Modpacks",
+  "tabShaders": "Shaders",
   "addButton": "Add",
   "byAuthor": "by {author}",
   "@byAuthor": {
@@ -209,5 +210,28 @@
   "contentTypeMod": "MOD",
   "contentTypeResourcepack": "RESOURCE PACK",
   "contentTypeDatapack": "DATA PACK",
-  "contentTypeModpack": "MODPACK"
+  "contentTypeModpack": "MODPACK",
+  "contentTypeShader": "SHADER",
+  "minecraftVersions": "Minecraft Versions",
+  "downloadProgress": "{downloaded} MB / {total} MB",
+  "@downloadProgress": {
+    "placeholders": {
+      "downloaded": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "downloadProgressUnknownTotal": "{downloaded} MB",
+  "@downloadProgressUnknownTotal": {
+    "placeholders": {
+      "downloaded": { "type": "String" }
+    }
+  },
+  "clearSelection": "Clear selection",
+  "requiredDependencies": "Required Dependencies",
+  "optionalDependencies": "Optional Dependencies",
+  "noDependenciesRequired": "No dependencies required",
+  "installRequiredDependencies": "Install required dependencies",
+  "installRequiredDependenciesTooltip": "Will download:\n{dependencies}",
+  "notificationsTitle": "Notifications",
+  "noNotifications": "No notifications"
 }

@@ -12,6 +12,7 @@ ContentVersion _$ContentVersionFromJson(Map<String, dynamic> json) =>
       projectId: json['project_id'] as String,
       name: json['name'] as String,
       versionNumber: json['version_number'] as String,
+      versionType: json['version_type'] as String,
       gameVersions: (json['game_versions'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -32,6 +33,7 @@ Map<String, dynamic> _$ContentVersionToJson(ContentVersion instance) =>
       'project_id': instance.projectId,
       'name': instance.name,
       'version_number': instance.versionNumber,
+      'version_type': instance.versionType,
       'game_versions': instance.gameVersions,
       'loaders': instance.loaders,
       'files': instance.files,

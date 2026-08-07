@@ -59,7 +59,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                         ),
                         Text(
                           AppLocalizations.of(context)!.profilesTabTitle,
-                          style: AppText.defaultTheme.titleLarge.copyWith(
+                          style: AppText.defaultTheme.headlineLarge.copyWith(
                             color: AppColors.dark.onSurface,
                           ),
                         ),
@@ -67,7 +67,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                     ),
                     Text(
                       AppLocalizations.of(context)!.manageAccountsSubtitle,
-                      style: AppText.defaultTheme.body.copyWith(
+                      style: AppText.defaultTheme.bodyLarge.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
                     ),
@@ -143,13 +143,13 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                             children: [
                               Text(
                                 AppLocalizations.of(context)!.noAccountsTitle,
-                                style: AppText.defaultTheme.titleSmall.copyWith(
+                                style: AppText.defaultTheme.titleLarge.copyWith(
                                   color: AppColors.dark.onSurface,
                                 ),
                               ),
                               Text(
                                 AppLocalizations.of(context)!.noAccountsSubtitle,
-                                style: AppText.defaultTheme.bodySmall.copyWith(
+                                style: AppText.defaultTheme.bodyMedium.copyWith(
                                   color: AppColors.dark.onSurfaceVariant,
                                 ),
                               ),
@@ -202,7 +202,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                                       children: [
                                         Text(
                                           profile.nickname,
-                                          style: AppText.defaultTheme.titleSmall.copyWith(
+                                          style: AppText.defaultTheme.titleLarge.copyWith(
                                             color: AppColors.dark.onSurface,
                                           ),
                                         ),
@@ -215,7 +215,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                                             ),
                                             child: Text(
                                               AppLocalizations.of(context)!.activeBadge,
-                                              style: AppText.defaultTheme.label.copyWith(
+                                              style: AppText.defaultTheme.labelLarge.copyWith(
                                                 color: AppColors.dark.onPrimary,
                                               ),
                                             ),
@@ -224,7 +224,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                                     ),
                                     Text(
                                       profile.uuid,
-                                      style: AppText.defaultTheme.bodySmall.copyWith(
+                                      style: AppText.defaultTheme.bodyMedium.copyWith(
                                         color: AppColors.dark.onSurfaceVariant,
                                       ),
                                     ),

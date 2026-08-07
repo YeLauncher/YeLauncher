@@ -185,13 +185,13 @@ class _MultiSelectDropdownState<T> extends State<MultiSelectDropdown<T>> {
                     color: widget.values.isNotEmpty
                         ? AppColors.dark.onPrimaryContainer
                         : AppColors.dark.onSurface,
-                    size: AppText.defaultTheme.label.fontSize,
+                    size: AppText.defaultTheme.labelLarge.fontSize,
                   ),
                   const SizedBox(width: 8),
                 ],
                 Text(
                   _getLabel(),
-                  style: AppText.defaultTheme.label.copyWith(
+                  style: AppText.defaultTheme.labelLarge.copyWith(
                     color: widget.values.isNotEmpty
                         ? AppColors.dark.onPrimaryContainer
                         : AppColors.dark.onSurface,
@@ -205,7 +205,7 @@ class _MultiSelectDropdownState<T> extends State<MultiSelectDropdown<T>> {
                   color: widget.values.isNotEmpty
                       ? AppColors.dark.onPrimaryContainer
                       : AppColors.dark.onSurfaceVariant,
-                  size: AppText.defaultTheme.label.fontSize! + 4,
+                  size: AppText.defaultTheme.labelLarge.fontSize! + 4,
                 ),
               ],
             ),
@@ -257,7 +257,7 @@ class _MultiSelectDropdownMenuItemState<T>
               Expanded(
                 child: Text(
                   widget.item.label,
-                  style: AppText.defaultTheme.body.copyWith(
+                  style: AppText.defaultTheme.bodyLarge.copyWith(
                     color: widget.isSelected
                         ? AppColors.dark.primary
                         : AppColors.dark.onSurface,

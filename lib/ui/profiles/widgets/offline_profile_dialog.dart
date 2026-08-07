@@ -54,14 +54,14 @@ class _OfflineProfileDialogState extends State<OfflineProfileDialog> {
                   children: [
                     Text(
                       AppLocalizations.of(context)!.addOfflineAccountTitle,
-                      style: AppText.defaultTheme.titleLarge.copyWith(
+                      style: AppText.defaultTheme.headlineLarge.copyWith(
                         color: AppColors.dark.onSurface,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       AppLocalizations.of(context)!.addOfflineAccountSubtitle,
-                      style: AppText.defaultTheme.body.copyWith(
+                      style: AppText.defaultTheme.bodyLarge.copyWith(
                         color: AppColors.dark.onSurfaceVariant,
                       ),
                     ),

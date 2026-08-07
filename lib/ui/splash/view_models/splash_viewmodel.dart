@@ -91,10 +91,15 @@ class SplashViewModel extends ChangeNotifier {
           final List<InstalledContentModel> verifiedContent = [];
 
           for (final content in instance.installedContent) {
-            final folderName = content.type == 'resourcepack' ? 'resourcepacks' : 'mods';
+            final folderName = switch (content.type) {
+              'resourcepack' => 'resourcepacks',
+              'shader' => 'shaderpacks',
+              _ => 'mods',
+            };
             final file = File(p.join(gameDir.path, folderName, content.filename));
+            final disabledFile = File('${file.path}.disabled');
 
-            if (await file.exists()) {
+            if (await file.exists() || await disabledFile.exists()) {
               verifiedContent.add(content);
             } else {
               _log.warning('Missing content file: ${file.path} for instance ${instance.id}');

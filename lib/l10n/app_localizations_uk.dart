@@ -169,6 +169,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tabModpacks => 'Модпаки';
 
   @override
+  String get tabShaders => 'Шейдери';
+
+  @override
   String get addButton => 'Додати';
 
   @override
@@ -498,4 +501,46 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get contentTypeModpack => 'МОДПАК';
+
+  @override
+  String get contentTypeShader => 'ШЕЙДЕР';
+
+  @override
+  String get minecraftVersions => 'Версії Minecraft';
+
+  @override
+  String downloadProgress(String downloaded, String total) {
+    return '$downloaded МБ / $total МБ';
+  }
+
+  @override
+  String downloadProgressUnknownTotal(String downloaded) {
+    return '$downloaded МБ';
+  }
+
+  @override
+  String get clearSelection => 'Очистити вибір';
+
+  @override
+  String get requiredDependencies => 'Обов\'язкові залежності';
+
+  @override
+  String get optionalDependencies => 'Опціональні залежності';
+
+  @override
+  String get noDependenciesRequired => 'Залежності не потрібні';
+
+  @override
+  String get installRequiredDependencies => 'Встановити необхідні залежності';
+
+  @override
+  String installRequiredDependenciesTooltip(Object dependencies) {
+    return 'Буде завантажено:\n$dependencies';
+  }
+
+  @override
+  String get notificationsTitle => 'Сповіщення';
+
+  @override
+  String get noNotifications => 'Немає сповіщень';
 }
